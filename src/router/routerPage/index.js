@@ -1,5 +1,5 @@
-const HelloWorld = ()=> import('@/components/HelloWorld')
+const Home = ()=> import('@/views/home')
 
 export default {
-  HelloWorld
+  Home
 }
