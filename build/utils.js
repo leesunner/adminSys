@@ -30,7 +30,7 @@ exports.cssLoaders = function (options) {
   }
 
   // generate loader string to be used with extract text plugin
-  function generateLoaders (loader, loaderOptions) {
+  function generateLoaders(loader, loaderOptions) {
     const loaders = options.usePostCSS ? [cssLoader, postcssLoader] : [cssLoader]
 
     if (loader) {
@@ -53,35 +53,24 @@ exports.cssLoaders = function (options) {
       return ['vue-style-loader'].concat(loaders)
     }
   }
-  //全局less文件引入配置
-  function lessResourceLoader() {
-    var loaders = [
-      cssLoader,
-      'less-loader',
-      {
-        loader: 'sass-resources-loader',
-        options: {
-          resources: path.resolve(__dirname, '@/assets/styles/common.less'),
-        }
-      }
-    ];
-    if (options.extract) {
-      return ExtractTextPlugin.extract({
-        use: loaders,
-        fallback: 'vue-style-loader'
-      })
-    } else {
-      return ['vue-style-loader'].concat(loaders)
-    }
+  function importFlie(url){
+    return path.resolve(__dirname, url)
   }
+
   // https://vue-loader.vuejs.org/en/configurations/extract-css.html
   return {
     css: generateLoaders(),
     postcss: generateLoaders(),
-    // less: generateLoaders('less'),
-    less:lessResourceLoader('less'),
-    sass: generateLoaders('sass', { indentedSyntax: true }),
-    scss: generateLoaders('sass'),
+    less: generateLoaders('less'),
+    sass: generateLoaders('sass', {indentedSyntax: true}),
+    scss: generateLoaders('sass').concat({
+      loader: 'sass-resources-loader',
+      options: {
+        resources: [
+          importFlie('../src/assets/styles/common.scss')
+        ]
+      }
+    }),
     stylus: generateLoaders('stylus'),
     styl: generateLoaders('stylus')
   }

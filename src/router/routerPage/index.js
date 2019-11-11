@@ -1,5 +1,5 @@
-const Home = ()=> import('@/views/home')
+const Login = ()=> import('@/views/Login')
 
 export default {
-  Home
+  Login
 }
