@@ -4,7 +4,7 @@
       <el-header style="background-color: #333333">Header</el-header>
       <el-container style="height: 100%;">
         <el-aside width="180px" style="height: 100%" class="el-scrollbar">
-          <aside-left></aside-left>
+          <nav-bar></nav-bar>
         </el-aside>
         <el-main>
           <router-view />
@@ -15,11 +15,11 @@
 </template>
 
 <script>
-  const AsideLeft = () => import('../components/left/left.vue');
+  const navBar = () => import('../components/navBar/navBar.vue');
 
   export default {
     name: "index",
-    components: {AsideLeft},
+    components: {navBar},
     data(){
       return{
 
