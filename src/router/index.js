@@ -1,21 +1,11 @@
-import Vue from 'vue'
-import vueRouter from 'vue-router'
-import pages from './routerPage'
-Vue.use(vueRouter)
-
-const router= new vueRouter({
-  routes: [
-    {
-      path: '/',
-      name: 'Login',
-      component: pages.Login
-    }
-  ]
-})
+import router from './routerConfig/routerSource';
+import pages from "./routerConfig/pageList";
 
 //路由全局拦截器
-router.beforeEach((to,from, next) => {
-  console.log(to)
+router.beforeEach((to, from, next) => {
+  document.title = to.meta.title
+  // const RoutersArr = permissionRouters(routeObj)
+  // router.addRoutes(RoutersArr)
   next()
 })
 

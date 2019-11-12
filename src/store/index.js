@@ -1,9 +1,9 @@
-import 'es6-promise/auto'
 import Vue from 'vue'
 import Vuex from 'vuex'
+import login from './modules/Login'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
-  modules:{}
+  modules:{login}
 })
 export default store

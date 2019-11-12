@@ -20,22 +20,59 @@
       class="particles"
     >
     </vue-particles>
-
+    <div class="login-mode">
+        <h1>百问数字政务系统</h1>
+      <el-tabs v-model="activeName" ref="tabs" :stretch="true" @tab-click="handleClick">
+        <el-tab-pane label="密码登录" name="first"></el-tab-pane>
+        <el-tab-pane label="手机登录" name="second"></el-tab-pane>
+      </el-tabs>
+      <el-form  ref="form" :model="data">
+        <el-form-item>
+          <el-form-item label="用户名：">
+            <el-input v-model="data.name" class="trans" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="密码：">
+            <el-input type="password" v-model="data.name" class="trans" clearable></el-input>
+          </el-form-item>
+          <slider></slider>
+          <el-form-item>
+            <el-checkbox v-model="checked">记住密码</el-checkbox>
+            <el-link v-power="''">忘记密码？</el-link>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" class="abc" @click="login">登 录</el-button>
+          </el-form-item>
+        </el-form-item>
+      </el-form>
+    </div>
   </div>
 </template>
 
 <script>
+  import Slider from '../components/checking/slider'
   export default {
+    components: {Slider},
     name: "login",
+    comments:{Slider},
     data() {
       return {
         height: window.innerHeight,
         data:{
           username:'',
-          password:'',
-        }
+          password:''
+        },
+        checked:'',
+        activeName:'first',
       }
     },
+    methods:{
+      handleClick(){
+
+      },
+      login(){
+        this.$router.push('Index')
+      }
+    }
   }
 </script>
 
@@ -52,12 +89,28 @@
     left: 0;
     right: 0;
     margin: auto;
-    width: 388px;
-    height: 560px;
-    padding: 10px 10px;
-    background-color: $black;
+    height: 515px;
+    width: 410px;
+    padding: 10px 30px;
+    background-color: rgba(0,0,0,0.4);
+    user-select: none;
     h1{
-      color: $black;
+      color: $white;
+      padding: 20px 0;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .trans{
+      & /deep/.el-input__inner{
+        background-color: $opcity;
+      }
+    }
+    & /deep/.el-button{
+      width: 100%;
+      margin-top: 35px;
+    }
+    & /deep/.el-checkbox{
+      margin-right: 160px;
     }
   }
 </style>

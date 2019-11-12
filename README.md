@@ -1,106 +1,24 @@
-Ant Design Jeecg Vue
-====
+百问数字政务系统前端架构说明
+基础框架：vue全家桶；
+ui框架：element-ui；
+ajax框架：axios;
+css预处理：sass；
+数据可视化框架：
 
-当前最新版本： 2.0.2（发布日期：20190708）
+###########文件系统说明（src文件夹下）##########
+assets -img 图片文件
+       -styles 样式文件
+components 项目组件库
+directive  自定义指令
+elementComponents 按需导入element-ui的组件
+request -index.js axios导出主文件，包含拦截器，接口请求域名设置
+        -api/apiList.js 接口url导出列表
+        -api/requestMethods.js 接口函数调用导出列表
+router -index.js 路由全局拦截器，路由主入口
+       -routerConfig/pageList.js  路由对应page文件导出
+       -routerConfig/routerSource.js  初始化路由文件导出
+stores -index.js 状态管理导出主入口
+       -modules 拆分文件
+tools  -工具函数存放文件
+views  系统页面文件
 
-Overview
-----
-
-基于 [Ant Design of Vue](https://vuecomponent.github.io/ant-design-vue/docs/vue/introduce-cn/) 实现的 Ant Design Pro  Vue 版
-Jeecg-boot 的前段UI框架，采用前后端分离方案，提供强大代码生成器的快速开发平台。
-前端页面代码和后端功能代码一键生成，不需要写任何代码，保持jeecg一贯的强大！！
-
-
-
-#### 前端技术
- 
-- 基础框架：[ant-design-vue](https://github.com/vueComponent/ant-design-vue) - Ant Design Of Vue 实现
-- JavaScript框架：Vue
-- Webpack
-- node
-- yarn
-- eslint
-- @vue/cli 3.2.1
-- [vue-cropper](https://github.com/xyxiao001/vue-cropper) - 头像裁剪组件
-- [@antv/g2](https://antv.alipay.com/zh-cn/index.html) - Alipay AntV 数据可视化图表
-- [Viser-vue](https://viserjs.github.io/docs.html#/viser/guide/installation)  - antv/g2 封装实现
-
-
-
-项目下载和运行
-----
-
-- 拉取项目代码
-```bash
-git clone https://github.com/zhangdaiscott/jeecg-boot.git
-cd  jeecg-boot/ant-design-jeecg-vue
-```
-
-- 安装依赖
-```
-yarn install
-```
-
-- 开发模式运行
-```
-yarn run serve
-```
-
-- 编译项目
-```
-yarn run build
-```
-
-- Lints and fixes files
-```
-yarn run lint
-```
-
-
-
-其他说明
-----
-
-- 项目使用的 [vue-cli3](https://cli.vuejs.org/guide/), 请更新您的 cli
-
-- 关闭 Eslint (不推荐) 移除 `package.json` 中 `eslintConfig` 整个节点代码
-
-- 修改 Ant Design 配色，在文件 `vue.config.js` 中，其他 less 变量覆盖参考 [ant design](https://ant.design/docs/react/customize-theme-cn) 官方说明
-```ecmascript 6
-  css: {
-    loaderOptions: {
-      less: {
-        modifyVars: {
-          /* less 变量覆盖，用于自定义 ant design 主题 */
-
-          'primary-color': '#F5222D',
-          'link-color': '#F5222D',
-          'border-radius-base': '4px',
-        },
-        javascriptEnabled: true,
-      }
-    }
-  }
-```
-
-
-
-附属文档
-----
-- [Ant Design Vue](https://vuecomponent.github.io/ant-design-vue/docs/vue/introduce-cn)
-
-- [报表 viser-vue](https://viserjs.github.io/demo.html#/viser/bar/basic-bar)
-
-- [Vue](https://cn.vuejs.org/v2/guide)
-
-- [路由/菜单说明](https://github.com/zhangdaiscott/jeecg-boot/tree/master/ant-design-jeecg-vue/src/router/README.md)
-
-- [ANTD 默认配置项](https://github.com/zhangdaiscott/jeecg-boot/tree/master/ant-design-jeecg-vue/src/defaultSettings.js)
-
-- 其他待补充...
-
-
-备注
-----
-
-> @vue/cli 升级后，eslint 规则更新了。由于影响到全部 .vue 文件，需要逐个验证。既暂时关闭部分原本不验证的规则，后期维护时，在逐步修正这些 rules

@@ -58,6 +58,7 @@ import {
   CollapseItem,
   Cascader,
   // ColorPicker,
+  Scrollbar,
   Transfer,
   Container,
   Header,
@@ -81,6 +82,7 @@ import {
 
 // Vue.use(Rate);
 // Vue.use(Slider);
+Vue.use(Scrollbar);
 Vue.use(Pagination);
 Vue.use(Dialog);
 Vue.use(Autocomplete);

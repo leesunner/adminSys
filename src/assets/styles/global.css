@@ -7,7 +7,6 @@
   font-size:100%;
   vertical-align:baseline;
   background:transparent;
-  font-size: 16px;
 }
 html, body {
   height: 100%;
@@ -26,6 +25,30 @@ table {
 }
 span,a,i,label,b{
   vertical-align: middle;
+}
+img{
+  border:none;
+  vertical-align:middle;
+}
+a, a:link, a:visited{
+  color:#000;
+  text-decoration:none;
+}
+a:hover{
+  color:#000;
+  text-decoration:none;
+}
+/* 标签属性，textarea,input 强制输入时内容超出时换行，打断 */
+textarea,input{
+  word-wrap:break-word;
+  word-break:break-all;
+  border: none;
+  /*color: red;!*输入文字、光标颜色*!*/
+  /*-webkit-text-fill-color: blue;!*输入文字、placeholder颜色*!*/
+  /*caret-color: yellow;!*光标颜色*!*/
+}
+span,p,div{
+  word-wrap:break-word;
 }
 /*@media screen and (min-width:321px) and (max-width:375px){*/
   /*html{font-size:11px}*/
