@@ -18,7 +18,7 @@ AXIOS.interceptors.request.use(config=>{
 //响应拦截器
 AXIOS.interceptors.response.use(res=>{
   console.log(res)
-  return res
+  return res.data
 },error=>{
   return Promise.reject(error)
 })

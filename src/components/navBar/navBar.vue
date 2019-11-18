@@ -6,16 +6,16 @@
     <!--</el-radio-group>-->
     <el-scrollbar style="height: 100%;">
       <el-menu
-        default-active="1"
+        :default-active="$route.path"
+        unique-opened
         class="el-menu-vertical-demo"
         @open="handleOpen"
-        @close="handleClose"
         background-color="#545c64"
         router
         text-color="#fff"
         :collapse="isCollapse"
         active-text-color="#ffd04b">
-        <nav-item v-for="(menu,index) in menuList" :key="index+100" :item="menu" ></nav-item>
+        <nav-item v-for="(menu,index) in menuList" :key="index+100" :item="menu"></nav-item>
       </el-menu>
     </el-scrollbar>
   </div>
@@ -23,58 +23,32 @@
 
 <script>
   import navItem from './navBaritem'
+  import {permissionMenus} from '@/tools/routerTool'
+  import {mapMutations} from 'vuex'
   export default {
     name: "AsideLeft",
-    components:{navItem},
+    components: {navItem},
     data() {
       return {
         isCollapse: false,
-        menuList: [
-          {
-            title: '首页',
-            path: '/login',
-            children: []
-          },
-          {
-            title: '角色管理',
-            path: '/login',
-            children: [
-              {
-                title: '角色管理',
-                name: 'login',
-                path: '/login',
-                children: [
-                  {
-                    title: '角色添加',
-                    name: 'login',
-                    path: '/login',
-                  }
-                ]
-              },
-              {
-                title: '角色权限',
-                name: 'login',
-                path: '/login',
-                children: [
-                  {
-                    title: '权限树',
-                    name: 'login',
-                    path: '/login',
-                  }
-                ]
-              }
-            ]
-          },
-        ]
+        menuList: []
       };
     },
+    created() {
+      const list = this.$store.state.login.ROUTERS_LIST
+      this.menuList = list[0].children
+
+    },
     methods: {
+      ...mapMutations([
+        'setMenuNavTabs'
+      ]),
       handleOpen(key, keyPath) {
-        console.log(key, keyPath);
+        // this.setMenuNavTabs({
+        //   type:'add',//remove
+        //   value:key,
+        // })
       },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      }
     }
   }
 </script>
@@ -86,7 +60,7 @@
     overflow: hidden;
     & /deep/ .el-scrollbar__wrap {
       overflow-x: hidden;
-      margin-right: -18px!important;
+      margin-right: -18px !important;
     }
     & /deep/ .el-submenu__title, & /deep/ .el-menu-item {
       padding-left: 0 !important;

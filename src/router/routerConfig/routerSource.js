@@ -1,6 +1,13 @@
 import Vue from 'vue'
 import vueRouter from 'vue-router'
 import pages from './pageList'
+
+//解决点击相同路由是报错的问题
+const routerPush = vueRouter.prototype.push
+vueRouter.prototype.push = function push(location) {
+  return routerPush.call(this, location).catch(error => error)
+}
+
 Vue.use(vueRouter)
 
 const RouterSource = new vueRouter({
@@ -8,35 +15,28 @@ const RouterSource = new vueRouter({
     {
       path: '/',
       name: '/',
-      redirect:'/Login',
-      meta:{
-        title:'百问数据系统'
+      redirect: '/login',
+      meta: {
+        title: '百问数据系统'
       },
     },
     {
-      path: '/Login',
-      name: 'Login',
+      path: '/login',
+      name: 'login',
       component: pages.Login,
-      meta:{
-        title:'系统登录页'
-      },
-    },
-    {
-      path: '/Index',
-      name: 'Index',
-      component: pages.Index,
-      meta:{
-        title:'首页'
+      meta: {
+        title: '系统登录页'
       },
     },
     {
       path: '*',
       name: '404',
-      component: pages.errorPage,
-      meta:{
-        title:'没找到页面'
+      component: pages.ErrorPage,
+      meta: {
+        title: '没找到页面'
       },
     },
   ]
 })
+
 export default RouterSource

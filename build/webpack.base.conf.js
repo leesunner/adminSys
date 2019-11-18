@@ -43,7 +43,6 @@ module.exports = {
         loader: 'babel-loader',
         include: [
           resolve('src'),
-          resolve('test'),
           resolve('config'),
           resolve('node_modules/webpack-dev-server/client'),
           resolve('node_modules/element-ui/packages'),

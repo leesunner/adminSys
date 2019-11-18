@@ -78,10 +78,10 @@
       top: 0;
       left: 0;
       height: 45px;
-      background-color: $success;
+      background-color: $primary;
       color: $white;
       letter-spacing:4px;
-      opacity: 0.80;
+      opacity: 0.95;
     }
     &-animtc{
       transition: all 0.22s ease-in-out;

@@ -20,5 +20,12 @@ export default {
       source = JSON.parse(data)
     }
     return source
+  },
+  /**
+   * @description 清除session
+   * @param (id:String)
+   * */
+  clearSession() {
+    window.sessionStorage.clear()
   }
 }

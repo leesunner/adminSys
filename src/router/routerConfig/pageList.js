@@ -1,8 +1,6 @@
 const Login = ()=> import('@/views/Login')
-const Index = ()=> import('@/views/Index')
-const errorPage = ()=> import('@/views/404')
+const ErrorPage = ()=> import('@/views/Error')
 export default {
   Login,
-  Index,
-  errorPage
+  ErrorPage,
 }

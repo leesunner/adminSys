@@ -70,7 +70,9 @@
 
       },
       login(){
-        this.$router.push('Index')
+        this.$store.dispatch('routerTree').then(res=>{
+          this.$router.push('index')
+        })
       }
     }
   }
@@ -94,8 +96,8 @@
     padding: 10px 30px;
     background-color: rgba(0,0,0,0.4);
     user-select: none;
+    color: #fff;
     h1{
-      color: $white;
       padding: 20px 0;
       font-size: 20px;
       margin-bottom: 10px;
