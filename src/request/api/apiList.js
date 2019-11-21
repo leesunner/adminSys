@@ -1,4 +1,6 @@
 //配置接口信息列表
-export default {
-  login:'api/login'
+const apiList =  {
+  login:'/m/sys/login'
 }
+
+export default apiList

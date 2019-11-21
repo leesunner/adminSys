@@ -19,7 +19,7 @@
       },
       fontSizeMax: {
         type: Number,
-        default: 45
+        default: 38
       },
       backgroundColorMin: {
         type: Number,
@@ -144,6 +144,11 @@
       },
       //获取验证码
       randomCode() {
+        return new Promise(resolve => {
+          this.checkKey = 10
+          this.code = '5f2c'
+          resolve()
+        })
         // return new Promise((resolve)=>{
         //   if(this.remote==true){
         //     getCode().then(res=>{
@@ -186,6 +191,7 @@
     },
     mounted() {
       this.drawPic()
+
     },
     data() {
       return {

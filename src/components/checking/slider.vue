@@ -1,5 +1,5 @@
 <template>
-  <div class="slider" ref="slider" @mousemove.stop="mouseMove">
+  <div class="slider" ref="slider" @mousemove.stop="mouseMove">拖动滑块>>
     <div :class="['slider-color',down?'':'slider-animtc']" :style="`width:${lock?xCache+45:xCache}px`">{{lock?'拖动已完成>>':''}}</div>
     <div :class="['slider-item',down?'':'slider-animt']" v-show="!lock" ref="block" @mousedown.stop="mouseDown"
          @mouseup.stop="mouseUp">{{text}}
@@ -70,9 +70,10 @@
     user-select: none;
     width: 100%;
     height: 45px;
-    background-color: rgba(0,0,0,.35);
+    background-color: rgba(207, 237, 237, 0.85);
     position: relative;
     margin-top: 15px;
+    text-align: center;
     &-color{
       position: absolute;
       top: 0;
@@ -87,6 +88,9 @@
       transition: all 0.22s ease-in-out;
     }
     &-item {
+      position: absolute;
+      top: 0;
+      left: 0;
       height: 45px;
       width: 45px;
       cursor: move;

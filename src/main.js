@@ -15,9 +15,12 @@ import './assets/styles/element-variables.scss'
 //粒子背景效果
 import VueParticles from 'vue-particles'
 Vue.use(VueParticles)
+//引入接口列表
+import apiList from "./request/api/apiList";
 
 Vue.config.productionTip = false
 Vue.prototype.$request = request
+Vue.prototype.$api = apiList
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

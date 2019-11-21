@@ -14,7 +14,7 @@ html, body {
   font-family: '微软雅黑','Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  /*text-align: center;*/
 }
 ul,li,ol{
   list-style: none;
@@ -71,3 +71,18 @@ span,p,div{
 /*@media screen and (min-width:800px){*/
   /*html{font-size:25px}*/
 /*}*/
+
+
+/*transiton组件的动画效果*/
+.fade-enter-active, .fade-leave-active {
+  transition: all 0.1s;
+  opacity: 1;
+}
+.fade-enter, .fade-leave-to{
+  opacity: 0;
+}
+.inputContent{
+  position: relative;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}

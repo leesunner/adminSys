@@ -1,5 +1,21 @@
-$black:#000000;
-$opcity:transparent;
-$white:#fff;
-$primary:#409EFF;
-$success:#67c23a;
+//变量
+$black: #000000;
+$opcity: transparent;
+$white: #fff;
+$primary: #29c8c9;
+$success: #67c23a;
+
+//自定义控制字符行数隐藏
+@mixin text-over($val:1) {
+  @if ($val<=1) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+  } @else {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: $val;
+  }
+}

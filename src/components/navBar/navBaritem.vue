@@ -49,7 +49,7 @@
 
 <style lang="scss" scoped>
 .nav-bar-item{
-  padding: 0!important;
+  padding-left: 30px!important;
   min-width: inherit!important;
 }
 </style>
