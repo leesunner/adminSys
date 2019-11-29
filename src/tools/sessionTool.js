@@ -4,10 +4,8 @@ export default {
    * @param (id:String,data:数据源)
    * */
   setSession(id, data) {
-    if (data) {
-      const source = JSON.stringify(data)
-      window.sessionStorage.setItem(id, source)
-    }
+    const source = JSON.stringify(data)
+    window.sessionStorage.setItem(id, source)
   },
   /**
    * @description 获取session
@@ -22,7 +20,7 @@ export default {
     return source
   },
   /**
-   * @description 清除session
+   * @description 清除所有session
    * @param (id:String)
    * */
   clearSession() {

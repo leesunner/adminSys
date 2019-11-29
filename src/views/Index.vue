@@ -1,6 +1,6 @@
 <template>
   <div>
-    <lee-echarts :options="option" :width="width" :height="height"></lee-echarts>
+    <lee-echarts :options="option"></lee-echarts>
   </div>
 </template>
 
@@ -39,8 +39,6 @@
             }
           ]
         },
-        width:window.innerWidth-200,
-        height:window.innerHeight-60
       }
     },
   }

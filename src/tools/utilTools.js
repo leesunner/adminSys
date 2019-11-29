@@ -2,7 +2,10 @@
  * 加密工具类
  */
 import CryptoJS from 'crypto-js'
-
+//加密key
+const key = '201991022019ndit';
+//加密偏移值
+const piv = 1234567876543210;
 /**
  * 验证手机号
  */
@@ -21,8 +24,6 @@ export const checkEmail = (value) => {
  * 加密
  */
 export const Encrypt = (val) => {
-  const key = '201991022019ndit';
-  const piv = 1234567876543210;
   const message = CryptoJS.enc.Utf8.parse(val);
   const secret_key = CryptoJS.enc.Utf8.parse(key);//key
   const iv = CryptoJS.enc.Utf8.parse(piv);//偏移
@@ -34,6 +35,23 @@ export const Encrypt = (val) => {
   });
   return CryptoJS.enc.Base64.stringify(ciphertext.ciphertext)
 }
+
+/**
+ * 清空对象的所有属性的值
+ */
+export const emptyObj = (obj) => {
+  if (typeof (obj) == 'object') {
+    for (var key of Object.keys(obj)) {
+      if (obj[key] != null && obj[key].constructor == Array) {
+        obj[key] = []
+      } else {
+        obj[key] = ''
+      }
+    }
+    return obj;
+  }
+}
+
 /**
  * 深拷贝对象
  *

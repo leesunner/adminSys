@@ -3,10 +3,10 @@
     <el-tab-pane
       closable
       lazy
-      :key="item.name"
-      v-for="(item, index) in getMenuNavTabs"
-      :label="item.title"
-      :name="item.name"
+      :key="item.id"
+      v-for="item in getMenuNavTabs"
+      :label="item.menuName"
+      :name="item.url"
     >
     </el-tab-pane>
   </el-tabs>
@@ -23,20 +23,13 @@
       }
     },
     watch:{
-      '$route.name'(newValue){
+      '$route.path'(newValue){
         //切换到当前访问的路由tab
         this.editableTabsValue = newValue
       },
-      getMenuNavTabs:{
-        handler(newValue,oldValue){
-          //关闭对应路由时，跳转一个路由，并显示选中的tab
-          newValue.length<=0?this.$router.push('index'):this.$router.push(oldValue[0].path)
-        },
-        deep:true,
-      }
     },
     created(){
-      this.editableTabsValue = this.$route.name
+      this.editableTabsValue = this.$route.path
     },
     computed:{
       ...mapGetters([

@@ -26,11 +26,7 @@
         </el-button>
       </div>
       <el-form-item>
-        <el-checkbox v-model="checked">记住密码</el-checkbox>
-        <el-link v-power="''" class="passBack">忘记密码？</el-link>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" class="login" @click="login">登 录</el-button>
+        <el-button type="primary" class="login" @click="login" @keyup.enter.native="login">登 录</el-button>
       </el-form-item>
     </el-form-item>
   </el-form>
@@ -93,17 +89,16 @@
       },
       //验证表单信息
       checkInfo() {
-
+        // this._funs.checkPhone()
+            return false
       },
       //登录
       login() {
-        const params = {
-          username: this.data.username,
-          password: Encrypt(this.data.password)
+        if (this.checkInfo()){
+          this.$store.dispatch('LoginByPhone', this.data).then(res => {
+            this.$router.push('index')
+          })
         }
-        this.$store.dispatch('routerTree', params).then(res => {
-          this.$router.push('index')
-        })
       }
     }
   }
@@ -126,11 +121,12 @@
   }
 
   .login {
-
+    margin-top: 48px;
   }
 
   .code {
     position: relative;
+    margin-top: 15px;
     &-input {
       width: 55%;
     }

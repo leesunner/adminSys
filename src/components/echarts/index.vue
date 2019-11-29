@@ -1,6 +1,6 @@
 <template>
-  <div class="echart">
-    <div ref="canvas" :style="`height: ${$attrs.height}px;width: ${$attrs.width}px;`"></div>
+  <div class="echart" ref="echartContent">
+    <div ref="canvas" :style="`height: ${height}px;width: ${width}px;`"></div>
   </div>
 </template>
 
@@ -12,11 +12,21 @@
     data() {
       return {
         canvas: null,
+        height:window.innerHeight-70,
+        width:window.innerWidth-200,
+        echarEle:null
       }
     },
     props:['options'],
     mounted() {
       this.$nextTick(()=>{
+        this.echarEle = this.$refs.echartContent
+        window.onresize = (e) =>{
+          this.height = this.echarEle.clientHeight
+          this.width = this.echarEle.clientWidth
+          this.canvas.resize();
+        }
+        //注入自定义主题
         $e.registerTheme('chalk', theme)
         this.init()
         this.setOption()
@@ -40,6 +50,9 @@
     }
   }
 </script>
-<style scoped>
-
+<style lang="scss" scoped>
+.echart{
+  height: 100%;
+  width: 100%;
+}
 </style>

@@ -2,9 +2,9 @@
 $black: #000000;
 $opcity: transparent;
 $white: #fff;
-$primary: #29c8c9;
+$primary: #409EFF;
 $success: #67c23a;
-
+$gay:#909399;
 //自定义控制字符行数隐藏
 @mixin text-over($val:1) {
   @if ($val<=1) {
@@ -18,4 +18,26 @@ $success: #67c23a;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: $val;
   }
+}
+.el-tree-node{
+  margin-top: 6px;
+}
+.custom-tree-node {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  padding-right: 8px;
+  &-title{
+    display: inline-block;
+    width: 90px;
+    @include text-over(1)
+  }
+  span{
+    vertical-align: middle;
+  }
+}
+.pagination{
+  margin-top: 15px;
 }

@@ -1,4 +1,4 @@
-import request from '@/request/api/requestMethods'
+import request from '@/request'
 //引入接口列表
 import apiList from "@/request/api/apiList";
 import _session from '../../tools/sessionTool'
@@ -27,87 +27,62 @@ export default {
     }
   },
   actions: {
-    //登录
-    Login({commit}) {
-      // return request.get(apiList.login,arguments[1]).then(res=>{
-      //   console.log('登录进来了')
-      //   console.log(res.data)
-      //   _session.setSession('USER_INFO',res.data)
-      //   commit('setUserInfo', res.data)
-      // })
-      return new Promise((resolve, reject)=>{
-        //模拟登录接口提交
-        setTimeout(() => {
-          console.log('登录进来了')
-          const data = {userName:'小明'}
-          _session.setSession('USER_INFO',data)
-          commit('setUserInfo', data)
-          resolve(data)
-        }, 150)
+    //用户名登录
+    Login({dispatch,commit}) {
+      return request.get(apiList.login, {params:arguments[1]}).then(res => {
+        console.log('登录进来了')
+        _session.setSession('USER_INFO', res.data.data)
+        commit('setUserInfo', res.data.data)
+        return dispatch('routerTree')
+      })
+    },
+    //手机号登录
+    LoginByPhone({dispatch,commit}) {
+      return request.get(apiList.loginByPhone, {params:arguments[1]}).then(res => {
+        console.log('登录进来了')
+        _session.setSession('USER_INFO', res.data.data)
+        commit('setUserInfo', res.data.data)
+        return dispatch('routerTree')
       })
     },
     //登出
     loginOut() {
       _session.clearSession('USER_INFO')
       _session.clearSession('ROUTERS_LIST')
-      router.push('login')
+      router.go(0)
     },
     //获取路由树
     async routerTree({dispatch, commit, state}) {
-      await dispatch('Login',arguments[1])
-      return new Promise((resolve, reject)=>{
-        //模拟菜单接口信息获取
-        setTimeout(() => {
-          const arr = [
-            {
-              path: '/main',
-              name: 'main',
-              filePath: 'views/Main',
-              redirect:'/index',
-              children: [
-                {
-                  path: '/index',
-                  name: 'index',
-                  filePath: 'views/Index',
-                  title: '首页',
-                  children: [],
-                },
-              ],
-            },
-          ]
-          const resArrs = [{
-            title: '角色权限',
-            name: 'permissions',
-            path: '/permissions',
-            filePath: 'views/permission/permissionTree',
-            children: [],
+      //为了刷新时正确使用数据
+      let userInfo = _session.getSessoin('USER_INFO')
+      if (userInfo){
+        commit('setUserInfo', userInfo)
+      }
+      return request.get(`${apiList.menu}/user/${userInfo.id}`).then(res => {
+        console.log('菜单进来了')
+        const arr = [
+          {
+            url: '/main',
+            menuName: 'main',
+            menuPath: 'views/Main',
+            redirect: '/index',
+            children: [
+              {
+                url: '/index',
+                menuName: '首页',
+                menuPath: 'views/Index',
+                title: '首页',
+                children: null,
+              },
+            ],
           },
-            {
-              title: '测试页面',
-              path:'test1',
-              children: [
-                {
-                  path: '/error',
-                  name: 'error',
-                  filePath: 'views/Error',
-                  title: '没找到页面',
-                  children: [],
-                },
-                {
-                  title: '数据图表',
-                  name: 'dataGraph',
-                  path: '/dataGraph',
-                  filePath: 'views/dataChart/persons',
-                  children: [],
-                }
-              ]
-            }]
-          Array.prototype.push.apply(arr[0].children, resArrs)
-          commit('setRouterTree', arr)
-          permissionRouters(arr)
-          _session.setSession('ROUTERS_LIST',arr)
-          resolve()
-        }, 450)
+        ]
+        if (res.data.data[0]){
+          Array.prototype.push.apply(arr[0].children, res.data.data[0].children)
+        }
+        commit('setRouterTree', arr)
+        permissionRouters(arr)
+        _session.setSession('ROUTERS_LIST', arr)
       })
     },
   }

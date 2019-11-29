@@ -14,12 +14,13 @@ function dataRecursion (datas) {
   datas.forEach((item, index) => {
     //先处理父路由数据
     arr.push({
-      path: item.path || '',
-      name: item.name || '',
-      component: () => import('@/' + item.filePath || '@/views/404'),
+      path: item.url || '',
+      name: item.menuName || '',
+      component: () => import('@/' + item.menuPath || '@/views/404'),
       redirect: item.redirect || '',
       meta: {
-        title: item.title || '百问数据'
+        title: item.menuName || '百问数据',
+        menuId:item.id || ''
       },
       children: []
     })

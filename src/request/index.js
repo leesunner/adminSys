@@ -1,15 +1,14 @@
 import axios from 'axios'
 import _session from '../tools/sessionTool'
-import {Loading} from 'element-ui';
+import {Loading,Message} from 'element-ui';
 
-// const url = 'http://172.16.9.254:8091'
-const AXIOS = axios.create({
-  timeout: 10000
-})
+axios.defaults.timeout = 20000
+
 let loadingInstance = null
 let count = 0
 function close() {
   count--
+  console.log(count)
   if (count === 0) {
     loadingInstance.close()
   }
@@ -23,25 +22,46 @@ function open() {
   });
 }
 //请求拦截器
-AXIOS.interceptors.request.use(config => {
+axios.interceptors.request.use(config => {
   open()
-  const TOKEN = _session.getSessoin('AUTH_TOKEN')
-  if (!(TOKEN == 'undefined' || !TOKEN)) {
-    config.headers['Authorization'] = `Bearer ${TOKEN}`
+  // const TOKEN = _session.getSessoin('AUTH_TOKEN')
+  // if (!(TOKEN == 'undefined' || !TOKEN)) {
+  //   config.headers['Authorization'] = `Bearer ${TOKEN}`
+  // }
+  const USER_INFO = _session.getSessoin('USER_INFO')
+  if (USER_INFO){
+    config.headers['userId'] = USER_INFO.id
   }
-  console.log(config)
   return config
 }, error => {
+  close()
+  Message({
+    showClose: true,
+    message: '接口请求有误',
+    type: 'error'
+  });
   return Promise.reject(error)
 })
 
 //响应拦截器
-AXIOS.interceptors.response.use(res => {
+axios.interceptors.response.use(res => {
   close()
-  console.log(res)
-  return res.data
+  if (res.data.code===200){
+    return res
+  }else{
+    Message({
+      showClose: true,
+      message: res.data.msg,
+      type: 'error'
+    });
+  }
 }, error => {
   close()
+  Message({
+    showClose: true,
+    message: '接口响应有误',
+    type: 'error'
+  });
   return Promise.reject(error)
 })
-export default AXIOS
+export default axios

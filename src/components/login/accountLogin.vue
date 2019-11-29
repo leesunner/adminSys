@@ -16,10 +16,10 @@
       <slider></slider>
       <el-form-item>
         <el-checkbox v-model="checked">记住密码</el-checkbox>
-        <el-link v-power="''" class="passBack">忘记密码？</el-link>
+        <el-link class="passBack">忘记密码？</el-link>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" class="login" @click="login">登 录</el-button>
+        <el-button type="primary" class="login" @click="login" @keyup.enter.native="login">登 录</el-button>
       </el-form-item>
     </el-form-item>
   </el-form>
@@ -54,7 +54,7 @@
           username: this.data.username,
           password: Encrypt(this.data.password)
         }
-        this.$store.dispatch('routerTree', params).then(res => {
+        this.$store.dispatch('Login', params).then(res => {
           this.$router.push('index')
         })
       }

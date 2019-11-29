@@ -36,6 +36,7 @@ import {
   Form,
   FormItem,
   Tabs,
+  Avatar,
   TabPane,
   Tag,
   Tree,
@@ -88,6 +89,7 @@ Vue.use(Dialog);
 Vue.use(Autocomplete);
 Vue.use(Dropdown);
 Vue.use(DropdownMenu);
+Vue.use(Avatar);
 Vue.use(DropdownItem);
 Vue.use(Menu);
 Vue.use(Submenu);

@@ -5,8 +5,8 @@
       :height="`${height}px`"
       :particleOpacity="0.65"
       :particlesNumber="130"
-      shapeType="circle"
-      :particleSize="3"
+      shapeType="star"
+      :particleSize="4"
       linesColor="#dedede"
       :linesWidth="1"
       :lineLinked="true"
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-  const infoLogin = () => import('../components/login/infoLogin')
+  const infoLogin = () => import('../components/login/accountLogin')
   const phoneLogin = () => import('../components/login/phoneLogin')
   export default {
     components: {infoLogin, phoneLogin},
@@ -46,6 +46,10 @@
         loginType: 'infoLogin',
       }
     },
+    created(){
+      //进登录页先清缓存
+      this._session.clearSession()
+    },
     methods: {
       handleClick({name}) {
         name == 'first' ? this.loginType = 'infoLogin' : this.loginType = 'phoneLogin'
@@ -56,9 +60,12 @@
 
 <style lang="scss" scoped>
   .particles {
-    background: url("~@img/1624043_12B.jpg") no-repeat;
+    height: 100vh;
+    background-image: url("~@img/1624043_12B.jpg");
+    background-repeat: no-repeat;
     background-size: 100% 100%;
     position: relative;
+    user-select: none;
   }
 
   .login-mode {
@@ -68,18 +75,37 @@
     left: 0;
     right: 0;
     margin: auto;
-    height: 515px;
+    height: 500px;
     width: 410px;
     padding: 10px 30px;
-    background-color: rgba(255, 255, 255, 0.98);
     user-select: none;
-    color: #fff;
+    color: $white;
     overflow: hidden;
+    text-align: center;
     h1 {
       padding: 20px 0;
-      font-size: 20px;
+      font-size: 32px;
+      letter-spacing: 10px;
       margin-bottom: 10px;
-      color: #303133;
+      color: $white;
+    }
+    & /deep/.el-tabs__item{
+      color: $white;
+    }
+    & /deep/.is-active{
+      color: $primary;
+    }
+    & /deep/.el-checkbox{
+      color: $white;
+    }
+    & /deep/.is-checked{
+      color: $primary;
+    }
+    & /deep/.el-link--default{
+      color: $white;
+    }
+    & /deep/.el-link--default:hover{
+      color: $primary;
     }
   }
 </style>

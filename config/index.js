@@ -12,7 +12,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/m':{
-        target:'http://172.16.9.254:8091',
+        // target:'http://172.16.9.254:8091',//填写你自己的代理接口域名(刘金鑫)
+        target:'http://172.16.9.247:8091',//填写你自己的代理接口域名
         changeOrigin:true,
         pathRewrite: {
           '^/m': '/m'   //重写接口
