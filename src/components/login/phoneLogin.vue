@@ -17,7 +17,7 @@
       <!--</div>-->
       <div class="code">
         <div class="code-input">
-          <el-form-item >
+          <el-form-item>
             <el-input type="password" v-model="data.code" placeholder="请输入验证码" clearable></el-input>
           </el-form-item>
         </div>
@@ -36,6 +36,7 @@
   // const Slider = () => import('../checking/slider')
   const jGraph = () => import('../checking/jGraphicCode')
   import {Encrypt} from '@/tools/utilTools'
+
   const leeIcon = () => import('@/components/icon/index')
   export default {
     name: "phone-login",
@@ -79,10 +80,10 @@
       countDown() {
         this.time = setTimeout(() => {
           this.codeText--
-          if (this.codeText === 0){
+          if (this.codeText === 0) {
             this.codeText = '发送验证码'
             this.buttonType = 'primary'
-          }else{
+          } else {
             this.countDown()
           }
         }, 1000)
@@ -90,13 +91,15 @@
       //验证表单信息
       checkInfo() {
         // this._funs.checkPhone()
-            return false
+        return false
       },
       //登录
       login() {
-        if (this.checkInfo()){
+        if (this.checkInfo()) {
           this.$store.dispatch('LoginByPhone', this.data).then(res => {
-            this.$router.push('index')
+            if (res) {
+              this.$router.push('index')
+            }
           })
         }
       }

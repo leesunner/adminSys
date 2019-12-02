@@ -46,10 +46,10 @@
       </el-form>
       <el-form size="mini" inline>
         <el-form-item>
-          <el-button type="primary" @click="getUserByPage(1)" icon="el-icon-search" v-buttonP="_config.buttonCode.B_LIST">查询</el-button>
+          <el-button type="primary" @click="getUserByPage(1)" icon="el-icon-search" v-show="buttonControl" v-buttonP="_config.buttonCode.B_LIST">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="showCreateUser = true" icon="el-icon-plus" v-buttonP="_config.buttonCode.B_CREATE">创建用户</el-button>
+          <el-button type="primary" @click="showCreateUser = true" icon="el-icon-plus" v-show="buttonControl" v-buttonP="_config.buttonCode.B_CREATE">创建用户</el-button>
         </el-form-item>
       </el-form>
     </el-row>
@@ -481,7 +481,6 @@
       }
     },
     mounted() {
-      console.log('mounted进来')
       this.getUserByPage();
       this.getDeptTree();
     },

@@ -1,9 +1,11 @@
 <template>
   <div class="slider" ref="slider" @mousemove.stop="mouseMove">
     <p class="slider-text">拖动滑块>></p>
-    <div :class="['slider-color',down?'':'slider-animtc']" :style="`width:${lock?xCache+45:xCache}px`">{{lock?'拖动已完成>>':''}}</div>
+    <div :class="['slider-color',down?'':'slider-animtc']" :style="`width:${lock?xCache+45:xCache}px`">
+      {{lock?'拖动已完成>>':''}}
+    </div>
     <div :class="['slider-item',down?'':'slider-animt']" v-show="!lock" ref="block" @mousedown.stop="mouseDown"
-         @mouseup.stop="mouseUp">{{text}}
+         @mouseup.stop="mouseUp" :style="`transform: translateX(${xCache}px)`">{{text}}
     </div>
   </div>
 </template>
@@ -15,6 +17,20 @@
       width: {
         type: Number,
         default: 350
+      },
+      control: {
+        type: Boolean,
+        default: true,
+      }
+    },
+    watch: {
+      control(newVal) {
+        this.moveX = 0
+        this.xCache = 0
+        this.down = false
+        this.lock = false
+        this.moveWidth = this.width - 45
+        this.text = '滑块'
       }
     },
     created() {
@@ -29,7 +45,7 @@
         down: false,
         lock: false,
         moveWidth: this.width - 45,
-        text:'滑块',
+        text: '滑块',
       }
     },
     methods: {
@@ -40,7 +56,6 @@
       mouseUp(e) {
         this.down = false
         this.xCache >= this.moveWidth ? this.xCache = this.moveWidth : this.xCache = 0
-        this.moveSlider()
       },
       mouseMove(e) {
         if (this.down && !this.lock) {
@@ -56,11 +71,7 @@
           } else {
             this.xCache = 0
           }
-          this.moveSlider()
         }
-      },
-      moveSlider() {
-        this.$refs.block.style.transform = `translateX(${this.xCache}px)`
       },
     }
   }
@@ -75,31 +86,31 @@
     position: relative;
     margin-top: 15px;
     text-align: center;
-    &-text{
+    &-text {
       animation: sca 1s linear -10s infinite;
     }
     @keyframes sca {
-      0%{
-        transform: scale3d(1,1,1);
+      0% {
+        transform: scale3d(1, 1, 1);
       }
-      50%{
-        transform: scale3d(1.15,1.15,1.15);
+      50% {
+        transform: scale3d(1.15, 1.15, 1.15);
       }
-      100%{
-        transform: scale3d(1,1,1);
+      100% {
+        transform: scale3d(1, 1, 1);
       }
     }
-    &-color{
+    &-color {
       position: absolute;
       top: 0;
       left: 0;
       height: 45px;
       background-color: $primary;
       color: $white;
-      letter-spacing:4px;
+      letter-spacing: 4px;
       opacity: 0.95;
     }
-    &-animtc{
+    &-animtc {
       transition: all 0.22s ease-in-out;
     }
     &-item {

@@ -2,10 +2,9 @@ import Vue from 'vue';
 // 解决导航菜单嵌套导致菜单折叠文字部分不隐藏的问题
 import {Plugin} from 'vue-fragment'
 Vue.use(Plugin)
-//按钮权限混入
-import buttonMixin from '../mixin/buttonPermission'
-// 自定义指令
 
+// 自定义指令
+import '../directive'
 
 //导入整体过滤器
 import '../fillters'
@@ -32,7 +31,6 @@ import _session from '../tools/sessionTool'
 
 Vue.config.productionTip = false
 
-Vue.mixin(buttonMixin)
 Vue.prototype.$request = request
 Vue.prototype.$apiList = apiList
 Vue.prototype._funs = funs

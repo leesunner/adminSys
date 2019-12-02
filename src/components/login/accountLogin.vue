@@ -13,7 +13,7 @@
           <el-input type="password" v-model="data.password" placeholder="请输入密码" class="trans" clearable></el-input>
         </div>
       </el-form-item>
-      <slider></slider>
+      <slider :control="control"></slider>
       <el-form-item>
         <el-checkbox v-model="checked">记住密码</el-checkbox>
         <el-link class="passBack">忘记密码？</el-link>
@@ -39,6 +39,7 @@
     data() {
       return {
         checked: '',
+        control:true,
         data: {
           username: '',
           password: ''
@@ -55,7 +56,11 @@
           password: Encrypt(this.data.password)
         }
         this.$store.dispatch('Login', params).then(res => {
-          this.$router.push('index')
+          if (res){
+            this.$router.push('index')
+            //接口有反应后，初始化滑块状态
+            this.control = !this.control
+          }
         })
       }
     }

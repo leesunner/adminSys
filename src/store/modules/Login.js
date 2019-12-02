@@ -30,19 +30,21 @@ export default {
     //用户名登录
     Login({dispatch,commit}) {
       return request.get(apiList.login, {params:arguments[1]}).then(res => {
-        console.log('登录进来了')
-        _session.setSession('USER_INFO', res.data.data)
-        commit('setUserInfo', res.data.data)
-        return dispatch('routerTree')
+        if (res) {
+          _session.setSession('USER_INFO', res.data.data)
+          commit('setUserInfo', res.data.data)
+          return dispatch('routerTree')
+        }
       })
     },
     //手机号登录
     LoginByPhone({dispatch,commit}) {
       return request.get(apiList.loginByPhone, {params:arguments[1]}).then(res => {
-        console.log('登录进来了')
-        _session.setSession('USER_INFO', res.data.data)
-        commit('setUserInfo', res.data.data)
-        return dispatch('routerTree')
+        if (res){
+          _session.setSession('USER_INFO', res.data.data)
+          commit('setUserInfo', res.data.data)
+          return dispatch('routerTree')
+        }
       })
     },
     //登出
@@ -59,7 +61,6 @@ export default {
         commit('setUserInfo', userInfo)
       }
       return request.get(`${apiList.menu}/user/${userInfo.id}`).then(res => {
-        console.log('菜单进来了')
         const arr = [
           {
             url: '/main',

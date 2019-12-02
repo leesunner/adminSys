@@ -7,10 +7,10 @@
             <el-input v-model="searchData.name" clearable placeholder="用户组名称"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="getUserGroupByPage(1)" icon="el-icon-search" v-buttonP="_config.buttonCode.B_LIST">查询</el-button>
+            <el-button type="primary" @click="getUserGroupByPage(1)" icon="el-icon-search" v-show="buttonControl" v-buttonP="_config.buttonCode.B_LIST">查询</el-button>
           </el-form-item>
           <el-form-item>
-          <el-button type="primary" @click="showCreateUserGroup = true" icon="el-icon-plus" v-buttonP="_config.buttonCode.B_CREATE">创建用户组</el-button>
+          <el-button type="primary" @click="showCreateUserGroup = true" icon="el-icon-plus" v-show="buttonControl" v-buttonP="_config.buttonCode.B_CREATE">创建用户组</el-button>
         </el-form-item>
         </span>
       </el-form>
