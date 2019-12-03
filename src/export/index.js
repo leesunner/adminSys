@@ -23,11 +23,11 @@ Vue.use(VueParticles)
 //引入接口列表
 import apiList from "../request/api/apiList";
 //引入通用工具函数
-import * as funs from '../tools/utilTools'
+import * as funs from '../tools/utilTools';
 //引入字典
-import config from '../config'
+import config from '../config';
 //引入session设置
-import _session from '../tools/sessionTool'
+import _session from '../tools/sessionTool';
 
 Vue.config.productionTip = false
 

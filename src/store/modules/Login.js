@@ -41,6 +41,7 @@ export default {
     LoginByPhone({dispatch,commit}) {
       return request.get(apiList.loginByPhone, {params:arguments[1]}).then(res => {
         if (res){
+          console.log('登录进来了')
           _session.setSession('USER_INFO', res.data.data)
           commit('setUserInfo', res.data.data)
           return dispatch('routerTree')
@@ -49,12 +50,11 @@ export default {
     },
     //登出
     loginOut() {
-      _session.clearSession('USER_INFO')
-      _session.clearSession('ROUTERS_LIST')
+      _session.clearSession()
       router.go(0)
     },
     //获取路由树
-    async routerTree({dispatch, commit, state}) {
+    routerTree({dispatch, commit, state}) {
       //为了刷新时正确使用数据
       let userInfo = _session.getSessoin('USER_INFO')
       if (userInfo){

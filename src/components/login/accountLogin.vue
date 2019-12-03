@@ -56,11 +56,9 @@
           password: Encrypt(this.data.password)
         }
         this.$store.dispatch('Login', params).then(res => {
-          if (res){
-            this.$router.push('index')
-            //接口有反应后，初始化滑块状态
-            this.control = !this.control
-          }
+          this.$router.push('/index')
+          //接口有反应后，初始化滑块状态
+          this.control = !this.control
         })
       }
     }

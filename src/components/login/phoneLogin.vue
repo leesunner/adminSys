@@ -98,7 +98,7 @@
         if (this.checkInfo()) {
           this.$store.dispatch('LoginByPhone', this.data).then(res => {
             if (res) {
-              this.$router.push('index')
+              this.$router.push('/index')
             }
           })
         }
