@@ -28,8 +28,8 @@ export default {
   },
   actions: {
     //用户名登录
-    Login({dispatch,commit}) {
-      return request.get(apiList.login, {params:arguments[1]}).then(res => {
+    Login({dispatch,commit},data) {
+      return request.get(apiList.login, {params:data}).then(res => {
         if (res) {
           _session.setSession('USER_INFO', res.data.data)
           commit('setUserInfo', res.data.data)
@@ -38,8 +38,8 @@ export default {
       })
     },
     //手机号登录
-    LoginByPhone({dispatch,commit}) {
-      return request.get(apiList.loginByPhone, {params:arguments[1]}).then(res => {
+    LoginByPhone({dispatch,commit},data) {
+      return request.get(apiList.loginByPhone, {params:data}).then(res => {
         if (res){
           console.log('登录进来了')
           _session.setSession('USER_INFO', res.data.data)
