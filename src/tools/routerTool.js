@@ -16,7 +16,7 @@ function dataRecursion (datas) {
     arr.push({
       path: item.url || '',
       name: item.menuName || '',
-      component: () => import('@/' + item.menuPath || '@/views/404'),
+      component: () => import('@/' + (item.menuPath.indexOf('views/')>-1 ?item.menuPath: '@/views/Error')),
       redirect: item.redirect || '',
       meta: {
         title: item.menuName || '百问数据',

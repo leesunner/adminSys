@@ -126,7 +126,7 @@
       </div>
     </el-dialog>
     <!-- 创建用户弹窗 -->
-    <el-dialog title="创建用户" class="createuser" :visible.sync="showCreateUser">
+    <el-dialog title="创建用户" class="createuser" :visible.sync="showCreateUser" width="745px">
       <el-form
         :model="createUser"
         inline
@@ -147,10 +147,11 @@
         <el-form-item label="手机号" prop="telephone">
           <el-input v-model="createUser.telephone"></el-input>
         </el-form-item>
-        <el-form-item label="所在部门" prop="deptId">
+        <el-form-item label="所在部门" prop="deptIds">
           <el-cascader
-            v-model="createUser.deptId"
+            v-model="createUser.deptIds"
             :props="prop"
+            @change="val=>createUser.deptIds = val "
             :show-all-levels="false"
             :options="deptTree"
           ></el-cascader>
@@ -189,24 +190,56 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="省邮政编码">
-          <el-input v-model="createUser.provinceCode"></el-input>
-        </el-form-item>
-        <el-form-item label="省名称">
-          <el-input v-model="createUser.provinceName"></el-input>
-        </el-form-item>
-        <el-form-item label="市邮政编码">
-          <el-input v-model="createUser.cityCode"></el-input>
-        </el-form-item>
-        <el-form-item label="市名称">
-          <el-input v-model="createUser.cityName"></el-input>
-        </el-form-item>
-        <el-form-item label="县邮政编码">
-          <el-input v-model="createUser.districtCode"></el-input>
-        </el-form-item>
-        <el-form-item label="县名称">
-          <el-input v-model="createUser.districtName"></el-input>
-        </el-form-item>
+        <!--<el-form-item label="所在省">-->
+          <!--<el-select v-model="createUser.provinceCode" filterable placeholder="请选择">-->
+            <!--<el-option-->
+              <!--v-for="item in provinceOptions"-->
+              <!--:key="item.locationCode"-->
+              <!--:label="item.locationName"-->
+              <!--:value="item.locationCode">-->
+            <!--</el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="所在市">-->
+          <!--<el-select v-model="createUser.cityCode" filterable placeholder="请选择">-->
+            <!--<el-option-->
+              <!--v-for="item in cityOptions"-->
+              <!--:key="item.locationCode"-->
+              <!--:label="item.locationName"-->
+              <!--:value="item.locationCode">-->
+            <!--</el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="所在区/县">-->
+          <!--<el-select v-model="createUser.districtCode" filterable placeholder="请选择">-->
+            <!--<el-option-->
+              <!--v-for="item in districtOptions"-->
+              <!--:key="item.locationCode"-->
+              <!--:label="item.locationName"-->
+              <!--:value="item.locationCode">-->
+            <!--</el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="所在乡/镇/街道">-->
+          <!--<el-select v-model="createUser.townCode" filterable placeholder="请选择">-->
+            <!--<el-option-->
+              <!--v-for="item in townOptions"-->
+              <!--:key="item.locationCode"-->
+              <!--:label="item.locationName"-->
+              <!--:value="item.locationCode">-->
+            <!--</el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="所在村/小区">-->
+          <!--<el-select v-model="createUser.villageCode" filterable placeholder="请选择">-->
+            <!--<el-option-->
+              <!--v-for="item in villageOptions"-->
+              <!--:key="item.locationCode"-->
+              <!--:label="item.locationName"-->
+              <!--:value="item.locationCode">-->
+            <!--</el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
       </el-form>
       <div slot="footer">
         <el-button size="mini" @click="showCreateUser = false">取消</el-button>
@@ -214,7 +247,7 @@
       </div>
     </el-dialog>
     <!-- 查看用户角色详情弹窗 -->
-    <el-dialog size="mini" :title="`用户角色列表：${rowData.username}`" :visible.sync="showUserRoleDetail">
+    <el-dialog size="mini" :title="`用户角色列表：${rowData.username}`" :visible.sync="showUserRoleDetail" width="745px">
       <el-table size="mini" :data="userRoleDetail" border style="width: 100%">
         <el-table-column type="index" label="序号" width="50"></el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
@@ -263,7 +296,7 @@
     </el-dialog>
     <!-- 查看用户详情弹窗 -->
     <el-scrollbar>
-      <el-dialog :title="`用户详情：${rowData.username}`" class="createuser" :visible.sync="showUserDetail">
+      <el-dialog :title="`用户详情：${rowData.username}`" class="createuser" :visible.sync="showUserDetail" width="745px">
         <el-form
           :disabled="checkType"
           :model="userDetail"
@@ -282,8 +315,9 @@
           </el-form-item>
           <el-form-item label="所在部门">
             <el-cascader
-              v-model="userDetail.deptId"
+              v-model="userDetail.deptIds"
               :props="prop"
+              @change="val=>userDetail.deptIds = val"
               :show-all-levels="false"
               :options="deptTree"
             ></el-cascader>
@@ -317,24 +351,56 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="省邮政编码">
-            <el-input v-model="userDetail.provinceCode"></el-input>
-          </el-form-item>
-          <el-form-item label="省名称">
-            <el-input v-model="userDetail.provinceName"></el-input>
-          </el-form-item>
-          <el-form-item label="市邮政编码">
-            <el-input v-model="userDetail.cityCode"></el-input>
-          </el-form-item>
-          <el-form-item label="市名称">
-            <el-input v-model="userDetail.cityName"></el-input>
-          </el-form-item>
-          <el-form-item label="县邮政编码">
-            <el-input v-model="userDetail.districtCode"></el-input>
-          </el-form-item>
-          <el-form-item label="县名称">
-            <el-input v-model="userDetail.districtName"></el-input>
-          </el-form-item>
+          <!--<el-form-item label="所在省">-->
+            <!--<el-select v-model="userDetail.provinceCode" filterable placeholder="请选择">-->
+              <!--<el-option-->
+                <!--v-for="item in provinceOptions"-->
+                <!--:key="item.locationCode"-->
+                <!--:label="item.locationName"-->
+                <!--:value="item.locationCode">-->
+              <!--</el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
+          <!--<el-form-item label="所在市">-->
+            <!--<el-select v-model="userDetail.cityCode" filterable placeholder="请选择">-->
+              <!--<el-option-->
+                <!--v-for="item in cityOptions"-->
+                <!--:key="item.locationCode"-->
+                <!--:label="item.locationName"-->
+                <!--:value="item.locationCode">-->
+              <!--</el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
+          <!--<el-form-item label="所在区/县">-->
+            <!--<el-select v-model="userDetail.districtCode" filterable placeholder="请选择">-->
+              <!--<el-option-->
+                <!--v-for="item in districtOptions"-->
+                <!--:key="item.locationCode"-->
+                <!--:label="item.locationName"-->
+                <!--:value="item.locationCode">-->
+              <!--</el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
+          <!--<el-form-item label="所在乡/镇/街道">-->
+            <!--<el-select v-model="userDetail.townCode" filterable placeholder="请选择">-->
+              <!--<el-option-->
+                <!--v-for="item in townOptions"-->
+                <!--:key="item.locationCode"-->
+                <!--:label="item.locationName"-->
+                <!--:value="item.locationCode">-->
+              <!--</el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
+          <!--<el-form-item label="所在村/小区">-->
+            <!--<el-select v-model="userDetail.villageCode" filterable placeholder="请选择">-->
+              <!--<el-option-->
+                <!--v-for="item in villageOptions"-->
+                <!--:key="item.locationCode"-->
+                <!--:label="item.locationName"-->
+                <!--:value="item.locationCode">-->
+              <!--</el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
         </el-form>
         <div slot="footer">
           <el-button
@@ -399,24 +465,29 @@
           value: "id",
           label: "name",
           emitPath: false,
+          multiple: true,
           checkStrictly: true
         },
         createUser: {
           //创建用户信息
           birthday: "",
-          cityCode: "",
           cityName: "",
           districtCode: "",
+          cityCode: "",
+          provinceName:'',
+          provinceCode: "",
           districtName: "",
+          townCode:'',
+          townName:'',
+          villageCode:'',
+          villageName:'',
           email: "",
           idCard: "",
-          provinceCode: "",
-          provinceName: "",
           realName: "",
           sex: "",
           state: "",
           telephone: "",
-          deptId: "",
+          deptIds: "",
           username: "",
           password: ""
         }, //编辑用户表单数据
@@ -432,7 +503,7 @@
           realName: [
             {required: true, message: "请输入用户真实姓名", trigger: "blur"}
           ],
-          deptId: [
+          deptIds: [
             {required: true, message: "请选择用户所在部门", trigger: "blur"}
           ],
           state: [{required: true, message: "请选择用户状态", trigger: "blur"}],
@@ -477,6 +548,7 @@
           valArr.push(item.id);
         }
         this.valueArr = valArr;
+        console.log(data)
         return data;
       }
     },
@@ -521,7 +593,7 @@
       // 查询部门树
       getDeptTree() {
         this.$request
-          .get(this.$apiList.dept + "/treeview")
+          .get(this.$apiList.dept + "/all/tree")
           .then(res => {
             var data = res.data;
             this.deptTree = data.data || [];

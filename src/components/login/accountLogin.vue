@@ -47,19 +47,19 @@
       }
     },
     methods: {
-      checkInfo() {
-
-      },
       login() {
-        const params = {
-          username: this.data.username,
-          password: Encrypt(this.data.password)
+        console.log(this._funs.checkInfoEmpty(this,this.data))
+        if (this._funs.checkInfoEmpty(this,this.data)){
+          const params = {
+            username: this.data.username,
+            password: Encrypt(this.data.password)
+          }
+          this.$store.dispatch('Login', params).then(res => {
+            this.$router.push('/index')
+            //接口有反应后，初始化滑块状态
+            this.control = !this.control
+          })
         }
-        this.$store.dispatch('Login', params).then(res => {
-          this.$router.push('/index')
-          //接口有反应后，初始化滑块状态
-          this.control = !this.control
-        })
       }
     }
   }

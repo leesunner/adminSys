@@ -8,7 +8,6 @@ let loadingInstance = null
 let count = 0
 function close() {
   count--
-  console.log(count)
   if (count === 0) {
     loadingInstance.close()
   }
@@ -24,6 +23,7 @@ function open() {
 //请求拦截器
 axios.interceptors.request.use(config => {
   open()
+  config.headers['requestOrigin'] = 1//识别登录方式（pc）
   // const TOKEN = _session.getSessoin('AUTH_TOKEN')
   // if (!(TOKEN == 'undefined' || !TOKEN)) {
   //   config.headers['Authorization'] = `Bearer ${TOKEN}`

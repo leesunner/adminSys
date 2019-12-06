@@ -28,20 +28,32 @@
             @click="handleCheck(scope.$index, scope.row)"
           >详情
           </el-button>
-          <el-button
-            size="mini"
-            type="success"
-            icon="el-icon-view"
-            @click="handleCheckMenu(scope.$index, scope.row)"
-          >查看菜单
-          </el-button>
-          <el-button
-            size="mini"
-            type="warning"
-            icon="el-icon-view"
-            @click="handleCheckButton(scope.$index, scope.row)"
-          >查看按钮
-          </el-button>
+          <el-dropdown @command="e=>handleCheckMenu(e, scope.row)">
+            <el-button
+              type="success"
+              size="mini"
+            >查看菜单
+              <i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item v-for="item in _config.dict_platform_type" :key="item.key+100" :command="item.key">
+                {{item.value}}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+          <el-dropdown @command="e=>handleCheckButton(e, scope.row)">
+            <el-button
+              type="warning"
+              size="mini"
+            >查看按钮
+              <i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item v-for="item in _config.dict_platform_type" :key="item.key+100" :command="item.key">
+                {{item.value}}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
           <el-button
             size="mini"
             type="danger"
@@ -68,7 +80,7 @@
       </div>
     </el-dialog>
     <!-- 权限拥有的按钮弹窗 -->
-    <el-dialog :title="`权限按钮编辑：${rowData.permissionName}`" :visible.sync="showPermissionButtonTree">
+    <el-dialog :title="`权限按钮编辑：${rowData.permissionName}`" :visible.sync="showPermissionButtonTree" width="815px">
       <el-row style="text-align:right;">
         <el-button
           size="mini"
@@ -97,34 +109,36 @@
         <el-button :disabled="checkType" type="info" @click="checkAll(false)" size="mini">全不选</el-button>
       </el-row>
       <el-row>
-        <el-col v-for="(value,key,index) of buttonObj" :key="index" style="margin-bottom:20px;">
-          <el-col :span="4">
-            <span style="color:#F56C6C;display:block;">{{key}}</span>
-            <el-link
-              :disabled="checkType"
-              type="primary"
-              style="margin-right:10px;"
-              @click="checkAllByMenu(key,true)"
-            >全选本组
-            </el-link>
-            <el-link :disabled="checkType" type="info" @click="checkAllByMenu(key,false)">全不选</el-link>
-          </el-col>
-          <el-col :span="20">
-            <el-checkbox
-              style="width:180px;"
-              v-model="item.hasPermission"
-              v-for="item in value"
-              :label="item.id"
-              :key="item.id"
-              :disabled="checkType"
-            >{{item.buttonName}}
-            </el-checkbox>
-          </el-col>
-        </el-col>
+        <el-collapse v-model="activeCollapseName" accordion style="margin-bottom:20px;">
+          <el-collapse-item :title="key" :name="index" v-for="(value,key,index) of buttonObj" :key="index">
+            <el-col :span="4">
+              <!--<span style="color:#F56C6C;display:block;">{{key}}</span>-->
+              <el-link
+                :disabled="checkType"
+                type="primary"
+                style="margin-right:10px;"
+                @click="checkAllByMenu(key,true)"
+              >全选本组
+              </el-link>
+              <el-link :disabled="checkType" type="info" @click="checkAllByMenu(key,false)">全不选</el-link>
+            </el-col>
+            <el-col :span="20">
+              <el-checkbox
+                style="width:180px;"
+                v-model="item.hasPermission"
+                v-for="item in value"
+                :label="item.id"
+                :key="item.id"
+                :disabled="checkType"
+              >{{item.buttonName}}
+              </el-checkbox>
+            </el-col>
+          </el-collapse-item>
+        </el-collapse>
       </el-row>
     </el-dialog>
     <!-- 权限拥有的菜单弹窗 -->
-    <el-dialog :title="`权限菜单编辑：${rowData.permissionName}`" :visible.sync="showPermissionMenuTree">
+    <el-dialog :title="`权限菜单编辑：${rowData.permissionName}`" :visible.sync="showPermissionMenuTree" width="645px">
       <div style="text-align:right;">
         <el-button
           size="mini"
@@ -201,6 +215,7 @@
     mixins: [mixin],
     data() {
       return {
+        activeCollapseName: '1',
         buttonObj: {}, //按钮列表对象
         checkType: true, //区分查看还是编辑
         rowData: "", //行数据
@@ -255,15 +270,15 @@
         });
       },
       // 查看权限拥有的‘按钮’按钮
-      handleCheckButton(index, row) {
+      handleCheckButton(type, row) {
         this.showPermissionButtonTree = true;
         this.checkType = true;
         this.rowData = row;
-        this.getPermissionAllButtonById(row.id);
+        this.getPermissionAllButtonById(type, row.id);
       },
       // 查看权限拥有的菜单按钮
-      handleCheckMenu(index, row) {
-        this.getPermissionMenuById(row.id);
+      handleCheckMenu(type, row) {
+        this.getPermissionMenuById(type, row.id);
         this.rowData = row;
         this.checkType = true;
         this.showPermissionMenuTree = true;
@@ -284,7 +299,7 @@
         for (var i = 0; i < len; i++) {
           checked.push(nodes[i].id);
         }
-        this.$request.put(this.$apiList.menu+ "/all/tree/permission", {
+        this.$request.put(this.$apiList.menu + "/all/tree/permission", {
           permissionId: this.rowData.id,
           resourceIds: checked
         })
@@ -374,13 +389,14 @@
         return this.checkedNode;
       },
       // 查询权限拥有的按钮(不分页)
-      getPermissionAllButtonById(id) {
+      getPermissionAllButtonById(type, id) {
         this.$request
-          .get(this.$apiList.button+ "/all/tree/permission", {
+          .get(this.$apiList.button + "/all/tree/permission", {
             params: {
               pageNum: 1,
-              pageSize: 1000,
-              permissionId: id
+              pageSize: 30,
+              permissionId: id,
+              type: type
             }
           })
           .then(res => {
@@ -418,7 +434,7 @@
           });
         }
         this.$request
-          .put(this.$apiList.button+ "/all/tree/permission", {
+          .put(this.$apiList.button + "/all/tree/permission", {
             permissionId: this.rowData.id,
             resourceIds: checked
           })
@@ -433,10 +449,15 @@
           });
       },
       // 查询权限拥有的菜单
-      getPermissionMenuById(id) {
+      getPermissionMenuById(type, id) {
         this.checkedNode = [];
         this.$request
-          .get(this.$apiList.menu + "/all/tree/permission?permissionId=" + id)
+          .get(this.$apiList.menu + "/all/tree/permission", {
+            params: {
+              permissionId: id,
+              type: type
+            }
+          })
           .then(res => {
             var data = res.data;
             if (data.code == 200) {

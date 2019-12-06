@@ -1,13 +1,78 @@
 <template>
   <div>
+    <el-row  style="margin-top: 20px">
+      <el-col :span="4">
+        <el-radio-group v-model="checkBoxType" size="small" @change="getMenuTree">
+          <el-radio-button :label="1">PC端</el-radio-button>
+          <el-radio-button :label="2">APP端</el-radio-button>
+        </el-radio-group>
+      </el-col>
+    </el-row >
+    <el-row style="margin-top: 12px;" class="search">
+      <el-form inline>
+        <el-form-item label="请输入菜单关键字:">
+          <el-input
+            size="small"
+            placeholder="输入关键字进行搜索"
+            clearable
+            v-model="filterText">
+          </el-input>
+        </el-form-item>
+      </el-form>
+    </el-row>
+    <el-dialog title="添加菜单" :visible.sync="dialogVisible">
+      <el-form
+        :model="menuDetail"
+        size="mini"
+        label-width="100px"
+        :rules="rules"
+        ref="formRules"
+        style="width:400px;padding:20px 0 0;"
+      >
+        <el-form-item label="菜单名称" prop="menuName">
+          <el-input v-model="menuDetail.menuName"></el-input>
+        </el-form-item>
+        <el-form-item label="菜单链接" prop="url">
+          <el-input v-model="menuDetail.url"></el-input>
+        </el-form-item>
+        <el-form-item label="文件路径" prop="menuPath">
+          <el-input v-model="menuDetail.menuPath"></el-input>
+        </el-form-item>
+        <el-form-item label="菜单图标">
+          <el-input v-model="menuDetail.icon"></el-input>
+        </el-form-item>
+        <el-form-item label="菜单排序">
+          <el-input v-model="menuDetail.sort"></el-input>
+        </el-form-item>
+        <el-form-item label="所属菜单" prop="parentId">
+          <el-cascader
+            v-model="menuDetail.parentId"
+            :props="prop"
+            :show-all-levels="false"
+            :options="menuTreeData"
+          ></el-cascader>
+        </el-form-item>
+        <el-form-item label="是否启用">
+          <el-switch v-model="menuDetail.enabled"></el-switch>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+          <el-button size="mini" @click="dialogVisible = false">取 消</el-button>
+          <el-button size="mini" type="primary" @click="confirmCreate">保存</el-button>
+      </div>
+    </el-dialog>
     <el-row style="background:#fff;">
       <el-col :span="12">
         <!-- 菜单树结构 -->
         <el-tree
           :default-expanded-keys="[1]"
           node-key="id"
+          class="filter-tree"
+          :filter-node-method="filterNode"
+          ref="tree"
           :data="menuTreeData"
           :props="defaultProps"
+          highlight-current
         >
           <span class="custom-tree-node" slot-scope="{ node, data }" @click.stop="() => handleNodeClick(data)">
             <span class="custom-tree-node-title">{{ node.label }}</span>
@@ -22,7 +87,7 @@
                 type="warning"
                 icon="el-icon-plus"
                 size="mini"
-                @click.stop="() => confirmCreate(data)"
+                @click.stop="() => showDialogCreate(data)"
               >添加子菜单</el-button>
               <el-button
                 v-if="node.level!==1"
@@ -41,16 +106,18 @@
           :disabled="checkType"
           :model="menuDetail"
           size="mini"
+          :rules="rules"
+          ref="formEditRules"
           label-width="100px"
           style="width:400px;padding:20px 0 0;"
         >
-          <el-form-item label="菜单名称">
+          <el-form-item label="菜单名称" prop="menuName">
             <el-input v-model="menuDetail.menuName"></el-input>
           </el-form-item>
-          <el-form-item label="菜单链接">
+          <el-form-item label="菜单链接" prop="url">
             <el-input v-model="menuDetail.url"></el-input>
           </el-form-item>
-          <el-form-item label="文件路径">
+          <el-form-item label="文件路径" prop="menuPath">
             <el-input v-model="menuDetail.menuPath"></el-input>
           </el-form-item>
           <el-form-item label="菜单图标">
@@ -59,7 +126,7 @@
           <el-form-item label="菜单排序">
             <el-input v-model="menuDetail.sort"></el-input>
           </el-form-item>
-          <el-form-item label="所属菜单">
+          <el-form-item label="所属菜单" prop="parentId">
             <el-cascader
               v-model="menuDetail.parentId"
               :props="prop"
@@ -107,12 +174,14 @@
 
 <script>
   import mixin from '@/mixin/buttonPermission'
-
+  import treeMixin from '@/mixin/treeSearchMixin'
   export default {
-    mixins: [mixin],
+    mixins: [mixin,treeMixin],
     data() {
       return {
+        dialogVisible:false,//创建弹框
         num: 0,
+        checkBoxType:1,
         prop: {
           value: "id",
           label: "menuName",
@@ -130,7 +199,13 @@
         },
         showMenuButtonDetail: false, //查看菜单按钮详情弹窗
         menuDetail: {}, //菜单详情
-        menuButtonDetail: [] //菜单按钮列表
+        menuButtonDetail: [], //菜单按钮列表
+        rules: {
+          menuName:[{ required: true, message: '请输入菜单名', trigger: 'blur' }],
+          menuPath:[{ required: true, message: '请输入文件路径', trigger: 'blur' }],
+          url: [{ required: true, message: '请输入菜单链接', trigger: 'blur' }],
+          parentId: [{ required: true, message: '请选择所属菜单', trigger: 'blur' }],
+        }
       };
     },
     mounted() {
@@ -182,8 +257,8 @@
         this.$store.login.state.ROUTERS_LIST = []
         this.$store.dispatch('routerTree')
       },
-      // 创建菜单信息
-      confirmCreate(data) {
+      //添加创建弹框
+      showDialogCreate(data){
         this.createMenu = {
           //创建菜单信息
           description: "",
@@ -191,43 +266,56 @@
           icon: "",
           leaf: "",
           level: data.level + 1,
-          menuName: `新增菜单-${new Date().getTime()}`,
+          menuName: ``,
           parentId: data.id,
           value: "",
           sort: "",
           url: "",
           menuPath: '',
+          type:parseInt(this.checkBoxType),
         };
-        this.$request
-          .post(this.$apiList.menu, this.createMenu)
-          .then(res => {
-            if (res.data.code == 200) {
-              this.$message.success(res.data.msg);
-            }
-            this.createMenu = this._funs.emptyObj(this.createMenu);
-            this.getMenuTree();
-          })
-          .catch(err => {
-            this.$message.error(err);
-          });
+        this.dialogVisible = true
+      },
+      // 创建菜单信息
+      confirmCreate() {
+        this.$refs['formRules'].validate(valid => {
+          if (valid) {
+            this.$request
+              .post(this.$apiList.menu, this.createMenu)
+              .then(res => {
+                if (res.data.code == 200) {
+                  this.$message.success(res.data.msg);
+                }
+                this.createMenu = this._funs.emptyObj(this.createMenu);
+                this.getMenuTree();
+              })
+              .catch(err => {
+                this.$message.error(err);
+              });
+          }
+        })
       },
       // 确认修改菜单信息
       confirmChange() {
-        this.$request
-          .put(this.$apiList.menu, this.menuDetail)
-          .then(res => {
-            if (res.data.code == 200) {
-              this.$message.success(res.data.msg);
-            }
-            this.menuDetail = this._funs.emptyObj(this.menuDetail);
-            this.showMenuButton = false;
-            this.checkType = true;
-            this.getMenuTree();
-            this.refreshTree()
-          })
-          .catch(err => {
-            this.$message.error(err);
-          });
+        this.$refs['formEditRules'].validate(valid => {
+          if (valid) {
+            this.$request
+              .put(this.$apiList.menu, this.menuDetail)
+              .then(res => {
+                if (res.data.code == 200) {
+                  this.$message.success(res.data.msg);
+                }
+                this.menuDetail = this._funs.emptyObj(this.menuDetail);
+                this.showMenuButton = false;
+                this.checkType = true;
+                this.getMenuTree();
+                this.refreshTree()
+              })
+              .catch(err => {
+                this.$message.error(err);
+              });
+          }
+        })
       },
       // 查询菜单按钮详情
       getMenuButtonById(id) {
@@ -260,7 +348,7 @@
       // 查询菜单树结构
       getMenuTree() {
         this.$request
-          .get(this.$apiList.menu + "/all/tree")
+          .get(this.$apiList.menu + "/all/tree/"+ this.checkBoxType)
           .then(res => {
             var data = res.data;
             if (data.code == 200) {
@@ -272,9 +360,13 @@
   };
 </script>
 <style lang="scss" scoped>
+  .search{
+    .el-form-item{
+      margin-bottom: 0;
+    }
+  }
   .el-tree {
-    padding: 20px;
-    padding-left: 0;
+    padding:20px 0 20px 20px;
   }
 </style>
 

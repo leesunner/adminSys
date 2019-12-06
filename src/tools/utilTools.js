@@ -20,6 +20,24 @@ export const checkEmail = (value) => {
   const test = /^\w+@[A-Za-z\d]+(.){1}([A-Za-z]{2,})$/g
   return test.test(value)
 }
+/***
+ * 信息空校验
+ * @param (_this:vue对象，data:数据校验对象)
+ * */
+export const checkInfoEmpty = (_this,data = {}) => {
+  let control = false
+  for (let item in data) {
+      if (!data[item]){
+        _this.$message.error(`${item}不能为空`)
+        control = false
+        break
+      }else{
+        control = true
+      }
+  }
+  return control
+}
+
 /**
  * 加密
  */

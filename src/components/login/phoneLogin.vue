@@ -64,16 +64,22 @@
     methods: {
       //发送验证码
       sendCode() {
-        if (this.codeText === '发送验证码') {
-          //发送验证码的接口
-          this.buttonType = 'info'
-          this.codeText = 59
-          this.countDown()
-        } else {
-          this.$message({
-            message: `请${this.codeText}秒再试`,
-            type: 'warning'
-          });
+        if (this.data.phoneNumber){
+          if (this.codeText === '发送验证码') {
+            //发送验证码的接口
+            this.$request.get(`${this.$apiList.sendCode}/${this.data.phoneNumber}`).then(res=>{
+              this.buttonType = 'info'
+              this.codeText = 59
+              this.countDown()
+            })
+          } else {
+            this.$message({
+              message: `请${this.codeText}秒再试`,
+              type: 'warning'
+            });
+          }
+        }else{
+          this.$message.error('请输入手机号码')
         }
       },
       //倒计时
@@ -95,13 +101,14 @@
       },
       //登录
       login() {
-        if (this.checkInfo()) {
-          this.$store.dispatch('LoginByPhone', this.data).then(res => {
-            if (res) {
-              this.$router.push('/index')
-            }
-          })
-        }
+        // if (this.checkInfo()) {
+        //
+        // }
+        this.$store.dispatch('LoginByPhone', this.data).then(res => {
+          if (res) {
+            this.$router.push('/index')
+          }
+        })
       }
     }
   }

@@ -39,9 +39,10 @@ export default {
     },
     //手机号登录
     LoginByPhone({dispatch,commit},data) {
-      return request.get(apiList.loginByPhone, {params:data}).then(res => {
+      return request.get(`${apiList.login}/phone`, {params:data}).then(res => {
         if (res){
           console.log('登录进来了')
+          // _session.setSession('AUTH_TOKEN',res.data.data.token)
           _session.setSession('USER_INFO', res.data.data)
           commit('setUserInfo', res.data.data)
           return dispatch('routerTree')
@@ -60,7 +61,7 @@ export default {
       if (userInfo){
         commit('setUserInfo', userInfo)
       }
-      return request.get(`${apiList.menu}/user/${userInfo.id}`).then(res => {
+      return request.get(`${apiList.menu}/user`).then(res => {
         const arr = [
           {
             url: '/main',
@@ -73,6 +74,13 @@ export default {
                 menuName: '首页',
                 menuPath: 'views/Index',
                 title: '首页',
+                children: null,
+              },
+              {
+                url: '/currentUserInfo',
+                menuName: '个人信息',
+                menuPath: 'views/userManagement/LoginUserInfo',
+                title: '个人信息',
                 children: null,
               },
             ],

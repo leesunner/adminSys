@@ -11,12 +11,13 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/m':{
-        // target:'http://172.16.9.254:8091',//填写你自己的代理接口域名(刘金鑫)
-        target:'http://172.16.9.247:8091',//填写你自己的代理接口域名
+      '/v1/m':{
+        // target:'http://172.16.8.19:8091',//(刘金鑫)
+        target:'http://172.16.8.53:8091',//(陈永峰)
+        // target:'http://172.16.8.45:8091',//
         changeOrigin:true,
         pathRewrite: {
-          '^/m': '/m'   //重写接口
+          '^/v1/m': '/v1/m'   //重写接口
         }
       }
     },

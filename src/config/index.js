@@ -1,5 +1,15 @@
 // 字典管理
 export default {
+  //平台信息(c端：1,B端：2)
+  dict_platform_type: [
+    {
+      key: 1,
+      value: 'PC端'
+    }, {
+      key: 2,
+      value: '移动端'
+    },
+  ],
   // 用户性别
   dict_sex: [
     {
@@ -107,7 +117,7 @@ export default {
     }
   ],
   //用户来源
-  dict_user_origin:[],
+  dict_user_origin: [],
   //合资人
   dict_investor_list: [],
   /**

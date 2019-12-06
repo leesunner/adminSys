@@ -1,9 +1,23 @@
 <template>
   <div>
-    <el-row>
-      <el-form size="mini">
-        <el-form-item>
-          <el-button type="primary" @click="showCreateButton = true" icon="el-icon-plus">创建按钮</el-button>
+    <el-row style="margin-top: 20px">
+      <el-radio-group v-model="checkBoxType" size="small" @change="getMenuTree">
+        <el-radio-button :label="1">PC端</el-radio-button>
+        <el-radio-button :label="2">APP端</el-radio-button>
+      </el-radio-group>
+      <el-button type="primary" style="margin-left: 45px;" size="mini" @click="showCreateButton = true"
+                 icon="el-icon-plus">创建按钮
+      </el-button>
+    </el-row>
+    <el-row style="margin-top: 12px;">
+      <el-form inline>
+        <el-form-item label="请输入按钮关键字:">
+          <el-input
+            size="small"
+            placeholder="输入关键字进行搜索"
+            clearable
+            v-model="filterText">
+          </el-input>
         </el-form-item>
       </el-form>
     </el-row>
@@ -13,8 +27,12 @@
         <el-tree
           :default-expanded-keys="[1]"
           node-key="id"
+          class="filter-tree"
+          :filter-node-method="filterNode"
+          ref="tree"
           :data="menuTreeData"
           :props="defaultProps"
+          highlight-current
         >
           <span class="custom-tree-node" slot-scope="{ node, data }">
             <span>{{ node.label }}</span>
@@ -50,17 +68,27 @@
     </el-col>
     <!-- 创建按钮弹窗 -->
     <el-dialog title="创建按钮" :visible.sync="showCreateButton">
-      <el-form :model="createButton" size="mini" :label-width="formLabelWidth">
-        <el-form-item label="按钮名称">
+      <el-form :model="createButton" size="mini" :rules="rules" ref="formRules" :label-width="formLabelWidth">
+        <el-form-item label="平台" prop="type">
+          <el-select v-model="createButton.type" @change="handlerChangeType" clearable placeholder="请选择">
+            <el-option
+              v-for="item in _config.dict_platform_type"
+              :key="item.key"
+              :label="item.value"
+              :value="item.key">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="按钮名称" prop="buttonName">
           <el-input v-model="createButton.buttonName"></el-input>
         </el-form-item>
-        <el-form-item label="按钮代码">
+        <el-form-item label="按钮代码" prop="buttonCode">
           <el-input v-model="createButton.buttonCode"></el-input>
         </el-form-item>
         <el-form-item label="请求地址">
           <el-input v-model="createButton.url"></el-input>
         </el-form-item>
-        <el-form-item label="请求方式">
+        <el-form-item label="请求方式" prop="requestType">
           <el-select v-model="createButton.requestType" clearable placeholder="请求方式">
             <el-option
               v-for="(item,index) of _config.dict_method_type"
@@ -70,7 +98,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所属菜单">
+        <el-form-item label="所属菜单" prop="menuId">
           <el-cascader
             v-model="createButton.menuId"
             :props="prop"
@@ -79,7 +107,7 @@
           ></el-cascader>
         </el-form-item>
         <el-form-item label="是否公共资源">
-          <el-select v-model="createButton.buttonType" clearable placeholder="请选择">
+          <el-select v-model="createButton.resourceType" clearable placeholder="请选择">
             <el-option
               v-for="(item,index) of _config.dict_button_type"
               :key="index"
@@ -103,18 +131,20 @@
         :disabled="checkType"
         :model="buttonDetail"
         size="mini"
+        :rules="rules"
         :label-width="formLabelWidth"
+        ref="formEditRules"
       >
-        <el-form-item label="按钮名称">
+        <el-form-item label="按钮名称" prop="buttonName">
           <el-input v-model="buttonDetail.buttonName"></el-input>
         </el-form-item>
-        <el-form-item label="按钮代码">
+        <el-form-item label="按钮代码" prop="buttonCode">
           <el-input v-model="buttonDetail.buttonCode"></el-input>
         </el-form-item>
         <el-form-item label="请求地址">
           <el-input v-model="buttonDetail.url"></el-input>
         </el-form-item>
-        <el-form-item label="请求方式">
+        <el-form-item label="请求方式" prop="requestType">
           <el-select v-model="buttonDetail.requestType" clearable placeholder="请求方式">
             <el-option
               v-for="(item,index) of _config.dict_method_type"
@@ -124,7 +154,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所属菜单">
+        <el-form-item label="所属菜单" prop="menuId">
           <el-cascader
             v-model="buttonDetail.menuId"
             :props="prop"
@@ -133,7 +163,7 @@
           ></el-cascader>
         </el-form-item>
         <el-form-item label="是否公共资源">
-          <el-select v-model="buttonDetail.buttonType" clearable placeholder="请选择">
+          <el-select v-model="buttonDetail.resourceType" clearable placeholder="请选择">
             <el-option
               v-for="(item,index) of _config.dict_button_type"
               :key="index"
@@ -163,11 +193,13 @@
 
 <script>
   import mixin from '@/mixin/buttonPermission'
+  import treeMixin from '@/mixin/treeSearchMixin'
 
   export default {
-    mixins: [mixin],
+    mixins: [mixin, treeMixin],
     data() {
       return {
+        checkBoxType: 1,
         checkType: true, //区分查看还是编辑
         rowData: "", //行数据
         nodeId: "", //菜单id
@@ -193,17 +225,40 @@
           enabled: false,
           buttonCode: "",
           requestType: "",
-          buttonType: 2,
+          resourceType: 2,
           url: "",
-          menuId: ""
+          menuId: "",
+          type: '',
         },
-        formLabelWidth: "120px"
+        formLabelWidth: "120px",
+        rules: {
+          type: [
+            {required: true, message: "请选择平台", trigger: "blur"}
+          ],
+          buttonName: [
+            {required: true, message: "请输入按钮名称", trigger: "blur"}
+          ],
+          buttonCode: [
+            {required: true, message: "请输入按钮代码", trigger: "blur"}
+          ],
+          requestType: [
+            {required: true, message: "请选择请求方式", trigger: "blur"}
+          ],
+          menuId: [
+            {required: true, message: "请选择所属菜单", trigger: "blur"}
+          ],
+        },
       };
     },
     mounted() {
       this.getMenuTree();
     },
     methods: {
+      //转换端
+      handlerChangeType(val) {
+        this.checkBoxType = val
+        this.getMenuTree()
+      },
       // 查看菜单绑定的按钮
       handleNodeClick(data) {
         this.getMenuButtonById(data.id);
@@ -237,10 +292,9 @@
       },
       // 查看按钮详情按钮
       handleCheck(index, row) {
-        this.checkType = true;
         this.getButtonById(row.id);
+        this.checkType = true;
         this.rowData = row;
-        this.showButtonDetail = true;
       },
       // 删除'按钮'按钮
       handleDelete(index, row) {
@@ -258,8 +312,7 @@
       },
       // 确定删除按钮
       confirmDelete(row) {
-        this.$request
-          .delete(this.$apiList.button + "/" + row.id)
+        this.$request.delete(this.$apiList.button + "/" + row.id)
           .then(res => {
             if (res.data.code == 200) {
               this.$message.success(res.data.msg);
@@ -272,39 +325,57 @@
       },
       // 创建按钮信息
       confirmCreate() {
-        if (this.createButton.menuId == "") {
-          this.$message("请选择所属菜单!");
-          return;
-        }
-        this.$request
-          .post(this.$apiList.button, this.createButton)
-          .then(res => {
-            if (res.data.code == 200) {
-              this.$message.success(res.data.msg);
-            }
-            this.showCreateButton = false;
-            this.createButton = this._funs.emptyObj(this.createButton);
-            this.createButton.enabled = false;
-            this.createButton.buttonType = 2;
-          })
-          .catch(err => {
-            this.$message.error(err);
-          });
+        this.$refs['formRules'].validate((valid) => {
+          if (valid) {
+            this.$confirm(`您现在正在创建${this.createButton.type == 1 ? 'PC端' : 'APP端'}按钮, 是否继续?`, "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning"
+            })
+              .then(() => {
+                this.$request
+                  .post(this.$apiList.button, this.createButton)
+                  .then(res => {
+                    if (res.data.code == 200) {
+                      this.$message.success(res.data.msg);
+                    }
+                    this.showCreateButton = false;
+                    this.createButton = this._funs.emptyObj(this.createButton);
+                    this.createButton.enabled = false;
+                    this.createButton.buttonType = 2;
+                  })
+                  .catch(err => {
+                    this.$message.error(err);
+                  });
+              })
+              .catch(() => {
+                this.$message("已取消");
+              });
+          } else {
+            return false;
+          }
+        });
       },
       // 确认修改按钮信息
       confirmChange() {
-        this.$request.put(this.$apiList.button, this.buttonDetail).then(res => {
-          if (res.data.code == 200) {
-            this.$message.success(res.data.msg);
-            this.getMenuButtonById(this.nodeId);
+        this.$refs['formEditRules'].validate((valid) => {
+          if (valid) {
+            this.$request.put(this.$apiList.button, this.buttonDetail).then(res => {
+              if (res.data.code == 200) {
+                this.$message.success(res.data.msg);
+                this.getMenuButtonById(this.nodeId);
+              }
+              this.showButtonDetail = false;
+            });
+          } else {
+            return false;
           }
-          this.showButtonDetail = false;
-        });
+        })
       },
       // 查询菜单树结构
       getMenuTree() {
         this.$request
-          .get(this.$apiList.menu + "/all/tree")
+          .get(this.$apiList.menu + "/all/tree/" + this.checkBoxType)
           .then(res => {
             var data = res.data;
             if (data.code == 200) {
@@ -323,6 +394,7 @@
             var data = res.data;
             if (data.code == 200) {
               this.buttonDetail = data.data || {};
+              this.showButtonDetail = true
             }
           })
           .catch(err => {
@@ -334,8 +406,7 @@
 </script>
 <style lang="scss" scoped>
   .el-tree {
-    padding: 20px;
-    padding-left: 0;
+    padding: 0 0 20px 20px;
   }
 
   .custom-tree-node {

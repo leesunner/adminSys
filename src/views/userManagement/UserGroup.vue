@@ -7,10 +7,10 @@
             <el-input v-model="searchData.name" clearable placeholder="用户组名称"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="getUserGroupByPage(1)" icon="el-icon-search" v-show="buttonControl" v-buttonP="_config.buttonCode.B_LIST">查询</el-button>
+            <el-button type="primary" size="mini" @click="getUserGroupByPage(1)" icon="el-icon-search" v-show="buttonControl" v-buttonP="_config.buttonCode.B_LIST">查询</el-button>
           </el-form-item>
           <el-form-item>
-          <el-button type="primary" @click="showCreateUserGroup = true" icon="el-icon-plus" v-show="buttonControl" v-buttonP="_config.buttonCode.B_CREATE">创建用户组</el-button>
+          <el-button type="primary" size="mini" @click="showCreateUserGroup = true" icon="el-icon-plus" v-show="buttonControl" v-buttonP="_config.buttonCode.B_CREATE">创建用户组</el-button>
         </el-form-item>
         </span>
       </el-form>
@@ -58,9 +58,9 @@
       <el-table :data="userGroupRoleDetail" size="mini" border style="width: 100%">
         <el-table-column type="index" label="序号" width="50"></el-table-column>
         <el-table-column prop="name" label="角色名"></el-table-column>
-        <el-table-column label="移除角色">
+        <el-table-column label="操作" width="90">
           <template v-slot="scope">
-            <el-link type="danger" @click="handleDelRole(scope.$index, scope.row)">移除</el-link>
+            <el-button type="danger" size="mini" @click="handleDelRole(scope.$index, scope.row)">移除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -94,8 +94,8 @@
           @size-change="handleSizeChange2"
         ></el-pagination>
         <div slot="footer">
-          <el-button @click="handleCancelRole">取消</el-button>
-          <el-button type="primary" @click="confirmChangeRole">确定</el-button>
+          <el-button size="mini" @click="handleCancelRole">取消</el-button>
+          <el-button size="mini" type="primary" @click="confirmChangeRole">确定</el-button>
         </div>
       </el-dialog>
       <div slot="footer">
@@ -116,7 +116,7 @@
             <el-input v-model="userSearchData.realName" clearable placeholder="真实姓名"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="getUserGroupMemberById(userSearchData.groupId)">查询</el-button>
+            <el-button type="primary" size="mini" @click="getUserGroupMemberById">查询</el-button>
           </el-form-item>
         </span>
       </el-form>
@@ -124,9 +124,9 @@
         <el-table-column type="index" label="序号" width="50"></el-table-column>
         <el-table-column prop="userName" label="账号名"></el-table-column>
         <el-table-column prop="realName" label="真实名"></el-table-column>
-        <el-table-column label="移除用户">
+        <el-table-column label="操作" width="90">
           <template v-slot="scope">
-            <el-link type="danger" @click="handleDelMember(scope.$index, scope.row)">移除</el-link>
+            <el-button type="danger" size="mini" @click="handleDelMember(scope.$index, scope.row)">移除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -442,7 +442,7 @@
         this.$request
           .post(this.$apiList.user_group + "/roles", {
             groupId: this.rowData.id,
-            roleIds: userIdArr.join()
+            roleIds: userIdArr.join(',')
           })
           .then(res => {
             if (res.data.code == 200) {
@@ -476,7 +476,7 @@
         this.$request
           .post(this.$apiList.user_group + "/users", {
             groupId: this.rowData.id,
-            userIds: userIdArr.join()
+            userIds: userIdArr.join(',')
           })
           .then(res => {
             if (res.data.code == 200) {
@@ -595,7 +595,9 @@
       },
       // 查询用户组成员列表
       getUserGroupMemberById(id) {
-        this.userSearchData.groupId = id
+        if (typeof id!=='object'){
+          this.userSearchData.groupId = id
+        }
         this.$request
           .get(this.$apiList.user_group + "/users", {
             params: this.userSearchData

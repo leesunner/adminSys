@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-divider>{{$store.state.login.USER_INFO.realName}} 用户信息</el-divider>
+    <!--<el-divider>{{$store.state.login.USER_INFO.realName}} 用户信息</el-divider>-->
     <div class="userCount">账户：{{$store.state.login.USER_INFO.username}}</div>
     <el-form label-width="80px" style="width: 540px;" size="mini" :model="userInfo" :rules="rules" ref="userInfo">
       <el-form-item label="用户名">
@@ -29,12 +29,12 @@
       </el-form-item>
       <el-form-item label="上次登录">
         <el-row>
-          <el-col :span="11">IP：{{userInfo.ip}}</el-col>
-          <el-col :span="13">时间：{{userInfo.time|formatTime('LLLL')}}</el-col>
+          <el-col :span="9">IP：{{userInfo.ip}}</el-col>
+          <el-col :span="15">时间：{{userInfo.time|formatTime('LLLL')}}</el-col>
         </el-row>
       </el-form-item>
       <el-form-item style="text-align: center;">
-        <el-button @click="submit('changePwd')" type="primary">立即保存</el-button>
+        <el-button @click="submit('userInfo')" type="primary">立即保存</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -109,12 +109,11 @@ export default {
         })
         .then(res => {
           // 跳转登录
-          if (res.data.code == 200) {
-            this.$message.success(res.data.msg);
-            setTimeout(() => {
-              this.$router.replace("/login");
-            }, 300);
-          }
+          this.$message.success(res.data.msg);
+          setTimeout(() => {
+            this.$router.replace("/login");
+            this._session.clearSession()
+          }, 300);
         })
     },
     // 立即提交按钮

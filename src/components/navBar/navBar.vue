@@ -57,7 +57,7 @@
       top: 0;
       bottom: 0;
       margin: auto 0;
-      width: 22px;
+      width: 20px;
       height: 36px;
       z-index: 30;
       background-color: $primary;
@@ -66,7 +66,7 @@
       cursor: pointer;
       line-height: 36px;
       .touch{
-        font-size: 20px;
+        font-size: 18px;
         color: $white;
       }
       .touch:hover{
