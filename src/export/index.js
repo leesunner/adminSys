@@ -6,31 +6,32 @@ Vue.use(Plugin)
 // 自定义指令
 import '../directive'
 
-//导入整体过滤器
-import '../fillters'
+//导入全局过滤器
+import '../filters'
 
-// import 'element-ui/lib/theme-chalk/index.css'
+// import 'element-ui/lib/theme-chalk/index.style'
 import '../assets/styles/global.css'
 import request from '../request'
 //element-ui组件引入文件
 import '../elementComponents'
 //element-ui样式变量覆盖文件
 import '../assets/styles/element-variables.scss'
-//粒子背景效果
-import VueParticles from 'vue-particles'
 
+import VueParticles from 'vue-particles'
 Vue.use(VueParticles)
+
 //引入接口列表
 import apiList from "../request/api/apiList";
 //引入通用工具函数
 import * as funs from '../tools/utilTools';
-//引入字典
+//引入字典配置
 import config from '../config';
 //引入session设置
 import _session from '../tools/sessionTool';
 
 Vue.config.productionTip = false
 
+//vue对象上添加公用属性和方法
 Vue.prototype.$request = request
 Vue.prototype.$apiList = apiList
 Vue.prototype._funs = funs

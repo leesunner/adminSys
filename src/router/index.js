@@ -21,6 +21,7 @@ router.beforeEach((to, from, next) => {
       //为了解决退出登录时，动态路由信息不清除的问题
       location.reload()
     }else{
+      _session.clearSession()
       //login和首次进来的直接过
       if (to.path==='/login'||to.path==='/'){
         next()

@@ -19,6 +19,19 @@ $gay:#909399;
     -webkit-line-clamp: $val;
   }
 }
+@mixin flew_item($val){
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  @if($val=='row'){
+    flex-flow: row nowrap;
+  }@else{
+    flex-flow: column nowrap;
+  }
+}
+.el-table th{
+  background-color: transparent!important;
+}
 .el-tree-node{
   margin-top: 6px;
 }
@@ -41,3 +54,4 @@ $gay:#909399;
 .pagination{
   margin-top: 15px;
 }
+

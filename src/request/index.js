@@ -1,8 +1,14 @@
 import axios from 'axios'
 import _session from '../tools/sessionTool'
 import {Loading,Message} from 'element-ui';
+import router from '../router';
 
 axios.defaults.timeout = 20000
+//打包时请设置这里作为请求url
+if (process.env.NODE_ENV === "production"){
+  axios.defaults.baseURL = process.env.BASE_URL
+}
+
 
 let loadingInstance = null
 let count = 0
@@ -24,10 +30,10 @@ function open() {
 axios.interceptors.request.use(config => {
   open()
   config.headers['requestOrigin'] = 1//识别登录方式（pc）
-  // const TOKEN = _session.getSessoin('AUTH_TOKEN')
-  // if (!(TOKEN == 'undefined' || !TOKEN)) {
-  //   config.headers['Authorization'] = `Bearer ${TOKEN}`
-  // }
+  const TOKEN = _session.getSessoin('AUTH_TOKEN')
+  if (!(TOKEN == 'undefined' || !TOKEN)) {
+    config.headers['Authorization'] = `Bearer ${TOKEN}`
+  }
   const USER_INFO = _session.getSessoin('USER_INFO')
   if (USER_INFO){
     config.headers['userId'] = USER_INFO.id
@@ -49,11 +55,22 @@ axios.interceptors.response.use(res => {
   if (res.data.code===200){
     return res
   }else{
-    Message({
-      showClose: true,
-      message: res.data.msg,
-      type: 'error'
-    });
+    //有需要可以根据code的值给出对应的提示
+    switch (res.data.code){
+      case 401:
+        Message.error('登录已过期')
+        router.go(0)
+        break;
+      case 403:
+        Message.error('暂无权限')
+        break;
+      case 500:
+        Message.error('服务器错误')
+        break;
+      default:
+        Message.error(res.data.msg)
+        break;
+    }
   }
 }, error => {
   close()

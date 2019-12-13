@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import vueRouter from 'vue-router'
-import pages from './pageList'
+import pages from './publicRouter'
 
 //解决点击相同路由是报错的问题
 const routerPush = vueRouter.prototype.push

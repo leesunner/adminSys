@@ -40,7 +40,7 @@
     methods: {
       ...mapMutations([
         'setMenuNavTabs'
-      ]),
+      ])
     }
   }
 </script>

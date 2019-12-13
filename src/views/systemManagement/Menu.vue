@@ -20,9 +20,10 @@
         </el-form-item>
       </el-form>
     </el-row>
+    <!--创建菜单-->
     <el-dialog title="添加菜单" :visible.sync="dialogVisible">
       <el-form
-        :model="menuDetail"
+        :model="createMenu"
         size="mini"
         label-width="100px"
         :rules="rules"
@@ -30,30 +31,30 @@
         style="width:400px;padding:20px 0 0;"
       >
         <el-form-item label="菜单名称" prop="menuName">
-          <el-input v-model="menuDetail.menuName"></el-input>
+          <el-input v-model="createMenu.menuName"></el-input>
         </el-form-item>
-        <el-form-item label="菜单链接" prop="url">
-          <el-input v-model="menuDetail.url"></el-input>
+        <el-form-item label="菜单链接">
+          <el-input v-model="createMenu.url"></el-input>
         </el-form-item>
-        <el-form-item label="文件路径" prop="menuPath">
-          <el-input v-model="menuDetail.menuPath"></el-input>
+        <el-form-item label="文件路径">
+          <el-input v-model="createMenu.menuPath"></el-input>
         </el-form-item>
         <el-form-item label="菜单图标">
-          <el-input v-model="menuDetail.icon"></el-input>
+          <el-input v-model="createMenu.icon"></el-input>
         </el-form-item>
         <el-form-item label="菜单排序">
-          <el-input v-model="menuDetail.sort"></el-input>
+          <el-input v-model="createMenu.sort"></el-input>
         </el-form-item>
         <el-form-item label="所属菜单" prop="parentId">
           <el-cascader
-            v-model="menuDetail.parentId"
+            v-model="createMenu.parentId"
             :props="prop"
             :show-all-levels="false"
             :options="menuTreeData"
           ></el-cascader>
         </el-form-item>
         <el-form-item label="是否启用">
-          <el-switch v-model="menuDetail.enabled"></el-switch>
+          <el-switch v-model="createMenu.enabled"></el-switch>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -191,7 +192,21 @@
         checkType: true, //区分查看还是编辑
         showMenuButton: false, //查看菜单按钮
         menuTreeData: [], //菜单树结构数据
-        createMenu: null, //创建菜单
+        createMenu: {
+          //创建菜单信息
+          description: "",
+          enabled: "",
+          icon: "",
+          leaf: "",
+          level: '',
+          menuName: ``,
+          parentId: '',
+          value: "",
+          sort: "",
+          url: "",
+          menuPath: '',
+          type:'',
+        }, //创建菜单
         defaultProps: {
           // 菜单树结构字段
           children: "children",
@@ -202,8 +217,8 @@
         menuButtonDetail: [], //菜单按钮列表
         rules: {
           menuName:[{ required: true, message: '请输入菜单名', trigger: 'blur' }],
-          menuPath:[{ required: true, message: '请输入文件路径', trigger: 'blur' }],
-          url: [{ required: true, message: '请输入菜单链接', trigger: 'blur' }],
+          // menuPath:[{ required: true, message: '请输入文件路径', trigger: 'blur' }],
+          // url: [{ required: true, message: '请输入菜单链接', trigger: 'blur' }],
           parentId: [{ required: true, message: '请选择所属菜单', trigger: 'blur' }],
         }
       };
@@ -259,21 +274,8 @@
       },
       //添加创建弹框
       showDialogCreate(data){
-        this.createMenu = {
-          //创建菜单信息
-          description: "",
-          enabled: "",
-          icon: "",
-          leaf: "",
-          level: data.level + 1,
-          menuName: ``,
-          parentId: data.id,
-          value: "",
-          sort: "",
-          url: "",
-          menuPath: '',
-          type:parseInt(this.checkBoxType),
-        };
+        this.createMenu.parentId = data.id
+        this.createMenu.type = parseInt(this.checkBoxType)
         this.dialogVisible = true
       },
       // 创建菜单信息

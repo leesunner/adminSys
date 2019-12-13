@@ -1,3 +1,4 @@
+//需要获取对应页面菜单按钮权限的的 都要导入该mixin
 export default {
   data(){
     return{

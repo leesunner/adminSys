@@ -1,9 +1,10 @@
-import request from '@/request'
+import request from '@/request';
 //引入接口列表
 import apiList from "@/request/api/apiList";
-import _session from '../../tools/sessionTool'
-import router from '../../router'
-import {permissionRouters} from '../../tools/routerTool'
+import _session from '../../tools/sessionTool';
+import router from '../../router';
+import {permissionRouters} from '../../tools/routerTool';
+import menuRouter from '@/router/routerConfig/menuRouter';
 
 export default {
   state: {
@@ -32,6 +33,7 @@ export default {
       return request.get(apiList.login, {params:data}).then(res => {
         if (res) {
           _session.setSession('USER_INFO', res.data.data)
+          _session.setSession('AUTH_TOKEN', res.data.data.accessToken)
           commit('setUserInfo', res.data.data)
           return dispatch('routerTree')
         }
@@ -62,30 +64,8 @@ export default {
         commit('setUserInfo', userInfo)
       }
       return request.get(`${apiList.menu}/user`).then(res => {
-        const arr = [
-          {
-            url: '/main',
-            menuName: 'main',
-            menuPath: 'views/Main',
-            redirect: '/index',
-            children: [
-              {
-                url: '/index',
-                menuName: '首页',
-                menuPath: 'views/Index',
-                title: '首页',
-                children: null,
-              },
-              {
-                url: '/currentUserInfo',
-                menuName: '个人信息',
-                menuPath: 'views/userManagement/LoginUserInfo',
-                title: '个人信息',
-                children: null,
-              },
-            ],
-          },
-        ]
+        //导入菜单公共页面路由
+        const arr = menuRouter
         if (res.data.data[0]){
           Array.prototype.push.apply(arr[0].children, res.data.data[0].children)
         }

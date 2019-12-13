@@ -48,7 +48,6 @@
     },
     methods: {
       login() {
-        console.log(this._funs.checkInfoEmpty(this,this.data))
         if (this._funs.checkInfoEmpty(this,this.data)){
           const params = {
             username: this.data.username,

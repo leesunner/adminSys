@@ -631,7 +631,7 @@
       },
       // 查询用户角色详情
       getUserRoleById(row) {
-        return this.$request.get(this.$apiList.user + "/" + row.id + "/roles");
+        return this.$request.get(this.$apiList.user + "/roles");
       },
       // 确定编辑用户角色（穿梭框确定）
       confirmChangeRole() {

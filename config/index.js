@@ -11,13 +11,11 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/v1/m':{
-        // target:'http://172.16.8.19:8091',//(刘金鑫)
-        target:'http://172.16.8.53:8091',//(陈永峰)
-        // target:'http://172.16.8.45:8091',//
+      '/center-users/v1/m':{
+        target:process.env.BASE_URL,
         changeOrigin:true,
         pathRewrite: {
-          '^/v1/m': '/v1/m'   //重写接口
+          '^/center-users/v1/m': '/center-users/v1/m'   //重写接口
         }
       }
     },
