@@ -22,6 +22,7 @@ Vue.use(VueParticles)
 
 //引入接口列表
 import apiList from "../request/api/apiList";
+import url from '@/request/api/realmnUrl';
 //引入通用工具函数
 import * as funs from '../tools/utilTools';
 //引入字典配置
@@ -37,3 +38,4 @@ Vue.prototype.$apiList = apiList
 Vue.prototype._funs = funs
 Vue.prototype._config= config
 Vue.prototype._session= _session
+Vue.prototype.$baseUrl= url

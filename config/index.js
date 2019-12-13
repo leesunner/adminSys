@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/center-users/v1/m':{
-        target:process.env.BASE_URL,
+        target:'http://172.16.8.242:1113',
         changeOrigin:true,
         pathRewrite: {
           '^/center-users/v1/m': '/center-users/v1/m'   //重写接口

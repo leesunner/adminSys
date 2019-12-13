@@ -2,12 +2,11 @@ import axios from 'axios'
 import _session from '../tools/sessionTool'
 import {Loading,Message} from 'element-ui';
 import router from '../router';
+import url from './api/realmnUrl'
 
 axios.defaults.timeout = 20000
-//打包时请设置这里作为请求url
-if (process.env.NODE_ENV === "production"){
-  axios.defaults.baseURL = process.env.BASE_URL
-}
+
+// axios.defaults.baseURL = url
 
 
 let loadingInstance = null

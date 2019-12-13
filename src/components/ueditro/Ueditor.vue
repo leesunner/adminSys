@@ -28,7 +28,7 @@
           // 初始容器宽度s
           initialFrameWidth: '100%',
           // 上传文件接口
-          serverUrl: process.env.BASE_URL+this.$apiList.ueditorFileUpload,
+          serverUrl: this.$baseUrl+this.$apiList.ueditorFileUpload,
           // UEditor 资源文件的存放路径
           // UEDITOR_HOME_URL: '../../../static/UEditor/'
         }
