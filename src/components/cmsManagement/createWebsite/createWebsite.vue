@@ -64,7 +64,7 @@
       <!--创建弹框-->
       <el-form-item label="站点LOGO" prop="logo" v-else>
         <el-upload
-          :action="process.env.BASE_URL+$apiList.fileUpload"
+          :action="$baseUrl+$apiList.fileUpload"
           :on-success="handleAvatarSuccess"
           :on-error="handleAvatarError"
           :before-upload="beforeAvatarUpload"

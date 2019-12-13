@@ -86,7 +86,7 @@
 
 <script>
   export default {
-    name: "content",
+    name: "cms-content",
     data(){
       return{
         //查询提交的数据

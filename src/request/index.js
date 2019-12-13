@@ -57,6 +57,7 @@ axios.interceptors.response.use(res => {
     //有需要可以根据code的值给出对应的提示
     switch (res.data.code){
       case 401:
+        _session.clearSession()
         Message.error('登录已过期')
         router.go(0)
         break;
@@ -67,7 +68,9 @@ axios.interceptors.response.use(res => {
         Message.error('服务器错误')
         break;
       default:
+        _session.clearSession()
         Message.error(res.data.msg)
+        router.go(0)
         break;
     }
   }
@@ -75,7 +78,7 @@ axios.interceptors.response.use(res => {
   close()
   Message({
     showClose: true,
-    message: '接口响应有误',
+    message: '接口响应超时',
     type: 'error'
   });
   return Promise.reject(error)

@@ -77,7 +77,7 @@
         arr.forEach(arrItem => {
           this.tableData.forEach(item => {
             if (item.children.length > 0) {
-              this.formatArr(item.children)
+              this.formatArr(item.children,arrItem)
             } else {
               if (arrItem==item.id){
                 this.$refs.multipleTable.toggleRowSelection(item)
@@ -86,8 +86,16 @@
           })
         })
       },
-      formatArr(arrItem){
-
+      formatArr(arr,arrItem){
+        arr.forEach(item => {
+          if (item.children.length > 0) {
+            this.formatArr(item.children,arrItem)
+          } else {
+            if (arrItem==item.id){
+              this.$refs.multipleTable.toggleRowSelection(item)
+            }
+          }
+        })
       },
       //查询拥有的栏目
       getOwnList() {
@@ -95,6 +103,7 @@
           const arr = res.data.data
           if (arr.length > 0) {
             this.childTools(arr)
+            console.log(this.$refs.multipleTable)
           }
         })
       },
@@ -106,12 +115,8 @@
       },
       //提交选中的栏目
       submit() {
-        if (this.multipleSelection.length <= 0) {
-          this.$message.error('您还未选中任何栏目')
-          return
-        }
         let obj = {
-          categoryIds: this.multipleSelection.map(item => item.id),
+          categoryIds: this.multipleSelection.length>0?this.multipleSelection.map(item => item.id):[],
           siteId: this.itemId
         }
         this.$request.post(`${this.$apiList.website}/category`, obj).then(res => {
