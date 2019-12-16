@@ -3,6 +3,7 @@ import request from '@/request';
 import apiList from "@/request/api/apiList";
 import _session from '../../tools/sessionTool';
 import router from '../../router';
+import {Notification} from 'element-ui';
 import {permissionRouters} from '../../tools/routerTool';
 import menuRouter from '@/router/routerConfig/menuRouter';
 
@@ -32,6 +33,11 @@ export default {
     Login({dispatch,commit},data) {
       return request.get(apiList.login, {params:data}).then(res => {
         if (res) {
+          Notification.success({
+            message:'登录成功',
+            duration:1500,
+            offset:35,
+          })
           _session.setSession('USER_INFO', res.data.data)
           _session.setSession('AUTH_TOKEN', res.data.data.accessToken)
           commit('setUserInfo', res.data.data)

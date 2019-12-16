@@ -11,12 +11,12 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/center-users/v1/m':{
+      '/center-users-ljw/v1/m':{
         target:'http://172.16.8.242:1113',
         // target:'http://172.16.8.19:1113',
         changeOrigin:true,
         pathRewrite: {
-          '^/center-users/v1/m': '/center-users/v1/m'   //重写接口
+          '^/center-users-ljw/v1/m': '/center-users-ljw/v1/m'   //重写接口
         }
       }
     },

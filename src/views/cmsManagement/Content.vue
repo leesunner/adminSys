@@ -50,13 +50,7 @@
                 tooltip-effect="dark"
                 :header-row-style="{'background-color': '#f7f7f7'}"
                 ref="multipleTable"
-                @selection-change="handleSelectionChange"
                 style="width: 100%">
-        <el-table-column
-          type="selection"
-          label="选择"
-          width="45">
-        </el-table-column>
         <el-table-column type="id" label="ID" width="50"></el-table-column>
         <el-table-column prop="title" label="标题" width="250"></el-table-column>
         <el-table-column prop="siteName" label="所属站点"></el-table-column>

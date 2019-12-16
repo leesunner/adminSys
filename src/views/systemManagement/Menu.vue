@@ -198,7 +198,7 @@
           enabled: "",
           icon: "",
           leaf: "",
-          level: '',
+          level: 0,
           menuName: ``,
           parentId: '',
           value: "",
@@ -276,7 +276,9 @@
       showDialogCreate(data){
         this.createMenu.parentId = data.id
         this.createMenu.type = parseInt(this.checkBoxType)
+        this.createMenu.level = data.level+1
         this.dialogVisible = true
+        console.log(this.createMenu)
       },
       // 创建菜单信息
       confirmCreate() {
@@ -285,9 +287,8 @@
             this.$request
               .post(this.$apiList.menu, this.createMenu)
               .then(res => {
-                if (res.data.code == 200) {
-                  this.$message.success(res.data.msg);
-                }
+                this.dialogVisible = false
+                this.$message.success(res.data.msg);
                 this.createMenu = this._funs.emptyObj(this.createMenu);
                 this.getMenuTree();
               })
@@ -304,9 +305,7 @@
             this.$request
               .put(this.$apiList.menu, this.menuDetail)
               .then(res => {
-                if (res.data.code == 200) {
-                  this.$message.success(res.data.msg);
-                }
+                this.$message.success(res.data.msg);
                 this.menuDetail = this._funs.emptyObj(this.menuDetail);
                 this.showMenuButton = false;
                 this.checkType = true;
@@ -324,10 +323,8 @@
         this.$request
           .get(this.$apiList.menu + "/" + id + "/buttons")
           .then(res => {
-            var data = res.data;
-            if (data.code == 200) {
-              this.menuButtonDetail = data.data || [];
-            }
+            const data = res.data;
+            this.menuButtonDetail = data.data || [];
           })
           .catch(err => {
             this.$message.error(err);
@@ -338,10 +335,8 @@
         this.$request
           .get(this.$apiList.menu + "/" + id)
           .then(res => {
-            var data = res.data;
-            if (data.code == 200) {
-              this.menuDetail = data.data || {};
-            }
+            const data = res.data;
+            this.menuDetail = data.data || {};
           })
           .catch(err => {
             this.$message.error(err);

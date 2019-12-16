@@ -9,7 +9,7 @@
         <el-input
           placeholder="输入栏目名称"
           clearable
-          v-model="columnData.name">
+          v-model="columnData['name']">
         </el-input>
       </el-form-item>
       <el-form-item label="栏目开关">

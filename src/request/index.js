@@ -58,8 +58,10 @@ axios.interceptors.response.use(res => {
     switch (res.data.code){
       case 401:
         _session.clearSession()
-        Message.error('登录已过期')
-        router.go(0)
+        setTimeout(()=>{
+          Message.error('登录已过期')
+          router.go(0)
+        },500)
         break;
       case 403:
         Message.error('暂无权限')
@@ -69,6 +71,8 @@ axios.interceptors.response.use(res => {
         break;
       default:
         Message.error(res.data.msg)
+        // _session.clearSession()
+        // router.go(0)
         break;
     }
   }

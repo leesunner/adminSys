@@ -2,7 +2,7 @@
 export default {
   data(){
     return{
-      filterText:'',
+      filterText:'',//搜索绑定字段
     }
   },
   watch: {

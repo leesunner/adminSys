@@ -70,9 +70,23 @@
       close() {
         this.$emit('close', false)
       },
+      childTree(arr){
+        console.log(arr)
+        if (arr.children.length > 0) {
+          this.childTree(arr.children)
+        } else {
+          return arr.id
+        }
+      },
       //整合拥有的栏目
       childTools(arr) {
-        arr.forEach(arrItem => {
+        //
+        let arrs = arr.map(item=>{
+          return this.childTree(item.children)
+        })
+        console.log(arrs)
+        debugger
+        arrs.forEach(arrItem => {
           this.tableData.forEach(item => {
             if (arrItem.id==item.id){
               this.$refs.multipleTable.toggleRowSelection(item)

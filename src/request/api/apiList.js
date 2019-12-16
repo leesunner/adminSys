@@ -1,6 +1,6 @@
 //配置接口信息列表/center-users
 // const version = '/v1'//版本号
-const version = '/center-users/v1'//版本号
+const version = '/center-users-ljw/v1'//版本号
 const apiList = {
   login: `${version}/m/sys/login`,//账户密码登录
   account: `${version}/m/sys/user/account`,//用户修改自己信息
@@ -18,6 +18,7 @@ const apiList = {
   article: `${version}/m/cms/article`,//文章管理
   category: `${version}/m/cms/category`,//栏目管理
   website: `${version}/m/cms/site`,//站点管理
+  workFlow:`${version}/m/activiti`,//工作流（事务/BPM）
 }
 
 export default apiList

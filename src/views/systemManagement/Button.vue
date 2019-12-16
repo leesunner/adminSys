@@ -39,7 +39,7 @@
             <span v-if="data.level == 1">
               <el-button size="mini" @click.stop="() => handleNodeClick(data)">公共按钮</el-button>
             </span>
-            <span v-if="data.level == 3">
+            <span v-if="data.level >1">
               <el-button size="mini" @click.stop="() => handleNodeClick(data)" icon="el-icon-view">按钮列表</el-button>
             </span>
           </span>
@@ -222,7 +222,7 @@
         createButton: {
           //创建按钮信息
           buttonName: "",
-          enabled: false,
+          enabled: true,
           buttonCode: "",
           requestType: "",
           resourceType: 2,
