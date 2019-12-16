@@ -67,7 +67,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <create-column :show="createShow" :topId="createParentId" @close="val => createShow = val"></create-column>
+    <create-column :show="createShow" :topId="createParentId" @close="close" :columnId="columnId" :isEdit="isEdit"></create-column>
   </div>
 </template>
 
@@ -81,7 +81,9 @@
       return {
         tableData: [],
         createShow: false, //创建顶级栏目弹框
-        createParentId: '',
+        createParentId: '',//创建父ID
+        isEdit:false, //编辑控制字段
+        columnId:'',
       }
     },
     mounted() {
@@ -97,14 +99,23 @@
       //内容
       handleContent(index, data) {
       },
+      //关闭
+      close(data){
+        this.createShow = false
+        this.isEdit = false
+        this.columnId = ''
+      },
       //编辑
-      handleEdit() {
+      handleEdit(data) {
+        this.columnId = data.id
+        this.createShow = true
+        this.isEdit = true
       },
       //添加栏目
-      handleCreateColumn(val) {
+      handleCreateColumn(data) {
         this.createShow = true
-        if (val.id != undefined) {
-          this.createParentId = val.id
+        if (data.id != undefined) {
+          this.createParentId = data.id
         }
       },
       //删除栏目

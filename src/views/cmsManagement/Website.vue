@@ -90,6 +90,8 @@
           pageSize: this._config.sizeArr[0],
           pageNum: 1,
           keywords: '',//站点关键字搜索
+          name:'',
+          domain:'',
         },
         tableData: [],
         createShow: false, //创建/编辑站点弹框
@@ -135,6 +137,7 @@
           hideStatus: !data.hideStatus
         }
         this.$request.put(`${this.$apiList.website}/hide`, paras).then(res => {
+          this.$message.success('操作成功')
           this.getDataList()
         })
       },

@@ -8091,7 +8091,6 @@ UE.Editor.defaultOptions = function(editor){
               isJsonp = false
                 /* 发出ajax请求 */
                 me._serverConfigLoaded = false;
-
                 configUrl && UE.ajax.request(configUrl,{
                     'method': 'GET',
                     'dataType': isJsonp ? 'jsonp':'',
@@ -8244,6 +8243,7 @@ UE.ajax = function() {
         if (!utils.isEmptyObject(ajaxOpts.data)){
             submitStr += (submitStr? "&":"") + json2str(ajaxOpts.data);
         }
+
         //超时检测
         var timerID = setTimeout(function() {
             if (xhr.readyState != 4) {
@@ -8252,9 +8252,9 @@ UE.ajax = function() {
                 clearTimeout(timerID);
             }
         }, ajaxOpts.timeout);
-
         var method = ajaxOpts.method.toUpperCase();
         var str = url + (url.indexOf("?")==-1?"?":"&") + (method=="POST"?"":submitStr+ "&noCache=" + +new Date);
+
         xhr.open(method, str, ajaxOpts.async);
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4) {

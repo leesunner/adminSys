@@ -130,23 +130,23 @@
       }
     },
     watch: {
-      itemId(newVal) {
+      '$attrs.show'(newVal){
         if (newVal) {
           this.getWesiteInfo()
         }else{
           this.columnData = {
             description: "",
-              copyright: '',
-              domain: "",
-              keywords: "",
-              logo: "",
-              name: "",
-              remarks: "",
-              title: "",
-              hideStatus: true, //隐藏
+            copyright: '',
+            domain: "",
+            keywords: "",
+            logo: "",
+            name: "",
+            remarks: "",
+            title: "",
+            hideStatus: true, //隐藏
           }
         }
-      }
+      },
     },
     methods: {
       close() {

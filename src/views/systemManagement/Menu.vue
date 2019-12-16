@@ -186,7 +186,7 @@
         prop: {
           value: "id",
           label: "menuName",
-          emitPath: false,
+            emitPath: false,
           checkStrictly: true
         },
         checkType: true, //区分查看还是编辑

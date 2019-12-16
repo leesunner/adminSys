@@ -68,9 +68,7 @@ axios.interceptors.response.use(res => {
         Message.error('服务器错误')
         break;
       default:
-        _session.clearSession()
         Message.error(res.data.msg)
-        router.go(0)
         break;
     }
   }

@@ -65,7 +65,20 @@ export default {
       value: '失败'
     },
   ],
-
+  dict_wordType:[
+    {
+      key:1,
+      value:'国内新闻'
+    },
+    {
+      key:2,
+      value:'县级新闻'
+    },
+    {
+      key:3,
+      value:'通知公告'
+    }
+  ],
   //是否购买物料
   dict_isTrue: [
     {

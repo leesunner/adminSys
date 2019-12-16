@@ -59,9 +59,8 @@
       }
     },
     watch: {
-      itemId(newVal) {
+      '$attrs.show'(newVal) {
         if (newVal) {
-          this.itemId = newVal
           this.getShowList()
           this.getOwnList()
         }
@@ -73,25 +72,24 @@
       },
       //整合拥有的栏目
       childTools(arr) {
-        console.log(arr)
         arr.forEach(arrItem => {
           this.tableData.forEach(item => {
-            if (item.children.length > 0) {
-              this.formatArr(item.children,arrItem)
-            } else {
-              if (arrItem==item.id){
-                this.$refs.multipleTable.toggleRowSelection(item)
+            if (arrItem.id==item.id){
+              this.$refs.multipleTable.toggleRowSelection(item)
+            }else{
+              if (item.children.length > 0) {
+                this.formatArr(item.children,arrItem.id)
               }
             }
           })
         })
       },
-      formatArr(arr,arrItem){
+      formatArr(arr,id){
         arr.forEach(item => {
           if (item.children.length > 0) {
-            this.formatArr(item.children,arrItem)
+            this.formatArr(item.children,id)
           } else {
-            if (arrItem==item.id){
+            if (id==item.id){
               this.$refs.multipleTable.toggleRowSelection(item)
             }
           }
