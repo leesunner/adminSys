@@ -6,7 +6,7 @@ import url from './api/realmnUrl'
 
 axios.defaults.timeout = 20000
 
-// axios.defaults.baseURL = url
+axios.defaults.baseURL = url
 
 
 let loadingInstance = null
@@ -58,8 +58,8 @@ axios.interceptors.response.use(res => {
     switch (res.data.code){
       case 401:
         _session.clearSession()
+        Message.error('登录已过期')
         setTimeout(()=>{
-          Message.error('登录已过期')
           router.go(0)
         },500)
         break;

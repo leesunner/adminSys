@@ -8,6 +8,7 @@
       ref="multipleTable"
       @selection-change="handleSelectionChange"
       row-key="id"
+      default-expand-all
       :header-row-style="{'background-color': '#f7f7f7'}"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
       <el-table-column
@@ -61,83 +62,83 @@
     watch: {
       '$attrs.show'(newVal) {
         if (newVal) {
-          this.getShowList()
-          this.getOwnList()
+          // this.getShowList()
+          // this.getOwnList()
+          this.getAllList()
         }
       },
     },
     methods: {
       close() {
         this.$emit('close', false)
+        this.$refs.multipleTable.clearSelection()
       },
-      childTree(arr){
-        console.log(arr)
-        if (arr.children.length > 0) {
-          this.childTree(arr.children)
-        } else {
-          return arr.id
-        }
+      //拥有栏目数据id提取
+      childTree(item, arrs) {
+        item.forEach(itemArr => {
+          arrs.push(itemArr.id)
+          if (itemArr.children.length > 0) {
+            this.childTree(itemArr.children, arrs)
+          }
+        })
       },
       //整合拥有的栏目
       childTools(arr) {
-        //
-        let arrs = arr.map(item=>{
-          return this.childTree(item.children)
-        })
-        console.log(arrs)
-        debugger
+        let arrs = []
+        this.childTree(arr, arrs)
         arrs.forEach(arrItem => {
-          this.tableData.forEach(item => {
-            if (arrItem.id==item.id){
-              this.$refs.multipleTable.toggleRowSelection(item)
-            }else{
-              if (item.children.length > 0) {
-                this.formatArr(item.children,arrItem.id)
-              }
-            }
-          })
+          this.formatArr(this.tableData, arrItem)
         })
       },
-      formatArr(arr,id){
+      //拥有栏目对比表格数据，提交到选中项中
+      formatArr(arr, id) {
         arr.forEach(item => {
+          if (id == item.id) {
+            this.$refs.multipleTable.toggleRowSelection(item, true)
+          }
           if (item.children.length > 0) {
-            this.formatArr(item.children,id)
-          } else {
-            if (id==item.id){
-              this.$refs.multipleTable.toggleRowSelection(item)
-            }
+            this.formatArr(item.children, id)
           }
         })
+      },
+      getAllList() {
+        this.$request.all([this.getShowList(), this.getOwnList()]).then(this.$request.spread((res1, res2) => {
+            // 两个请求现在都执行完成
+            this.tableData = res1.data.data
+            const arr = res2.data.data
+            if (arr.length > 0) {
+              //解决数据默认勾选的问题
+              setTimeout(()=>{
+                this.childTools(arr)
+              },0)
+            }
+          })
+        )
       },
       //查询拥有的栏目
       getOwnList() {
-        this.$request.get(`${this.$apiList.website}/${this.itemId}/category`).then(res => {
-          const arr = res.data.data
-          if (arr.length > 0) {
-            this.childTools(arr)
-            console.log(this.$refs.multipleTable)
-          }
-        })
+        return this.$request.get(`${this.$apiList.website}/${this.itemId}/category`)
       },
       //查询未隐藏的栏目
       getShowList() {
-        this.$request.get(`${this.$apiList.website}/category`).then(res => {
-          this.tableData = res.data.data
-        })
+        return this.$request.get(`${this.$apiList.website}/category`)
+
       },
       //提交选中的栏目
       submit() {
         let obj = {
-          categoryIds: this.multipleSelection.length>0?this.multipleSelection.map(item => item.id):[],
+          categoryIds: this.multipleSelection.length > 0 ? this.multipleSelection.map(item => item.id) : [],
           siteId: this.itemId
         }
         this.$request.post(`${this.$apiList.website}/category`, obj).then(res => {
           this.$message.success(res.data.msg)
+          this.close()
         })
       },
       //获取选中的栏目
       handleSelectionChange(val) {
         this.multipleSelection = val;
+        console.log(val)
       },
       //获取要绑定的栏目list
       getColumnList() {
