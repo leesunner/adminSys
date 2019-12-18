@@ -53,6 +53,7 @@
           :on-preview="handlePictureCardPreview"
           list-type="picture-card"
           :file-list="[editData]"
+          :headers="headers"
           :limit="1"
           :auto-upload="true">
           <i class="el-icon-plus"></i>
@@ -72,6 +73,7 @@
           :on-preview="handlePictureCardPreview"
           list-type="picture-card"
           :limit="1"
+          :headers="headers"
           :auto-upload="true">
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -79,7 +81,7 @@
           * 上传LOGO限制一张
         </el-row>
       </el-form-item>
-      <el-form-item label="站点开关">
+      <el-form-item label="启用站点">
         <el-tooltip :content="columnData.hideStatus?'隐藏后看不到栏目':'现在可以看到栏目了'" placement="right">
           <el-switch
             v-model="columnData.hideStatus"
@@ -118,6 +120,9 @@
           remarks: "",
           title: "",
           hideStatus: true, //隐藏
+        },
+        headers: {
+          'Authorization': `Bearer ${this._session.getSessoin('AUTH_TOKEN')}`
         },
         editData:{},
         dialogVisible: false,

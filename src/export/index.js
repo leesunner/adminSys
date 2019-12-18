@@ -21,7 +21,7 @@ import VueParticles from 'vue-particles'
 Vue.use(VueParticles)
 
 //引入接口列表
-import apiList from "../request/api/apiList";
+import {apiList,gateway} from "../request/api/apiList";
 import url from '@/request/api/realmnUrl';
 //引入通用工具函数
 import * as funs from '../tools/utilTools';
@@ -33,9 +33,17 @@ import _session from '../tools/sessionTool';
 Vue.config.productionTip = false
 
 //vue对象上添加公用属性和方法
+//axios
 Vue.prototype.$request = request
+//接口地址
 Vue.prototype.$apiList = apiList
+//工具函数
 Vue.prototype._funs = funs
+//配置字典
 Vue.prototype._config= config
+//缓存
 Vue.prototype._session= _session
+//请求域名
 Vue.prototype.$baseUrl= url
+//网关
+Vue.prototype.$gateway = gateway

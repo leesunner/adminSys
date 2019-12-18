@@ -1,6 +1,6 @@
 import request from '@/request';
 //引入接口列表
-import apiList from "@/request/api/apiList";
+import {apiList} from "@/request/api/apiList";
 import _session from '../../tools/sessionTool';
 import router from '../../router';
 import {Notification} from 'element-ui';

@@ -142,12 +142,7 @@
       getJsonArr(val) {
         if (val) {
           let arr = JSON.parse(val)
-          return arr.map((item, index) => {
-            return {
-              url: item,
-              name: `文件${index}`
-            }
-          })
+          return arr
         } else {
           return []
         }
@@ -155,35 +150,31 @@
       //过滤提交信息
       filtersSubmitValue(){
         const obj = this.formData
-        const newObj = {}
+        let newObj = {},control = true;
         for (let i in obj){
-          switch (item.formType){
-            case 'buttons':
-              //按钮
-              this.btnAndSelect[item.formType] = JSON.parse(item.formDefaultValue)
-              break;
-            case 'combox':
-              //下拉选择框数据
-              this.btnAndSelect[item.formType] = JSON.parse(item.formComboxValue)
-              this.newObject(obj, item)
-              break;
-            default:
-              this.newObject(obj, item)
-              break;
+          newObj[i] = obj[i].value
+          //是必填的，且不能为空
+          if (obj[i].isMust&&(obj[i].value==''||obj[i].value.length==0)){
+            control = false
+            this.$message.warning(`${obj[i].formTitle}不能为空`)
+            break;
           }
+        }
+        if (control){
+          return newObj//通过返回数据
+        }else{
+          return control//不通过返回false
         }
       },
       //按钮提交信息
       submit(url) {
-        console.log(this.formData)
-        debugger
-        this.$refs['formRules'].validate(valid => {
-          if (valid) {
-            this.$request.post(url, this.formData).then(res => {
-              this.$message.success(res.data.msg)
-            })
-          }
-        })
+        const data = this.filtersSubmitValue()
+        if (data){
+          data.taskId = this.taskId
+          this.$request.post(this.$gateway+url, data).then(res => {
+            this.$message.success(res.data.msg)
+          })
+        }
       },
       //新建对象(obj:新数据对象，item:数据复制对象，)
       newObject(obj, item) {
@@ -219,6 +210,7 @@
             }
           })
           //将提取的数据对象赋值给formData（这么用的原因：直接将提取的属性给formData并赋值，会导致表格渲染时无法再输入）
+          console.log(obj)
           this.formData = obj
         })
       },
@@ -251,7 +243,6 @@
               url: res.data
             })
           }
-          console.log(this.formData)
         } else {
           this.$message.error(res.msg)
         }

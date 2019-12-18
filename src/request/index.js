@@ -71,8 +71,6 @@ axios.interceptors.response.use(res => {
         break;
       default:
         Message.error(res.data.msg)
-        // _session.clearSession()
-        // router.go(0)
         break;
     }
   }
