@@ -57,6 +57,7 @@
           :before-upload="beforeFileUpload"
           :before-remove="handleBeforeRemove"
           :on-remove="handleRemove"
+          :on-preview="handleDownLoad"
           :limit="1"
           :file-list="formData[item].value">
           <el-button size="small" type="primary">点击上传文件</el-button>
@@ -128,7 +129,7 @@
     watch: {
       '$attrs.show'(newVal) {
         if (newVal) {
-          //data获取表数据，info获取表结构
+          //info获取表结构
           let url = 'info'
           this.getFormStructure(url)
         }
@@ -173,6 +174,8 @@
           data.taskId = this.taskId
           this.$request.post(this.$gateway+url, data).then(res => {
             this.$message.success(res.data.msg)
+            this.$emit('reqList',true)
+            this.close()
           })
         }
       },
@@ -303,6 +306,14 @@
           }
         }
       },
+      //下载文件
+      handleDownLoad(file){
+        const a = document.createElement('a')
+        a.href = file.url
+        a.download = file.name
+        a.target = "_blank"
+        a.click()
+      },
       //浏览大图
       handlePictureCardPreview(file) {
         this.imgUrl = file.url
@@ -316,6 +327,9 @@
   .form {
     & /deep/ .el-input__inner {
       width: 505px;
+    }
+    & /deep/.el-textarea__inner{
+      color: #303133;
     }
   }
 

@@ -33,10 +33,10 @@ axios.interceptors.request.use(config => {
   if (!(TOKEN == 'undefined' || !TOKEN)) {
     config.headers['Authorization'] = `Bearer ${TOKEN}`
   }
-  const USER_INFO = _session.getSessoin('USER_INFO')
-  if (USER_INFO){
-    config.headers['userId'] = USER_INFO.id
-  }
+  // const USER_INFO = _session.getSessoin('USER_INFO')
+  // if (USER_INFO){
+  //   config.headers['userId'] = USER_INFO.id
+  // }
   return config
 }, error => {
   close()

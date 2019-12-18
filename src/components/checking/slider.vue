@@ -25,12 +25,17 @@
     },
     watch: {
       control(newVal) {
-        this.moveX = 0
-        this.xCache = 0
-        this.down = false
-        this.lock = false
-        this.moveWidth = this.width - 45
-        this.text = '滑块'
+        if (!newVal){
+          this.moveX = 0
+          this.xCache = 0
+          this.down = false
+          this.lock = false
+          this.moveWidth = this.width - 45
+          this.text = '滑块'
+        }
+      },
+      lock(newVal){
+        this.$emit('change',newVal)
       }
     },
     created() {

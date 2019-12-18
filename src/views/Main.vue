@@ -8,9 +8,9 @@
         <el-aside style="height: 100%" width="auto">
           <nav-bar></nav-bar>
         </el-aside>
-        <el-main>
+        <el-main style="overflow: hidden;">
           <nav-bar-tabs v-if="$route.path!=='/index'"></nav-bar-tabs>
-          <el-scrollbar>
+          <el-scrollbar style="height: 100%;padding-bottom: 35px;">
             <div class="content">
               <!--<keep-alive>-->
               <router-view/>

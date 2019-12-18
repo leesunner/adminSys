@@ -13,7 +13,7 @@
           <el-input type="password" v-model="data.password" placeholder="请输入密码" class="trans" clearable></el-input>
         </div>
       </el-form-item>
-      <slider :control="control"></slider>
+      <slider :control="control" @change="val => control=val"></slider>
       <el-form-item>
         <el-checkbox v-model="checked">记住密码</el-checkbox>
         <el-link class="passBack">忘记密码？</el-link>
@@ -49,15 +49,19 @@
     methods: {
       login() {
         if (this._funs.checkInfoEmpty(this,this.data)){
+          if (!this.control){
+            this.$message.error('请拖动滑块')
+            return
+          }
           const params = {
             username: this.data.username,
             password: Encrypt(this.data.password)
           }
           this.$store.dispatch('Login', params).then(res => {
             this.$router.push('/index')
-            //接口有反应后，初始化滑块状态
-            this.control = !this.control
           })
+          //接口有反应后，初始化滑块状态
+          this.control = false
         }
       }
     }
