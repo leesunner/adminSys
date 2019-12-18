@@ -6,6 +6,15 @@ import CryptoJS from 'crypto-js'
 const key = '201991022019ndit';
 //加密偏移值
 const piv = 1234567876543210;
+
+/**
+ * 文件类型
+ * @param 默认识别txt/word/xsml
+ */
+export const checkFile = (value) => {
+  const test = /(text|word|sheetml)/g
+  return test.test(value)
+}
 /**
  * 验证手机号
  */
