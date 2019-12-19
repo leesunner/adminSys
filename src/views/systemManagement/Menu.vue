@@ -278,7 +278,6 @@
         this.createMenu.type = parseInt(this.checkBoxType)
         this.createMenu.level = data.level+1
         this.dialogVisible = true
-        console.log(this.createMenu)
       },
       // 创建菜单信息
       confirmCreate() {

@@ -48,7 +48,9 @@
 
 <script>
   const myApplyMattersDetail =()=> import('@/components/transactionManagement/myApplyMattersDetail')
+  import mixin from '@/mixin/buttonPermission'
   export default {
+    mixins: [mixin],
     name: "my-apply-matters",
     components: {myApplyMattersDetail},
     data() {
@@ -69,7 +71,9 @@
     methods: {
       //获取信息列表
       getPageList() {
-        this.$request.get(`${this.$apiList.workFlow}/applyProc`).then(res => {
+        this.$request.get(`${this.$apiList.workFlow}/applyProc`,{
+          params:this.searchData
+        }).then(res => {
           this.tableData = res.data.data
         })
       },

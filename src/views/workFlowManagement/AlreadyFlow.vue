@@ -5,7 +5,9 @@
 </template>
 
 <script>
-    export default {
+  import mixin from '@/mixin/buttonPermission'
+  export default {
+    mixins: [mixin],
         name: "already-flow"
     }
 </script>

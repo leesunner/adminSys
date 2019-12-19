@@ -195,6 +195,7 @@
           const arr = res.data.data
           const obj = {}
           // 过滤数据对象
+          console.log(arr)
           arr.forEach(item => {
             //提取按钮以及其他公用数据
             switch (item.formType){

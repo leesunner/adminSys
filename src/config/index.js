@@ -140,7 +140,7 @@ export default {
   buttonCode: {
     B_DELETE: 'B_DELETE',//基础的删除
     B_LIST: 'B_LIST',//基础的查看列表
-    B_UPDATE: 'B_UPDATE',//基础的编辑
+    B_UPDATE: 'B_UPDATE',//基础的编辑(修改)
     B_CREATE: 'B_CREATE',//基础的创建
     B_DETAIL: 'B_DETAIL',//基础的查看详情
     B_EXPORT: 'B_EXPORT',//基础的导出

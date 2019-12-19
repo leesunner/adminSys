@@ -53,7 +53,9 @@
 
 <script>
   const myWaitForMattersDetail =()=> import('@/components/transactionManagement/myWaitForMattersDetail')
+  import mixin from '@/mixin/buttonPermission'
   export default {
+    mixins: [mixin],
     name: "my-wait-for-matters",
     components: {myWaitForMattersDetail},
     data() {

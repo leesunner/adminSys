@@ -167,7 +167,9 @@
 <script>
   import createWord from '../../components/cmsManagement/content/createWord';
 
+  import mixin from '@/mixin/buttonPermission'
   export default {
+    mixins: [mixin],
     name: "cms-content",
     components:{createWord},
     data(){

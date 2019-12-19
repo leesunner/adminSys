@@ -55,7 +55,9 @@
 
 <script>
   const myAlreadyMattersDetail = () => import('@/components/transactionManagement/myAlreadyMattersDetail')
+  import mixin from '@/mixin/buttonPermission'
   export default {
+    mixins: [mixin],
     name: "my-already-matters",
     components: {myAlreadyMattersDetail},
     data() {
@@ -77,7 +79,9 @@
     methods: {
       //获取信息列表
       getPageList() {
-        this.$request.get(`${this.$apiList.workFlow}/endGtasks`).then(res => {
+        this.$request.get(`${this.$apiList.workFlow}/endGtasks`,{
+          params:this.searchData
+        }).then(res => {
           this.tableData = res.data.data
         })
       },

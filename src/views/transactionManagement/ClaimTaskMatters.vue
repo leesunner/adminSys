@@ -53,7 +53,9 @@
 
 <script>
   // const transactionDetail =()=> import('@/components/transactionManagement/transactionDetail')
+  import mixin from '@/mixin/buttonPermission'
   export default {
+    mixins: [mixin],
     name: "claim-task--matters",
     // components: {transactionDetail},
     data() {

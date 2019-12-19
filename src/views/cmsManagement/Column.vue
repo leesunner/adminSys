@@ -74,7 +74,9 @@
 <script>
   import createColumn from '@/components/cmsManagement/column/createColumn'
 
+  import mixin from '@/mixin/buttonPermission'
   export default {
+    mixins: [mixin],
     name: "column",
     components: {createColumn},
     data() {

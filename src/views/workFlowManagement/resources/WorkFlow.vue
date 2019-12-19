@@ -39,7 +39,9 @@
 
   import {debounce} from 'min-dash';
 
+  import mixin from '@/mixin/buttonPermission'
   export default {
+    mixins: [mixin],
     name: "work-flow",
     data() {
       return {

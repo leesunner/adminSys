@@ -548,7 +548,6 @@
           valArr.push(item.id);
         }
         this.valueArr = valArr;
-        console.log(data)
         return data;
       }
     },

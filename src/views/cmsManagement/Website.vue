@@ -81,7 +81,9 @@
   import createWebsite from '@/components/cmsManagement/createWebsite/createWebsite'
   import websiteAddColumn from '@/components/cmsManagement/createWebsite/websiteAddColumn'
 
+  import mixin from '@/mixin/buttonPermission'
   export default {
+    mixins: [mixin],
     name: "website",
     components: {createWebsite,websiteAddColumn},
     data() {
