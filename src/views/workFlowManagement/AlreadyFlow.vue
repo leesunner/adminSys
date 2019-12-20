@@ -40,6 +40,21 @@
       lazy
       :preview-src-list="srcList">
     </el-image>
+    <el-dialog title="部署工作流" :visible.sync="showCreateFlow" width="685px">
+          <el-upload
+            :action="`${$baseUrl+$apiList.workFlow}/deploymentZip`"
+            :headers="headers"
+            :on-success="handleAvatarSuccess"
+            :on-error="handleAvatarError"
+            :before-remove="()=>false"
+            :before-upload="beforeFileUpload"
+            :limit="1">
+            <el-button size="small" type="primary">点击上传BPM文件</el-button>
+          </el-upload>
+        <el-row class="warning">
+          * 文件上传只允许.zip的文件格式
+        </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -61,6 +76,9 @@
           defKey: "",
         },
         showCreateFlow: false,
+        headers: {
+          'Authorization': `Bearer ${this._session.getSessoin('AUTH_TOKEN')}`
+        },
       }
     },
     created() {
@@ -79,40 +97,39 @@
         const url = this.$baseUrl + this.$gateway + data.procImgUrl
         this.checkImg(url)
       },
-      //因为查看流程图要权限，所以做了图片的请求
+      //因为查看流程图要权限，所以做了图片流的请求
       checkImg(url) {
-        let req = new XMLHttpRequest();
-        req.responseType = 'blob';
-        req.open('get', url, true);
-        const TOKEN = this._session.getSessoin('AUTH_TOKEN')
-        req.setRequestHeader('Authorization', `Bearer ${TOKEN}`);
-        req.onreadystatechange = e => {
-          if (req.readyState == XMLHttpRequest.DONE && req.status == 200) {
-            console.log(req)
-            const src = URL.createObjectURL(req.response);
+        this.$request.get(url,{
+          responseType:'blob'
+        }).then(res => {
+            const src = URL.createObjectURL(res.data);
             this.srcList.push(src)
             this.$refs['bigImg'].clickHandler()
             setTimeout(() => {
               URL.revokeObjectURL(src);
             }, 500)
-          }
+        })
+      },
+      //上传成功回调
+      handleAvatarSuccess(res, file, fileList) {
+        if(res.code==200){
+          this.$message.success('部署成功')
+        }else{
+          this.$message.error(res.data.msg);
         }
-        req.send(null);
-        // this.$request.get(url).then(res => {
-        //   console.log()
-        //   // const reader= new FileReader();
-        //   // reader.addEventListener("load",(e)=>{
-        //   //   console.log(e)
-        //   // })
-        //   // console.log(res.data)
-        //   // reader.readAsText(res.data);
-        //   // reader.onload =(e)=>{
-        //   //   console.log(e)
-        //   //   // const src = URL.createObjectURL(res.data);
-        //   //   // this.srcList.push(src)
-        //   //   // this.$refs['bigImg'].clickHandler()
-        //   // }
-        // })
+      },
+      //上传文件拦截
+      beforeFileUpload(file) {
+        const _is = /(zip)+/.test(file.type)
+        if (!_is) {
+          this.$message.error('上传文件类型错误');
+          return false
+        }
+        return true;
+      },
+      //上传出错回调
+      handleAvatarError(err) {
+        this.$message.error('上传发生错误')
       },
     }
   }
@@ -125,6 +142,12 @@
     }
     & /deep/ .el-image-viewer__img {
       cursor: pointer;
+    }
+    .warning{
+      padding-left: 12px;
+      font-size: 12px;
+      color: #f56c6c;
+      margin-top: 18px;
     }
   }
 </style>

@@ -74,8 +74,7 @@
           :on-preview="handlePictureCardPreview"
           list-type="picture-card"
           :file-list="formData[item].value"
-          :limit="5"
-          :auto-upload="true">
+          :limit="5">
           <i class="el-icon-plus"></i>
         </el-upload>
         <el-row style="padding-left: 12px;font-size: 12px;color: #f56c6c;"

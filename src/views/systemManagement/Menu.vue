@@ -105,7 +105,7 @@
                 type="danger"
                 size="mini"
                 icon="el-icon-delete"
-                v-if="node.level!==1&&buttonControl[_config.buttonCode.B_DELETE]"
+                v-if="data.level>1&&buttonControl[_config.buttonCode.B_DELETE]"
                 @click.stop="() => handleDelete(node, data)"
               >删除</el-button>
             </span>

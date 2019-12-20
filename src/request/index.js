@@ -50,6 +50,7 @@ axios.interceptors.request.use(config => {
 
 //响应拦截器
 axios.interceptors.response.use(res => {
+  console.log(res)
   close()
   if (res.headers['content-type'].indexOf('image')>-1){
     //获取系统中图片时，文件流传递过来做的拦截

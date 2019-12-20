@@ -1,5 +1,5 @@
 //配置接口信息列表/center-users
-const gateway = '/center-users-ljw'//网关
+const gateway = '/center-users'//网关
 const version = '/v1'//版本号
 const apiList = {
   login: `${gateway+version}/m/sys/login`,//账户密码登录

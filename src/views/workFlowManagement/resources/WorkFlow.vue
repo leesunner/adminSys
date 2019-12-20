@@ -8,17 +8,17 @@
     </div>
     <ul class="buttons">
       <li>
-        <a id="js-download-diagram" ref="downloadLink" href title="download BPMN diagram">
-          <el-button type="primary" size="mini">
+          <el-button type="primary" size="mini" @click="downLoadBPMN">
             下载BPMN 文件
           </el-button>
+        <a id="js-download-diagram" ref="downloadLink" href >
         </a>
       </li>
       <li>
-        <a id="js-download-svg" href ref="downloadSvgLink" title="download as SVG image">
-          <el-button type="primary" size="mini">
+          <el-button type="primary" size="mini" @click="downLoadSVG">
             下载SVG 图片
           </el-button>
+        <a id="js-download-svg" href ref="downloadSvgLink">
         </a>
       </li>
     </ul>
@@ -40,12 +40,13 @@
   import {debounce} from 'min-dash';
 
   import mixin from '@/mixin/buttonPermission'
+
   export default {
     mixins: [mixin],
     name: "work-flow",
     data() {
       return {
-        isCollapse:false,
+        isCollapse: false,
         bpmnModeler: null,
         diagramXML: `<?xml version="1.0" encoding="UTF-8"?>
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn">
@@ -86,7 +87,6 @@
       saveSVG(done) {
         this.bpmnModeler.saveSVG(done);
       },
-
       saveDiagram(done) {
         this.bpmnModeler.saveXML({format: true}, function (err, xml) {
           done(err, xml);
@@ -144,22 +144,37 @@
           }
         })
         const exportArtifacts = debounce(() => {
-
           this.saveSVG((err, svg) => {
-            this.setEncoded(this.$refs.downloadSvgLink, 'diagram.svg', err ? null : svg);
+            this.setEncoded(this.$refs.downloadSvgLink, `diagram${new Date().getTime()}.svg`, err ? null : svg);
           });
-
           this.saveDiagram((err, xml) => {
-            this.setEncoded(this.$refs.downloadLink, 'diagram.bpmn', err ? null : xml);
+            this.setEncoded(this.$refs.downloadLink, `diagram${new Date().getTime()}.bpmn`, err ? null : xml);
           });
         }, 500);
 
         this.bpmnModeler.on('commandStack.changed', exportArtifacts);
       },
+      //下载bpm
+      downLoadBPMN(){
+        const a = this.$refs.downloadLink
+          if(/^(data:application)/.test(a.href)){
+            a.click()
+          }else{
+            this.$message.error('您还没有制作工作流程')
+          }
+      },
+      //下载svg
+      downLoadSVG(){
+        const a = this.$refs.downloadSvgLink
+        if(/^(data:application)/.test(a.href)){
+          a.click()
+        }else{
+          this.$message.error('您还没有制作工作流程')
+        }
+      },
       //解析数据
       setEncoded(link, name, data) {
         const encodedData = encodeURIComponent(data);
-
         if (data) {
           link.href = 'data:application/bpmn20-xml;charset=UTF-8,' + encodedData
           link.download = name
@@ -174,19 +189,21 @@
 </script>
 
 <style lang="scss" scoped>
-  .contentBox{
+  .contentBox {
     height: 84vh;
     position: relative;
   }
-  .contents{
+
+  .contents {
     height: inherit;
     position: relative;
-    .canvas{
+    .canvas {
       height: inherit;
       background-color: #ebeef5;
     }
   }
-  .properties-panel-parent{
+
+  .properties-panel-parent {
     position: absolute;
     top: 0;
     right: 0;
@@ -196,15 +213,16 @@
     transition: all ease-in-out 0.2s;
     overflow-y: auto;
     background-color: #f8f8f8;
-    #js-properties-panel{
-      height:inherit;
+    #js-properties-panel {
+      height: inherit;
     }
   }
-  .buttons{
+
+  .buttons {
     position: absolute;
     top: 6px;
     right: 262px;
-    li{
+    li {
       margin-bottom: 12px;
     }
   }

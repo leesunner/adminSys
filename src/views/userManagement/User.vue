@@ -68,6 +68,7 @@
             type="success"
             size="mini"
             icon="el-icon-view"
+            v-if="buttonControl[_config.buttonCode.B_DETAIL]"
             @click="handleCheck(scope.$index, scope.row)"
           >详情
           </el-button>
