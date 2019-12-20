@@ -5,7 +5,7 @@
         <el-radio-button :label="1">PC端</el-radio-button>
         <el-radio-button :label="2">APP端</el-radio-button>
       </el-radio-group>
-      <el-button type="primary" style="margin-left: 45px;" size="mini" @click="showCreateButton = true"
+      <el-button type="primary" style="margin-left: 45px;" size="mini" v-if="buttonControl[_config.buttonCode.B_CREATE]" @click="showCreateButton = true"
                  icon="el-icon-plus">创建按钮
       </el-button>
     </el-row>
@@ -37,10 +37,16 @@
           <span class="custom-tree-node" slot-scope="{ node, data }">
             <span>{{ node.label }}</span>
             <span v-if="data.level == 1">
-              <el-button size="mini" @click.stop="() => handleNodeClick(data)">公共按钮</el-button>
+              <el-button size="mini"
+                         @click.stop="() => handleNodeClick(data)"
+                         v-if="buttonControl[_config.buttonCode.B_LIST]"
+                         :type="currentName==data.menuName?'primary':''">公共按钮</el-button>
             </span>
             <span v-if="data.level >1">
-              <el-button size="mini" @click.stop="() => handleNodeClick(data)" icon="el-icon-view">按钮列表</el-button>
+              <el-button size="mini"
+                         @click.stop="() => handleNodeClick(data)"
+                         icon="el-icon-view" v-if="buttonControl[_config.buttonCode.B_LIST]"
+                         :type="currentName==data.menuName?'primary':''">按钮列表</el-button>
             </span>
           </span>
         </el-tree>
@@ -52,15 +58,19 @@
           <el-table-column prop="buttonName" label="名称"></el-table-column>
           <el-table-column prop="buttonCode" label="按钮代码"></el-table-column>
           <el-table-column prop="url" label="请求地址"></el-table-column>
-          <el-table-column prop="enabledVal" label="按钮状态" width="80"></el-table-column>
+          <el-table-column prop="enabled" label="按钮状态" width="80">
+            <template v-slot="scope">
+              <el-link :type="scope.row.enabled?'success':'error'">{{scope.row.enabled?'启用':'禁用'}}</el-link>
+            </template>
+          </el-table-column>
           <el-table-column label="详情" width="80">
             <template v-slot="scope">
-              <el-link type="primary" @click="handleCheck(scope.$index, scope.row)" icon="el-icon-view">查看</el-link>
+              <el-link type="primary" @click="handleCheck(scope.$index, scope.row)" icon="el-icon-view" v-if="buttonControl[_config.buttonCode.B_DETAIL]">查看</el-link>
             </template>
           </el-table-column>
           <el-table-column label="删除" width="80">
             <template v-slot="scope">
-              <el-link type="danger" icon="el-icon-delete" @click="handleDelete(scope.$index, scope.row)">删除</el-link>
+              <el-link type="danger" icon="el-icon-delete" @click="handleDelete(scope.$index, scope.row)" v-if="buttonControl[_config.buttonCode.B_DELETE]">删除</el-link>
             </template>
           </el-table-column>
         </el-table>
@@ -69,7 +79,7 @@
     <!-- 创建按钮弹窗 -->
     <el-dialog title="创建按钮" :visible.sync="showCreateButton">
       <el-form :model="createButton" size="mini" :rules="rules" ref="formRules" :label-width="formLabelWidth">
-        <el-form-item label="平台" prop="type">
+        <el-form-item label="PC/移动" prop="type">
           <el-select v-model="createButton.type" @change="handlerChangeType" clearable placeholder="请选择">
             <el-option
               v-for="item in _config.dict_platform_type"
@@ -122,7 +132,7 @@
       </el-form>
       <div slot="footer">
         <el-button size="mini" @click="showCreateButton = false">取消</el-button>
-        <el-button size="mini" type="primary" @click="confirmCreate">确定</el-button>
+        <el-button size="mini" type="primary" @click="confirmCreate" v-if="buttonControl[_config.buttonCode.B_CREATE]">确定</el-button>
       </div>
     </el-dialog>
     <!-- 查看按钮详情弹窗 -->
@@ -179,13 +189,13 @@
       <div slot="footer">
         <el-button
           size="mini"
-          v-if="checkType"
           @click="checkType = false"
+          v-if="checkType&&buttonControl[_config.buttonCode.B_UPDATE]"
         >启用编辑
         </el-button>
         <el-button size="mini" v-else @click="checkType = true">关闭编辑</el-button>
         <el-button size="mini" @click="showButtonDetail = false">关闭</el-button>
-        <el-button size="mini" v-show="!checkType" type="primary" @click="confirmChange">保存</el-button>
+        <el-button size="mini" type="primary" @click="confirmChange" v-if="!checkType&&buttonControl[_config.buttonCode.B_UPDATE]">保存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -199,6 +209,7 @@
     mixins: [mixin, treeMixin],
     data() {
       return {
+        currentName:'',//当前选取的菜单名
         checkBoxType: 1,
         checkType: true, //区分查看还是编辑
         rowData: "", //行数据
@@ -263,6 +274,7 @@
       handleNodeClick(data) {
         this.getMenuButtonById(data.id);
         this.nodeId = data.id;
+        this.currentName = data.menuName
       },
       // 查询菜单按钮列表
       getMenuButtonById(id) {
@@ -271,24 +283,9 @@
           .then(res => {
             var data = res.data;
             if (data.code == 200) {
-              if (data.data != []) {
-                var itemList = data.data;
-                var len = itemList.length;
-                for (var i = 0; i < len; i++) {
-                  var obj = itemList[i];
-                  this._config.dict_enabled_status.find(item => {
-                    if (item.key == obj.enabled) {
-                      obj.enabledVal = item.value;
-                    }
-                  });
-                }
-              }
               this.menuButtonDetail = data.data || [];
             }
           })
-          .catch(err => {
-            this.$message.error(err);
-          });
       },
       // 查看按钮详情按钮
       handleCheck(index, row) {
@@ -407,15 +404,6 @@
 <style lang="scss" scoped>
   .el-tree {
     padding: 0 0 20px 20px;
-  }
-
-  .custom-tree-node {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 14px;
-    padding-right: 8px;
   }
 </style>
 

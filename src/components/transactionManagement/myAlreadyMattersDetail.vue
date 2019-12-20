@@ -105,6 +105,7 @@
               this.newObject(obj, item)
             })
           //将提取的数据对象赋值给formData（这么用的原因：直接将提取的属性给formData并赋值，会导致表格渲染时无法再输入）
+          console.log(obj)
           this.formData = obj
         })
       },

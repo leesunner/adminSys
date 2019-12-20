@@ -19,6 +19,7 @@
             v-model="columnData.siteId"
             filterable
             remote
+            clearable
             reserve-keyword
             placeholder="请输入所属站点关键字"
             :remote-method="remoteMethod"
@@ -44,18 +45,21 @@
         </el-form-item>
         <el-form-item label="文章作者">
           <el-input
+            clearable
             placeholder="请输入文章作者"
             v-model="columnData.author">
           </el-input>
         </el-form-item>
         <el-form-item label="文章来源">
           <el-input
+            clearable
             placeholder="请输入文章来源"
             v-model="columnData.copyFrom">
           </el-input>
         </el-form-item>
         <el-form-item label="搜索关键字">
           <el-input
+            clearable
             placeholder="请输入关键字"
             v-model="columnData.keywords">
           </el-input>
@@ -80,6 +84,7 @@
           <el-form-item label="文章摘要" prop="description">
             <el-input
               type="textarea"
+              clearable
               :autosize="{ minRows: 3, maxRows: 6}"
               placeholder="请输入文章摘要"
               v-model="columnData.description">

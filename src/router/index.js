@@ -1,5 +1,4 @@
 import router from './routerConfig/routerSource';
-import {permissionRouters} from '../tools/routerTool';
 import _session from '../tools/sessionTool';
 import store from '../store/index';
 import NProgress from 'nprogress';
@@ -13,7 +12,7 @@ router.beforeEach((to, from, next) => {
   NProgress.start()
   document.title = to.meta.title
   //获取和解析路由列表
-  const ROUTERS_LIST = _session.getSessoin('ROUTERS_LIST')
+  const ROUTERS_LIST = _session.getLocalStorage('ROUTERS_LIST')
   const routerTree = store.state.login.ROUTERS_LIST
   //未登陆
   if (!ROUTERS_LIST) {
@@ -22,6 +21,7 @@ router.beforeEach((to, from, next) => {
       location.reload()
     }else{
       _session.clearSession()
+      _session.clearLocalStorage()
       //login和首次进来的直接过
       if (to.path==='/login'||to.path==='/'){
         next()
@@ -34,7 +34,7 @@ router.beforeEach((to, from, next) => {
     //已登录（或已登录刷新）
     //因为vuex里面的刷新页面会丢失数据，所以重新赋值
     if (routerTree.length <= 0) {
-      _session.setSession('ROUTERS_LIST', [])
+      _session.setLocalStorage('ROUTERS_LIST', null)
       store.dispatch('routerTree').then(res => {
         next('/index')
       }).catch(error=>{

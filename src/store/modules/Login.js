@@ -38,8 +38,8 @@ export default {
             duration:1500,
             offset:35,
           })
-          _session.setSession('USER_INFO', res.data.data)
-          _session.setSession('AUTH_TOKEN', res.data.data.accessToken)
+          _session.setLocalStorage('USER_INFO', res.data.data)
+          _session.setLocalStorage('AUTH_TOKEN', res.data.data.accessToken)
           commit('setUserInfo', res.data.data)
           return dispatch('routerTree')
         }
@@ -51,7 +51,7 @@ export default {
         if (res){
           console.log('登录进来了')
           // _session.setSession('AUTH_TOKEN',res.data.data.token)
-          _session.setSession('USER_INFO', res.data.data)
+          _session.setLocalStorage('USER_INFO', res.data.data)
           commit('setUserInfo', res.data.data)
           return dispatch('routerTree')
         }
@@ -60,24 +60,29 @@ export default {
     //登出
     loginOut() {
       _session.clearSession()
+      _session.clearLocalStorage()
       router.go(0)
     },
     //获取路由树
     routerTree({dispatch, commit, state}) {
       //为了刷新时正确使用数据
-      let userInfo = _session.getSessoin('USER_INFO')
+      let userInfo = _session.getLocalStorage('USER_INFO')
       if (userInfo){
+        //新开页面保持登录信息
+        let token = _session.getLocalStorage('AUTH_TOKEN')
+        _session.setSession('AUTH_TOKEN',token)
         commit('setUserInfo', userInfo)
       }
       return request.get(`${apiList.menu}/user`).then(res => {
         //导入菜单公共页面路由
         const arr = menuRouter
         if (res.data.data[0]){
-          Array.prototype.push.apply(arr[0].children, res.data.data[0].children)
+          //加到main路由中去
+          Array.prototype.push.apply(arr[0].children, res.data.data)
         }
         commit('setRouterTree', arr)
         permissionRouters(arr)
-        _session.setSession('ROUTERS_LIST', arr)
+        _session.setLocalStorage('ROUTERS_LIST', arr)
       })
     },
   }

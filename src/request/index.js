@@ -51,6 +51,10 @@ axios.interceptors.request.use(config => {
 //响应拦截器
 axios.interceptors.response.use(res => {
   close()
+  if (res.headers['content-type'].indexOf('image')>-1){
+    //获取系统中图片时，文件流传递过来做的拦截
+    return res
+  }
   if (res.data.code===200){
     return res
   }else{
@@ -58,6 +62,7 @@ axios.interceptors.response.use(res => {
     switch (res.data.code){
       case 401:
         _session.clearSession()
+        _session.clearLocalStorage()
         Message.error('登录已过期')
         setTimeout(()=>{
           router.go(0)

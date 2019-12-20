@@ -3,8 +3,8 @@ import Vue from 'vue';
 import {Plugin} from 'vue-fragment'
 Vue.use(Plugin)
 
-// 自定义指令
-import '../directive'
+// 自定义指令(暂时飞废弃)
+// import '../directive'
 
 //导入全局过滤器
 import '../filters'

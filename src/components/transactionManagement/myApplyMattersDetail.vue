@@ -1,6 +1,6 @@
 <template>
   <el-dialog title="流程详情" :visible.sync="$attrs.show" @close="close" width="685px" style="max-height: 820px;overflow: hidden;">
-    <el-scrollbar style="height: 100%;padding-bottom: 150px;">
+    <el-scrollbar style="height: 820px;padding-bottom: 205px;">
       <div class="detail">
         <el-timeline>
           <el-timeline-item
@@ -69,10 +69,5 @@
     & /deep/.el-card__body {
       padding: 0;
     }
-    //让dialog里面可以滚动
-    & /deep/.el-dialog__body {
-      height: 820px!important;
-    }
   }
-
 </style>

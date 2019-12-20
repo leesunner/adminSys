@@ -7,10 +7,16 @@
             <el-input v-model="searchData.roleName" clearable placeholder="角色名称"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="getRoleByPage(1)" icon="el-icon-search">查询</el-button>
+            <el-button type="primary"
+                       @click="getRoleByPage(1)"
+                       v-if="buttonControl[_config.buttonCode.B_LIST]"
+                       icon="el-icon-search">查询</el-button>
           </el-form-item>
            <el-form-item>
-          <el-button type="primary" @click="showCreateRole = true" icon="el-icon-plus">创建角色</el-button>
+          <el-button type="primary"
+                     @click="showCreateRole = true"
+                     v-if="buttonControl[_config.buttonCode.B_CREATE]"
+                     icon="el-icon-plus">创建角色</el-button>
         </el-form-item>
         </span>
       </el-form>
@@ -33,6 +39,7 @@
             size="mini"
             type="primary"
             icon="el-icon-view"
+            v-if="buttonControl[_config.buttonCode.B_DETAIL]"
             @click="handleCheck(scope.$index, scope.row)"
           >详情
           </el-button>
@@ -40,6 +47,7 @@
             size="mini"
             type="success"
             icon="el-icon-view"
+            v-if="buttonControl[_config.buttonCode.B_ROLE_PERMISSION_LIST]"
             @click="handleCheckPermission(scope.$index, scope.row)"
           >查看权限
           </el-button>
@@ -47,6 +55,7 @@
             size="mini"
             type="danger"
             icon="el-icon-delete"
+            v-if="buttonControl[_config.buttonCode.B_DELETE]"
             @click="handleDelete(scope.$index, scope.row)"
           >删除
           </el-button>
@@ -60,7 +69,7 @@
         <el-table-column prop="permissionName" label="名称"></el-table-column>
         <el-table-column label="移除权限">
           <template v-slot="scope">
-            <el-link type="danger" @click="handleDelPermission(scope.$index, scope.row)">移除</el-link>
+            <el-link v-if="buttonControl[_config.buttonCode.B_EDIT_PERMISSION]" type="danger" @click="handleDelPermission(scope.$index, scope.row)">移除</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -104,6 +113,7 @@
         <el-button
           size="mini"
           type="primary"
+          v-if="buttonControl[_config.buttonCode.B_ROLE_PERMISSION_OTHERS]"
           @click="handleAddPermission"
         >添加权限
         </el-button>

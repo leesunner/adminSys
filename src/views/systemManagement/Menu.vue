@@ -7,6 +7,15 @@
           <el-radio-button :label="2">APP端</el-radio-button>
         </el-radio-group>
       </el-col>
+      <el-col :span="4">
+        <el-button
+          type="primary"
+          v-if="buttonControl[_config.buttonCode.B_CREATE]"
+          icon="el-icon-plus"
+          size="small"
+          @click="showDialogCreate({id:0})"
+        >添加一级菜单</el-button>
+      </el-col>
     </el-row >
     <el-row style="margin-top: 12px;" class="search">
       <el-form inline>
@@ -59,7 +68,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
           <el-button size="mini" @click="dialogVisible = false">取 消</el-button>
-          <el-button size="mini" type="primary" @click="confirmCreate">保存</el-button>
+          <el-button size="mini" type="primary" @click="confirmCreate" v-if="buttonControl[_config.buttonCode.B_CREATE]">提交</el-button>
       </div>
     </el-dialog>
     <el-row style="background:#fff;">
@@ -75,26 +84,28 @@
           :props="defaultProps"
           highlight-current
         >
-          <span class="custom-tree-node" slot-scope="{ node, data }" @click.stop="() => handleNodeClick(data)">
+          <span class="custom-tree-node" slot-scope="{ node, data }">
             <span class="custom-tree-node-title">{{ node.label }}</span>
             <span style="display: inline-block;width: 280px;text-align: left;">
               <el-button
                 type="primary"
                 size="mini"
                 @click.stop="() => handleNodeClick(data)"
+                v-if="buttonControl[_config.buttonCode.B_DETAIL]"
                 icon="el-icon-view"
               >详情</el-button>
               <el-button
                 type="warning"
+                v-if="buttonControl[_config.buttonCode.B_CREATE]"
                 icon="el-icon-plus"
                 size="mini"
                 @click.stop="() => showDialogCreate(data)"
               >添加子菜单</el-button>
               <el-button
-                v-if="node.level!==1"
                 type="danger"
                 size="mini"
                 icon="el-icon-delete"
+                v-if="node.level!==1&&buttonControl[_config.buttonCode.B_DELETE]"
                 @click.stop="() => handleDelete(node, data)"
               >删除</el-button>
             </span>
@@ -142,14 +153,16 @@
         <el-form label-width="100px">
           <el-form-item size="mini">
             <el-button
-              v-if="checkType"
               @click="checkType = false"
+              v-if="buttonControl[_config.buttonCode.B_UPDATE]&&checkType"
             >启用编辑
             </el-button>
             <el-button v-else @click="checkType = true">关闭编辑</el-button>
-            <el-button v-show="!checkType" type="primary" @click="confirmChange">保存</el-button>
+            <el-button type="primary"
+                       @click="confirmChange"
+                       v-if="!checkType&&buttonControl[_config.buttonCode.B_UPDATE]">保存</el-button>
             <el-button
-              v-if="showMenuButton"
+              v-if="showMenuButton&&buttonControl[_config.buttonCode.B_LIST]"
               type="primary"
               @click="handleCheckButton"
             >查看菜单按钮

@@ -144,7 +144,18 @@ export default {
     B_CREATE: 'B_CREATE',//基础的创建
     B_DETAIL: 'B_DETAIL',//基础的查看详情
     B_EXPORT: 'B_EXPORT',//基础的导出
-
+    B_MENU_TREE:'B_MENU_TREE',//获取权限菜单树
+    B_BUTTON_TREE:'B_BUTTON_TREE',//获取权限按钮树
+    B_MENU_TREE_UPDATE:'B_MENU_TREE_UPDATE',//修改权限菜单树
+    B_BUTTON_TREE_UPDATE:'B_BUTTON_TREE_UPDATE',//修改权限按钮树
+    B_ROLE_PERMISSION_LIST:'B_ROLE_PERMISSION_LIST',//查看角色权限列表
+    B_ROLE_PERMISSION_OTHERS:'B_ROLE_PERMISSION_OTHERS',//查看角色未拥有权限列表
+    B_EDIT_PERMISSION:'B_EDIT_PERMISSION',//角色添加权限
+    B_USER_ROLE_LIST:'B_USER_ROLE_LIST',//查看用户角色
+    B_USER_UNROLE_LIST:'B_USER_UNROLE_LIST',//查看用户未有角色
+    B_EDIT_USER_ROLE:'B_EDIT_USER_ROLE',//编辑用户角色
+    B_USER_STATUS:'B_USER_STATUS',//修改用户状态
+    B_EDIT_PSW:'B_EDIT_PSW',//修改用户密码
   },
   // 全国各省省会城市的经纬度
   geoCoordMap: {

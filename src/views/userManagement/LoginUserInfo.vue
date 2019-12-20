@@ -33,7 +33,7 @@
           <el-col :span="15">时间：{{userInfo.time|formatTime('LLLL')}}</el-col>
         </el-row>
       </el-form-item>
-      <el-form-item style="text-align: center;">
+      <el-form-item style="text-align: right;">
         <el-button @click="submit('userInfo')" type="primary">立即保存</el-button>
       </el-form-item>
     </el-form>
@@ -113,6 +113,7 @@ export default {
           setTimeout(() => {
             this.$router.replace("/login");
             this._session.clearSession()
+            this._session.clearLocalStorage()
           }, 300);
         })
     },

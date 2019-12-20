@@ -5,9 +5,9 @@
         <el-form-item>
           <el-input v-model="searchData.name" clearable placeholder="请输入任务名关键字"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-input v-model="searchData.procDefName" clearable placeholder="请输入流程名关键字"></el-input>
-        </el-form-item>
+        <!--<el-form-item>-->
+          <!--<el-input v-model="searchData.procDefName" clearable placeholder="请输入流程名关键字"></el-input>-->
+        <!--</el-form-item>-->
       </el-form>
       <el-form size="mini" inline>
         <el-form-item>

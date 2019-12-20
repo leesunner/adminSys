@@ -39,7 +39,7 @@
     data() {
       return {
         checked: '',
-        control:true,
+        control:false,//
         data: {
           username: '',
           password: ''

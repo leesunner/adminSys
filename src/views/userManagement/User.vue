@@ -46,10 +46,10 @@
       </el-form>
       <el-form size="mini" inline>
         <el-form-item>
-          <el-button type="primary" @click="getUserByPage(1)" icon="el-icon-search" v-show="buttonControl" v-buttonP="_config.buttonCode.B_LIST">查询</el-button>
+          <el-button type="primary" @click="getUserByPage(1)" icon="el-icon-search" v-if="buttonControl[_config.buttonCode.B_LIST]">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="showCreateUser = true" icon="el-icon-plus" v-show="buttonControl" v-buttonP="_config.buttonCode.B_CREATE">创建用户</el-button>
+          <el-button type="primary" @click="showCreateUser = true" icon="el-icon-plus" v-if="buttonControl[_config.buttonCode.B_CREATE]">创建用户</el-button>
         </el-form-item>
       </el-form>
     </el-row>
@@ -75,6 +75,7 @@
             type="primary"
             size="mini"
             icon="el-icon-view"
+            v-if="buttonControl[_config.buttonCode.B_USER_ROLE_LIST]"
             @click="handleCheckRole(scope.$index, scope.row)"
           >用户角色
           </el-button>
@@ -290,6 +291,7 @@
           size="mini"
           type="primary"
           @click="showEditorUserRoleDetail = true"
+          v-if="buttonControl[_config.buttonCode.B_EDIT_USER_ROLE]"
         >编辑用户角色
         </el-button>
       </div>
@@ -621,12 +623,21 @@
       },
       // 查询用户未拥有的角色详情
       getUserNoRoleById(row) {
-        return this.$request.get(this.$apiList.user + "/other/roles", {
-          params: {
-            userId: row.id,
-            name: row.username
-          }
-        });
+        //有拥有编辑用户角色的权限
+        if (this.buttonControl[this._config.buttonCode.B_EDIT_USER_ROLE]){
+          return this.$request.get(this.$apiList.user + "/other/roles", {
+            params: {
+              userId: row.id,
+              name: row.username
+            }
+          });
+        }else{
+          return Promise.resolve({
+            data:{
+              code:403
+            }
+          })
+        }
       },
       // 查询用户角色详情
       getUserRoleById(row) {

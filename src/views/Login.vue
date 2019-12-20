@@ -49,6 +49,7 @@
     created(){
       //进登录页先清缓存
       this._session.clearSession()
+      this._session.clearLocalStorage()
     },
     methods: {
       handleClick({name}) {
