@@ -41,33 +41,71 @@
       :preview-src-list="srcList">
     </el-image>
     <el-dialog title="部署工作流" :visible.sync="showCreateFlow" width="685px">
+      <el-form inline :model="formData" size="mini">
+        <el-form-item label="选择菜单" label-width="96px">
+          <el-select v-model="formData.menuCode" placeholder="请选择菜单">
+            <el-option
+              v-for="(item,index) of menuSelect"
+              :key="index"
+              :label="item.value"
+              :value="item.key"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="上传文件"  label-width="96px">
           <el-upload
             :action="`${$baseUrl+$apiList.workFlow}/deploymentZip`"
+            :data="formData"
             :headers="headers"
+            ref="uploadBpmn"
             :on-success="handleAvatarSuccess"
             :on-error="handleAvatarError"
-            :before-remove="()=>false"
+            :before-remove="()=>true"
+            :on-change="(file, fileLists)=>{fileList = fileLists}"
             :before-upload="beforeFileUpload"
+            :file-list="fileList"
+            :auto-upload="false"
             :limit="1">
             <el-button size="small" type="primary">点击上传BPM文件</el-button>
           </el-upload>
-        <el-row class="warning">
-          * 文件上传只允许.zip的文件格式
-        </el-row>
+          <el-row class="warning">
+            * 文件上传只允许.zip的文件格式（里面必须包含.bpmn文件和.png）
+          </el-row>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button type="primary" size="small" @click.stop="submitFile">确认部署</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
   import mixin from '@/mixin/buttonPermission'
+  import ElRow from "element-ui/packages/row/src/row";
 
   export default {
+    components: {ElRow},
     mixins: [mixin],
     name: "already-flow",
     data() {
       return {
         srcList: [],
         tableData: {},
+        menuSelect:[
+          {
+            key:'ACT_DW',
+            value:'党务'
+          },
+          {
+            key:'ACT_SW',
+            value:'事务'
+          },
+          {
+            key:'ACT_CW',
+            value:'财务'
+          }
+        ],
         searchData: {
           //用户列表查询条件
           pageNum: 1,
@@ -79,6 +117,10 @@
         headers: {
           'Authorization': `Bearer ${this._session.getSessoin('AUTH_TOKEN')}`
         },
+        formData:{
+          menuCode:'',
+        },
+        fileList:[],
       }
     },
     created() {
@@ -110,10 +152,24 @@
             }, 500)
         })
       },
+      //确认部署工作流
+      submitFile(){
+        if (!this.formData.menuCode){
+          this.$message.error('请先选择要部署的事务项')
+          return
+        }
+        if (this.fileList.length<=0){
+          this.$message.error('请先选择要部署的文件')
+          return
+        }
+        this.$refs['uploadBpmn'].submit()
+      },
       //上传成功回调
       handleAvatarSuccess(res, file, fileList) {
         if(res.code==200){
           this.$message.success('部署成功')
+          this.$refs['uploadBpmn'].clearFiles()
+          this.getPageList()
         }else{
           this.$message.error(res.data.msg);
         }

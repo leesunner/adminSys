@@ -1,6 +1,5 @@
 <template>
   <el-form ref="form" :model="data">
-    <el-form-item>
       <el-form-item>
         <div class="inputContent">
           <lee-icon icon="iconshouji"></lee-icon>
@@ -28,7 +27,6 @@
       <el-form-item>
         <el-button type="primary" class="login" @click="login" @keyup.enter.native="login">登 录</el-button>
       </el-form-item>
-    </el-form-item>
   </el-form>
 </template>
 
@@ -64,7 +62,7 @@
     methods: {
       //发送验证码
       sendCode() {
-        if (this.data.phoneNumber){
+        if (this._funs.checkPhone(this.data.phoneNumber)){
           if (this.codeText === '发送验证码') {
             //发送验证码的接口
             this.$request.get(`${this.$apiList.sendCode}/${this.data.phoneNumber}`).then(res=>{
@@ -79,7 +77,7 @@
             });
           }
         }else{
-          this.$message.error('请输入手机号码')
+          this.$message.error('请输入正确的手机号码')
         }
       },
       //倒计时
@@ -96,19 +94,25 @@
       },
       //验证表单信息
       checkInfo() {
-        // this._funs.checkPhone()
-        return false
+        if (!this._funs.checkPhone(this.data.phoneNumber)){
+          this.$message.error('请输入正确的手机号码')
+          return false
+        }
+        if(!this.data.code){
+          this.$message.error('请输入验证码')
+          return false
+        }
+        return true
       },
       //登录
       login() {
-        // if (this.checkInfo()) {
-        //
-        // }
-        this.$store.dispatch('LoginByPhone', this.data).then(res => {
-          if (res) {
-            this.$router.push('/index')
-          }
-        })
+        if (this.checkInfo()) {
+          this.$store.dispatch('LoginByPhone', this.data).then(res => {
+            if (res) {
+              this.$router.push('/index')
+            }
+          })
+        }
       }
     }
   }
@@ -122,16 +126,12 @@
   }
 
   /deep/ .el-button {
-    width: 100%;
     margin-top: 35px;
+    width: 100%;
   }
 
   /deep/ .el-checkbox {
     margin-right: 160px;
-  }
-
-  .login {
-    margin-top: 48px;
   }
 
   .code {

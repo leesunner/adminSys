@@ -165,6 +165,7 @@
         }
         &-fresh {
           color: $primary;
+          cursor: pointer;
         }
       }
       &-button {

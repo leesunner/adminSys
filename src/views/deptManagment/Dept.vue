@@ -2,8 +2,8 @@
   <div class="dept">
     <!-- 添加子部门输入部门名称弹窗 -->
     <el-dialog :title="`您将在《${parentDeptName}》下添加子部门`" :visible.sync="showInputDeptName">
-      <el-form :model="createDept" size="mini">
-        <el-form-item label="部门名称">
+      <el-form :model="createDept" size="mini" :rules="DeptRules" ref="DeptRules">
+        <el-form-item label="部门名称" prop="name">
           <el-input v-model="createDept.name" clearable placeholder="请输入部门名称"></el-input>
         </el-form-item>
       </el-form>
@@ -12,7 +12,7 @@
         <el-button size="mini" type="primary" @click="confirmCreate">确定</el-button>
       </div>
     </el-dialog>
-    <el-row >
+    <el-row>
       <el-form inline>
         <el-form-item label="请输入部门关键字:">
           <el-input
@@ -34,7 +34,9 @@
                  default-expand-all
                  :props="defaultProps">
           <span class="custom-tree-node" slot-scope="{ node, data }">
-            <span class="custom-tree-node-title">{{ node.label }}</span>
+            <el-tooltip class="item" effect="dark" :content="node.label" placement="right">
+              <span class="custom-tree-node-title">{{ node.label }}</span>
+            </el-tooltip>
             <span style="width:445px;text-align: left;">
               <!--<span-->
               <!--v-if="!data.dingSync"-->
@@ -43,11 +45,11 @@
               <!--<el-button type="primary" size="mini">同步到钉钉</el-button>-->
               <!--</span>-->
               <el-button
-                type="primary"
+                :type="deptDetail.id==data.id?'primary':''"
                 icon="el-icon-view"
                 size="mini"
                 @click.stop="handleNodeClick(data)"
-              >查看详情</el-button>
+              >详情</el-button>
               <el-button
                 size="mini"
                 type="warning"
@@ -72,7 +74,7 @@
           </span>
         </el-tree>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8" v-show="deptDetail.id">
         <!-- 部门详情 -->
         <el-form
           :model="deptDetail"
@@ -263,8 +265,9 @@
 <script>
   import mixin from '@/mixin/buttonPermission'
   import treeMixin from '@/mixin/treeSearchMixin'
+
   export default {
-    mixins: [mixin,treeMixin],
+    mixins: [mixin, treeMixin],
     name: "dept",
     data() {
       return {
@@ -278,13 +281,12 @@
           checkStrictly: true
         },
         createDept: {
-          code: "",
           description: "",
           name: "",
-          pid: "",
-          sort: 0,
-          type: 0
         }, //新增部门
+        DeptRules: {
+          name: [{required: true, message: '请输入部门名', trigger: 'blur'}]
+        },
         showInputDeptName: false, //添加子部门弹窗
         parentDeptName: "", //父部门名称
         defaultProps: {
@@ -293,15 +295,15 @@
           label: "name"
         },
         selectRoleArr: [], //选中的角色
-        userGroupRoleDetail:{},//部门拥有的角色列表
-        dialogTableRoleVisible:false,//部门拥有的角色列表弹框
-        rowData:{},//行信息
-        showEditorUserGroupRoleDetail:false,//添加角色弹框
-        userGroupNoRoleDetail:{},
+        userGroupRoleDetail: {},//部门拥有的角色列表
+        dialogTableRoleVisible: false,//部门拥有的角色列表弹框
+        rowData: {},//行信息
+        showEditorUserGroupRoleDetail: false,//添加角色弹框
+        userGroupNoRoleDetail: {},
         searchUserRole: {
           //用户组有角色查询
           deptId: "",
-          roleName:'',
+          roleName: '',
           pageNum: 1,
           pageSize: this._config.sizeArr[0]
         },
@@ -318,7 +320,7 @@
           pageNum: 1,
           pageSize: this._config.sizeArr[0],
           realName: "",
-          deptId:'',
+          deptId: '',
         },
         showUserGroupMemberDetail: false, //查看用户组成员列表弹窗
         showUserGroupRoleDetail: false, //查看用户组角色列表弹窗
@@ -469,8 +471,8 @@
       getUserGroupRoleById(id) {
         this.searchUserRole.deptId = id
         this.$request
-          .get(this.$apiList.dept + "/roles",{
-            params:this.searchUserRole
+          .get(this.$apiList.dept + "/roles", {
+            params: this.searchUserRole
           })
           .then(res => {
             var data = res.data;
@@ -504,12 +506,12 @@
       },
       // 查询部門成员列表
       getUserGroupMemberById(id) {
-        if (typeof id!=='object'){
+        if (typeof id !== 'object') {
           this.userSearchData.deptId = id
         }
         this.$request
-          .get(this.$apiList.dept + `/users`,{
-            params:this.userSearchData
+          .get(this.$apiList.dept + `/users`, {
+            params: this.userSearchData
           })
           .then(res => {
             var data = res.data;
@@ -652,23 +654,19 @@
       },
       // 创建部门
       confirmCreate() {
-        if (this.createDept.name == "") {
-          this.$message("请输入部门名称");
-          return;
-        }
-        this.$request
-          .post(this.$apiList.dept, this.createDept)
-          .then(res => {
-            if (res.data.code == 200) {
-              this.$message.success(res.data.msg);
-            }
-            this.showInputDeptName = false;
-            this.createDept = this._funs.emptyObj(this.createDept);
-            this.getDeptTree();
-          })
-          .catch(err => {
-            this.$message.error(err);
-          });
+        this.$refs['DeptRules'].validate(valid => {
+          if (valid) {
+            this.$request.post(this.$apiList.dept, this.createDept)
+              .then(res => {
+                if (res.data.code == 200) {
+                  this.$message.success(res.data.msg);
+                }
+                this.showInputDeptName = false;
+                this.createDept = this._funs.emptyObj(this.createDept);
+                this.getDeptTree();
+              })
+          }
+        })
       },
       // 确认修改部门信息
       confirmChange() {

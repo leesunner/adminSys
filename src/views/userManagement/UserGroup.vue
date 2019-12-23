@@ -7,10 +7,12 @@
             <el-input v-model="searchData.name" clearable placeholder="用户组名称"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="mini" @click="getUserGroupByPage(1)" icon="el-icon-search" v-if="buttonControl[_config.buttonCode.B_LIST]">查询</el-button>
+            <el-button type="primary" size="mini" @click="getUserGroupByPage(1)" icon="el-icon-search"
+                       v-if="buttonControl[_config.buttonCode.B_LIST]">查询</el-button>
           </el-form-item>
           <el-form-item>
-          <el-button type="primary" size="mini" @click="showCreateUserGroup = true" icon="el-icon-plus" v-if="buttonControl[_config.buttonCode.B_CREATE]">创建用户组</el-button>
+          <el-button type="primary" size="mini" @click="showCreateUserGroup = true" icon="el-icon-plus"
+                     v-if="buttonControl[_config.buttonCode.B_CREATE]">创建用户组</el-button>
         </el-form-item>
         </span>
       </el-form>
@@ -26,6 +28,7 @@
             size="mini"
             type="primary"
             icon="el-icon-view"
+            v-if="buttonControl[_config.buttonCode.B_DETAIL]"
             @click="handleCheck(scope.$index, scope.row)"
           >详情
           </el-button>
@@ -33,6 +36,7 @@
             size="mini"
             type="success"
             icon="el-icon-view"
+            v-if="buttonControl[_config.buttonCode.B_USER_GROUP_MENBER]"
             @click="handleCheckMember(scope.$index, scope.row)"
           >查看成员
           </el-button>
@@ -40,6 +44,7 @@
             size="mini"
             type="warning"
             icon="el-icon-view"
+            v-if="buttonControl[_config.buttonCode.B_USERS_GROUP_ROLES]"
             @click="handleCheckRole(scope.$index, scope.row)"
           >查看角色
           </el-button>
@@ -47,6 +52,7 @@
             size="mini"
             type="danger"
             icon="el-icon-delete"
+            v-if="buttonControl[_config.buttonCode.B_DELETE]"
             @click="handleDelete(scope.$index, scope.row)"
           >删除
           </el-button>
@@ -60,7 +66,11 @@
         <el-table-column prop="name" label="角色名"></el-table-column>
         <el-table-column label="操作" width="90">
           <template v-slot="scope">
-            <el-button type="danger" size="mini" @click="handleDelRole(scope.$index, scope.row)">移除</el-button>
+            <el-link
+              type="danger"
+              v-if="buttonControl[_config.buttonCode.B_DELETE_ROLE_GROUP]"
+              @click="handleDelRole(scope.$index, scope.row)">移除
+            </el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -103,6 +113,7 @@
         <el-button
           size="mini"
           type="primary"
+          v-if="buttonControl[_config.buttonCode. B_GROUP_ADD_ROLE]"
           @click="handleAddRole"
         >添加角色
         </el-button>
@@ -116,7 +127,10 @@
             <el-input v-model="userSearchData.realName" clearable placeholder="真实姓名"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="mini" @click="getUserGroupMemberById">查询</el-button>
+            <el-button type="primary"
+                       v-if="buttonControl[_config.buttonCode. B_UNOWNE_USERLIST]"
+                       size="mini"
+                       @click="getUserGroupMemberById">查询</el-button>
           </el-form-item>
         </span>
       </el-form>
@@ -126,7 +140,12 @@
         <el-table-column prop="realName" label="真实名"></el-table-column>
         <el-table-column label="操作" width="90">
           <template v-slot="scope">
-            <el-button type="danger" size="mini" @click="handleDelMember(scope.$index, scope.row)">移除</el-button>
+            <el-link
+              type="danger"
+              v-if="buttonControl[_config.buttonCode.B_DELETE_USER_GROUP]"
+              size="mini"
+              @click="handleDelMember(scope.$index, scope.row)">移除
+            </el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -182,6 +201,7 @@
         <el-button
           size="mini"
           type="primary"
+          v-if="buttonControl[_config.buttonCode. B_GROUP_ADD_USER]"
           @click="handleAddMember"
         >添加成员
         </el-button>
@@ -189,8 +209,9 @@
     </el-dialog>
     <!-- 创建用户组弹窗 -->
     <el-dialog title="创建用户组" :visible.sync="showCreateUserGroup">
-      <el-form :model="createUserGroup" size="mini" :label-width="formLabelWidth">
-        <el-form-item label="用户组名称">
+      <el-form :model="createUserGroup" size="mini" :rules="createGroupForm" ref="createGroupForm"
+               :label-width="formLabelWidth">
+        <el-form-item label="用户组名称" prop="name">
           <el-input v-model="createUserGroup.name"></el-input>
         </el-form-item>
         <el-form-item label="用户组描述">
@@ -218,10 +239,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer">
-        <el-button size="mini" v-if="checkType" @click="checkType = false">启用编辑</el-button>
+        <el-button size="mini" @click="checkType = false" v-if="checkType&&buttonControl[_config.buttonCode. B_UPDATE]">
+          启用编辑
+        </el-button>
         <el-button size="mini" v-else @click="checkType = true">关闭编辑</el-button>
         <el-button size="mini" @click="showUserGroupDetail = false">关闭</el-button>
-        <el-button size="mini" v-show="!checkType" type="primary" @click="confirmChange">保存</el-button>
+        <el-button size="mini" v-if="!checkType" type="primary" @click="confirmChange">保存</el-button>
       </div>
     </el-dialog>
     <!-- 分页 -->
@@ -262,7 +285,7 @@
           pageNum: 1,
           pageSize: this._config.sizeArr[0],
           realName: "",
-          groupId:'',
+          groupId: '',
         },
         showCreateUserGroup: false, //创建用户组弹窗
         showUserGroupDetail: false, //查看用户组详情弹窗
@@ -294,7 +317,10 @@
           name: "",
           description: ""
         },
-        formLabelWidth: "120px"
+        formLabelWidth: "120px",
+        createGroupForm: {
+          name: [{required: true, message: '请输入用户组名', trigger: 'blur'}]
+        }
       };
     },
     mounted() {
@@ -429,67 +455,61 @@
       confirmChangeRole() {
         // 将用户选择的可添加角色的id数组转逗号拼接的字符串
         // 添加的操作需要把已经存在的角色id也传过去
-        var selectRoleArr = this.selectRoleArr.concat(this.userGroupRoleDetail);
-        var len = selectRoleArr.length;
-        if (len == 0) {
-          this.$message("请先选择要添加的角色再操作");
-          return;
+        if (this.selectRoleArr.length > 0) {
+          var selectRoleArr = this.selectRoleArr.concat(this.userGroupRoleDetail);
+          var len = selectRoleArr.length;
+          var userIdArr = [];
+          for (var i = 0; i < len; i++) {
+            userIdArr.push(selectRoleArr[i].id);
+          }
+          this.$request
+            .post(this.$apiList.user_group + "/roles", {
+              groupId: this.rowData.id,
+              roleIds: userIdArr.join(',')
+            })
+            .then(res => {
+              if (res.data.code == 200) {
+                this.$message.success(res.data.msg);
+              }
+              this.showEditorUserGroupRoleDetail = false;
+              this.showUserGroupRoleDetail = false;
+              this.$refs.noRoleTable.clearSelection();
+              this.handleCheckRole(this.rowIndex, this.rowData);
+            })
+        } else {
+          this.$message.error("请先选择要添加的角色再操作");
         }
-        var userIdArr = [];
-        for (var i = 0; i < len; i++) {
-          userIdArr.push(selectRoleArr[i].id);
-        }
-        this.$request
-          .post(this.$apiList.user_group + "/roles", {
-            groupId: this.rowData.id,
-            roleIds: userIdArr.join(',')
-          })
-          .then(res => {
-            if (res.data.code == 200) {
-              this.$message.success(res.data.msg);
-            }
-            this.showEditorUserGroupRoleDetail = false;
-            this.showUserGroupRoleDetail = false;
-            this.$refs.noRoleTable.clearSelection();
-            this.handleCheckRole(this.rowIndex, this.rowData);
-          })
-          .catch(err => {
-            this.$message.error(err);
-          });
       },
       // 确定编辑用户组用户
       confirmChangeMember() {
         // 将用户选择的可添加成员的userId数组转逗号拼接的字符串
         // 添加的操作需要把已经存在的成员userId也传过去
-        var selectMemberArr = this.selectMemberArr.concat(
-          this.userGroupMemberDetail
-        );
-        var len = selectMemberArr.length;
-        if (len == 0) {
-          this.$message("请先选择要添加的成员再操作");
-          return;
+        if (this.selectMemberArr.length > 0) {
+          var selectMemberArr = this.selectMemberArr.concat(
+            this.userGroupMemberDetail
+          );
+          var len = selectMemberArr.length;
+          var userIdArr = [];
+          for (var i = 0; i < len; i++) {
+            userIdArr.push(selectMemberArr[i].userId);
+          }
+          this.$request
+            .post(this.$apiList.user_group + "/users", {
+              groupId: this.rowData.id,
+              userIds: userIdArr.join(',')
+            })
+            .then(res => {
+              if (res.data.code == 200) {
+                this.$message.success(res.data.msg);
+              }
+              this.showEditorUserGroupMemberDetail = false;
+              this.showUserGroupMemberDetail = false;
+              this.$refs.noMemberTable.clearSelection();
+              this.handleCheckMember(this.rowIndex, this.rowData);
+            })
+        } else {
+          this.$message.error('请先选择要添加的成员再操作')
         }
-        var userIdArr = [];
-        for (var i = 0; i < len; i++) {
-          userIdArr.push(selectMemberArr[i].userId);
-        }
-        this.$request
-          .post(this.$apiList.user_group + "/users", {
-            groupId: this.rowData.id,
-            userIds: userIdArr.join(',')
-          })
-          .then(res => {
-            if (res.data.code == 200) {
-              this.$message.success(res.data.msg);
-            }
-            this.showEditorUserGroupMemberDetail = false;
-            this.showUserGroupMemberDetail = false;
-            this.$refs.noMemberTable.clearSelection();
-            this.handleCheckMember(this.rowIndex, this.rowData);
-          })
-          .catch(err => {
-            this.$message.error(err);
-          });
       },
       // 删除用户组按钮
       handleDelete(index, row) {
@@ -521,19 +541,20 @@
       },
       // 创建用户组信息
       confirmCreate() {
-        this.$request
-          .post(this.$apiList.user_group, this.createUserGroup)
-          .then(res => {
-            if (res.data.code == 200) {
-              this.$message.success(res.data.msg);
-            }
-            this.showCreateUserGroup = false;
-            this.createUserGroup = this._funs.emptyObj(this.createUserGroup);
-            this.getUserGroupByPage();
-          })
-          .catch(err => {
-            this.$message.error(err);
-          });
+        this.$refs['createGroupForm'].validate(valid => {
+          if (valid) {
+            this.$request
+              .post(this.$apiList.user_group, this.createUserGroup)
+              .then(res => {
+                if (res.data.code == 200) {
+                  this.$message.success(res.data.msg);
+                }
+                this.showCreateUserGroup = false;
+                this.createUserGroup = this._funs.emptyObj(this.createUserGroup);
+                this.getUserGroupByPage();
+              })
+          }
+        })
       },
       // 确认修改用户组信息
       confirmChange() {
@@ -595,7 +616,7 @@
       },
       // 查询用户组成员列表
       getUserGroupMemberById(id) {
-        if (typeof id!=='object'){
+        if (typeof id !== 'object') {
           this.userSearchData.groupId = id
         }
         this.$request

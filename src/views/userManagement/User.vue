@@ -80,7 +80,7 @@
             @click="handleCheckRole(scope.$index, scope.row)"
           >用户角色
           </el-button>
-          <el-dropdown @command="e=>handleChangeState(e, scope.row)">
+          <el-dropdown @command="e=>handleChangeState(e, scope.row)" v-if="buttonControl[_config.buttonCode.B_USER_STATUS]">
             <el-button
               type="danger"
               size="mini"
@@ -97,6 +97,7 @@
             type="warning"
             size="mini"
             icon="el-icon-edit"
+            v-if="buttonControl[_config.buttonCode.B_EDIT_PSW]"
             @click="handleChangePwd(scope.$index, scope.row)"
           >修改密码
           </el-button>
@@ -523,10 +524,10 @@
         changePwdRule: {
           //修改密码校验规则
           password: [
-            {required: true, message: "请输入修改后的密码", trigger: "blur"}
+            {required: true, message: "请输入密码", trigger: "blur"}
           ],
           rePassword: [
-            {required: true, message: "请确认修改后的密码", trigger: "blur"}
+            {required: true, message: "请确认密码", trigger: "blur"}
           ]
         },
         showChangePwd: false, //修改密码弹窗

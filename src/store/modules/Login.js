@@ -78,7 +78,7 @@ export default {
         const arr = menuRouter
         if (res.data.data[0]){
           //加到main路由中去
-          Array.prototype.push.apply(arr[0].children, res.data.data)
+          Array.prototype.push.apply(arr[0].children, res.data.data[0].children)
         }
         commit('setRouterTree', arr)
         permissionRouters(arr)

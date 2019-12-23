@@ -200,8 +200,11 @@
       },
       //上传拦截
       beforeAvatarUpload(file) {
+        if (!(file.type=='image/png'||file.type=='image/jpg')){
+          this.$message.error('上传文件类型错误');
+          return false
+        }
         const isLt2M = file.size / 1024 / 1024 < 2;
-
         if (!isLt2M) {
           this.$message.error('上传图片大小不能超过 2MB!');
         }

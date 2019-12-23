@@ -12,7 +12,7 @@
           v-model="columnData['name']">
         </el-input>
       </el-form-item>
-      <el-form-item label="栏目开关">
+      <el-form-item label="栏目状态">
         <el-tooltip :content="columnData.hideStatus?'隐藏后看不到栏目':'现在可以看到栏目了'" placement="right">
           <el-switch
             v-model="columnData.hideStatus"

@@ -338,8 +338,8 @@
                     }
                     this.showCreateButton = false;
                     this.createButton = this._funs.emptyObj(this.createButton);
-                    this.createButton.enabled = false;
-                    this.createButton.buttonType = 2;
+                    this.createButton.enabled = true;
+                    this.createButton.resourceType = 2;
                   })
                   .catch(err => {
                     this.$message.error(err);

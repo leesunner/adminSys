@@ -121,8 +121,8 @@
     </el-dialog>
     <!-- 创建角色弹窗 -->
     <el-dialog title="创建角色" :visible.sync="showCreateRole">
-      <el-form :model="createRole" size="mini" :label-width="formLabelWidth">
-        <el-form-item label="角色名称">
+      <el-form :model="createRole" size="mini" :rules="roleRules" ref="roleRules" :label-width="formLabelWidth">
+        <el-form-item label="角色名称" prop="roleName">
           <el-input v-model="createRole.roleName"></el-input>
         </el-form-item>
         <el-form-item label="角色编码">
@@ -212,7 +212,10 @@
           description: ""
         },
         valueArr: [],
-        formLabelWidth: "90px"
+        formLabelWidth: "90px",
+        roleRules:{
+          roleName:[{required: true, message: '请输入角色名', trigger: 'blur'}]
+        }
       };
     },
     mounted() {
@@ -292,14 +295,14 @@
       confirmChangePermission() {
         // 将用户选择的可添加权限的id数组转逗号拼接的字符串
         // 添加的操作需要把已经存在的权限id也传过去
+        if (this.selectPermissionArr.length == 0) {
+          this.$message.warning("请先选择要添加的权限再保存");
+          return;
+        }
         var selectPermissionArr = this.selectPermissionArr.concat(
           this.rolePermissionDetail
         );
         var len = selectPermissionArr.length;
-        if (len == 0) {
-          this.$message("请先选择要添加的权限再操作");
-          return;
-        }
         var idArr = [];
         for (var i = 0; i < len; i++) {
           idArr.push(selectPermissionArr[i].id);
@@ -352,19 +355,20 @@
       },
       // 创建角色信息
       confirmCreate() {
-        this.$request
-          .post(this.$apiList.role, this.createRole)
-          .then(res => {
-            if (res.data.code == 200) {
-              this.$message.success(res.data.msg);
-              this.showCreateRole = false;
-              this.createRole = this._funs.emptyObj(this.createRole);
-              this.getRoleByPage();
-            }
-          })
-          .catch(err => {
-            this.$message.error(err);
-          });
+        this.$refs['roleRules'].validate(valid => {
+          if (valid) {
+            this.$request
+              .post(this.$apiList.role, this.createRole)
+              .then(res => {
+                if (res.data.code == 200) {
+                  this.$message.success(res.data.msg);
+                  this.showCreateRole = false;
+                  this.createRole = this._funs.emptyObj(this.createRole);
+                  this.getRoleByPage();
+                }
+              })
+          }
+        })
       },
       // 确认修改角色信息
       confirmChange() {

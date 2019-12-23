@@ -43,8 +43,7 @@ $gay:#909399;
   font-size: 14px;
   padding-right: 8px;
   &-title{
-    display: inline-block;
-    width: 130px;
+    display: inline-block!important;
     @include text-over(1)
   }
   span{

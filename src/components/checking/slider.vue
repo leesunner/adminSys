@@ -86,12 +86,14 @@
   .slider {
     user-select: none;
     width: 100%;
-    height: 45px;
+    height: 40px;
     background-color: rgba(209, 209, 209, 0.95);
     position: relative;
     margin-top: 15px;
     text-align: center;
+    font-size: 14px;
     &-text {
+      line-height: 40px;
       animation: sca 1s linear -10s infinite;
     }
     @keyframes sca {
@@ -109,7 +111,9 @@
       position: absolute;
       top: 0;
       left: 0;
-      height: 45px;
+      height: 40px;
+      width: 40px;
+      line-height: 40px;
       background-color: $primary;
       color: $white;
       letter-spacing: 4px;
@@ -122,8 +126,9 @@
       position: absolute;
       top: 0;
       left: 0;
-      height: 45px;
-      width: 45px;
+      height: 40px;
+      width: 40px;
+      line-height: 40px;
       cursor: move;
       background-color: $primary;
       color: $white;

@@ -76,8 +76,9 @@
     </el-table>
     <!-- 创建权限弹窗 -->
     <el-dialog title="创建权限" :visible.sync="showCreatePermission">
-      <el-form :model="createPermission" size="mini" :label-width="formLabelWidth">
-        <el-form-item label="权限名称">
+      <el-form :model="createPermission" size="mini" :rules="permissionRule" ref="permissionRule"
+               :label-width="formLabelWidth">
+        <el-form-item label="权限名称" prop="permissionName">
           <el-input v-model="createPermission.permissionName"></el-input>
         </el-form-item>
         <el-form-item label="权限描述">
@@ -109,6 +110,22 @@
           </el-tree>
         </el-col>
         <el-col :span="15">
+          <el-row style="text-align:right;margin-top: 25px;">
+            <el-button
+              size="mini"
+              @click="checkType = false"
+              v-if="checkType&&buttonControl[_config.buttonCode.B_BUTTON_TREE_UPDATE]"
+            >启用编辑
+            </el-button>
+            <el-button size="mini" v-else @click="checkType = true">关闭编辑</el-button>
+            <el-button
+              size="mini"
+              v-show="!checkType"
+              type="primary"
+              @click="confirmChangeButtonPermission"
+            >保存
+            </el-button>
+          </el-row>
           <el-row v-if="buttonControl[_config.buttonCode.B_BUTTON_TREE_UPDATE]">
             <el-checkbox :indeterminate="isIndeterminate"
                          :disabled="checkType"
@@ -130,22 +147,6 @@
               </el-checkbox>
             </el-checkbox-group>
             <div style="color: #dcdcdc;" v-else>点击菜单获取按钮数据</div>
-          </el-row>
-          <el-row style="text-align:right;margin-top: 25px;">
-            <el-button
-              size="mini"
-              @click="checkType = false"
-              v-if="checkType&&buttonControl[_config.buttonCode.B_BUTTON_TREE_UPDATE]"
-            >启用编辑
-            </el-button>
-            <el-button size="mini" v-else @click="checkType = true">关闭编辑</el-button>
-            <el-button
-              size="mini"
-              v-show="!checkType"
-              type="primary"
-              @click="confirmChangeButtonPermission"
-            >保存
-            </el-button>
           </el-row>
         </el-col>
       </el-row>
@@ -264,7 +265,10 @@
           permissionName: "",
           description: ""
         },
-        formLabelWidth: "90px"
+        formLabelWidth: "90px",
+        permissionRule: {
+          permissionName: [{required: true, message: '请输入权限名', trigger: 'blur'}]
+        },
       };
     },
     mounted() {
@@ -311,9 +315,16 @@
         // 获取包含半选中的节点
         var nodes = this.$refs.tree.getCheckedNodes(false, true);
         var len = nodes.length;
-        for (var i = 0; i < len; i++) {
-          checked.push(nodes[i].id);
-        }
+        this.$confirm(`${len <= 0 ? '未选中任何权限,' : ''}确定修改吗?`).then(res => {
+          if (res == "confirm") {
+            for (var i = 0; i < len; i++) {
+              checked.push(nodes[i].id);
+            }
+            this.confirmMenu(checked)
+          }
+        })
+      },
+      confirmMenu(checked) {
         this.$request.put(this.$apiList.menu + "/all/tree/permission", {
           permissionId: this.rowData.id,
           resourceIds: checked
@@ -324,9 +335,6 @@
             }
             this.showPermissionMenuTree = false;
           })
-          .catch(err => {
-            this.$message.error(err);
-          });
       },
       // 删除权限按钮
       handleDelete(index, row) {
@@ -358,19 +366,20 @@
       },
       // 创建权限信息
       confirmCreate() {
-        this.$request
-          .post(this.$apiList.permission, this.createPermission)
-          .then(res => {
-            if (res.data.code == 200) {
-              this.$message.success(res.data.msg);
-              this.showCreatePermission = false;
-              this.createPermission = this._funs.emptyObj(this.createPermission);
-              this.getPermissionByPage();
-            }
-          })
-          .catch(err => {
-            this.$message.error(err);
-          });
+        this.$refs['permissionRule'].validate(valid => {
+          if (valid) {
+            this.$request
+              .post(this.$apiList.permission, this.createPermission)
+              .then(res => {
+                if (res.data.code == 200) {
+                  this.$message.success(res.data.msg);
+                  this.showCreatePermission = false;
+                  this.createPermission = this._funs.emptyObj(this.createPermission);
+                  this.getPermissionByPage();
+                }
+              })
+          }
+        })
       },
       // 确认修改权限信息
       confirmChange() {
@@ -428,13 +437,20 @@
               this.checkedButtonPermissions.push(item.id)
             }
           })
-          if (this.buttonPermissions.length==this.checkedButtonPermissions.length){
+          if (this.buttonPermissions.length == this.checkedButtonPermissions.length) {
             this.checkAll = true
           }
         })
       },
       // 确定修改权限按钮
       confirmChangeButtonPermission() {
+        this.$confirm(`${this.checkedButtonPermissions.length <= 0 ? '未选中任何权限,' : ''}确定修改吗?`).then(res => {
+          if (res == "confirm") {
+            this.comfirmButton()
+          }
+        })
+      },
+      comfirmButton() {
         this.$request
           .put(this.$apiList.button + "/permission", {
             permissionId: this.rowData.id,

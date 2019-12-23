@@ -21,7 +21,7 @@
           // 编辑器不自动被内容撑高
           autoHeightEnabled: false,
           // 初始容器高度
-          initialFrameHeight: 400,
+          initialFrameHeight: 460,
           // 初始容器宽度s
           initialFrameWidth: '100%',
           zIndex:2600,

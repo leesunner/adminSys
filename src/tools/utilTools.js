@@ -26,7 +26,7 @@ export const checkPhone = (value) => {
  * 验证邮箱
  */
 export const checkEmail = (value) => {
-  const test = /^\w+@[A-Za-z\d]+(.){1}([A-Za-z]{2,})$/g
+  const test = /^\w+@[A-Za-z\d]+\.([A-Za-z]{2,})$/g
   return test.test(value)
 }
 /***

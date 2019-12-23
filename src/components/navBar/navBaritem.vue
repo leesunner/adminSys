@@ -4,7 +4,7 @@
       <template v-if="!item.children">
         <el-tooltip class="item" effect="dark" :content="item.menuName" placement="right">
           <el-menu-item :index="item.url" @click="handleOpen(item)" :route="{path:item.url}" :key="item.url">
-            <i class="el-icon-setting"></i>
+            <i class="el-icon-position"></i>
             <span slot="title">{{item.menuName}}</span>
           </el-menu-item>
         </el-tooltip>
@@ -12,7 +12,7 @@
       <el-submenu v-else :index="`${item.id}+'path'`" :key="item.id">
         <nav-bar-item :menuList="item.children"/>
         <template slot="title">
-            <i class="el-icon-setting"></i>
+            <i class="el-icon-position"></i>
             <span slot="title">{{item.menuName}}</span>
         </template>
       </el-submenu>
