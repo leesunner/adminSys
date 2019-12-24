@@ -91,6 +91,8 @@ export default {
       }
       //超过半小时的 刷新重新请求接口
       if (!tree){
+        //需要重新获取数据后，重置时间
+        _session.setLocalStorage('LOGIN_TIME', new Date().getTime())
         return request.get(`${apiList.menu}/user`).then(res => {
           //导入菜单公共页面路由
           const arr = menuRouter

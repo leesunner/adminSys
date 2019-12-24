@@ -66,24 +66,27 @@
                 :style="`visibility: ${data.locationType !='village'?'visible':'hidden'};`"
                 icon="el-icon-plus"
                 @click.stop="handleCreate(data)"
+                v-if="buttonControl[_config.buttonCode.B_CREATE]"
               >添加{{formatType(data)}}</el-button>
               <el-button
                 size="mini"
-                type="primary"
+                type="warning"
                 icon="el-icon-edit"
                 @click.stop="handleEdit(data)"
+                v-if="buttonControl[_config.buttonCode.B_UPDATE]"
               >修改</el-button>
               <el-button
                 size="mini"
                 :type="data.disabled?'warning':'success'"
                 :icon="data.disabled?'el-icon-close':'el-icon-check'"
                 @click.stop="handleForbidden(data)"
+                v-if="buttonControl[_config.buttonCode.B_UPDATE]"
               >{{data.disabled?'禁用中':'启用中'}}</el-button>
               <el-button
                 size="mini"
                 type="danger"
-                v-if="data.locationType!='province'"
                 icon="el-icon-delete"
+                v-if="data.locationType!='province'&&buttonControl[_config.buttonCode.B_DELETE]"
                 @click.stop="handleDelete(data)"
               >删除</el-button>
             </span>

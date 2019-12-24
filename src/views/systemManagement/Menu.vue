@@ -3,8 +3,8 @@
     <el-row style="margin-top: 20px">
       <el-col :span="4">
         <el-radio-group v-model="checkBoxType" size="small" @change="getMenuTree">
-          <el-radio-button :label="1">PC端</el-radio-button>
-          <el-radio-button :label="2">APP端</el-radio-button>
+          <el-radio-button :label="1">管理端</el-radio-button>
+          <el-radio-button :label="2">展示端</el-radio-button>
         </el-radio-group>
       </el-col>
       <el-col :span="4">

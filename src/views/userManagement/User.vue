@@ -772,11 +772,11 @@
                       obj.stateVal = item.value;
                     }
                   });
-                  this._config.dict_user_origin.find(item => {
-                    if (item.key == obj.userOrigin) {
-                      obj.userOriginVal = item.value;
-                    }
-                  });
+                  // this._config.dict_user_origin.find(item => {
+                  //   if (item.key == obj.userOrigin) {
+                  //     obj.userOriginVal = item.value;
+                  //   }
+                  // });
                 }
               }
               this.userData = data.data || [];

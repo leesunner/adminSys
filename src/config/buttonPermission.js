@@ -29,4 +29,17 @@ export default {
     B_UNOWNE_ROLELIST:'B_UNOWNE_ROLELIST',//查询用户组未拥有的角色
     B_GROUP_ADD_USER:'B_GROUP_ADD_USER',//用户组添加成员
     B_GROUP_ADD_ROLE:'B_GROUP_ADD_ROLE',//用户组添加角色
+    // 部门管理
+    B_DEPT_TREE:'B_DEPT_TREE',//  获取部门树
+    B_STATUS:'B_STATUS',//禁用/启用
+    B_DEPT_ROLE_LIST:'B_DEPT_ROLE_LIST',//部门角色列表
+    B_UNOWN_ROLE_LIST:'B_UNOWN_ROLE_LIST',//未拥有角色列表
+    B_DEPT_USER_LIST:'B_DEPT_USER_LIST',//部门用户列表
+    B_UNOWN_USER_LIST:'B_UNOWN_USER_LIST',//未拥有用户列表
+    B_LIST:'B_LIST',//查询部门列表
+    B_INTO_DEPT_ROLE:'B_LIST',//角色绑定部门
+    B_INTO_DEPT_USERS:'B_INTO_DEPT_USERS',//用户绑定部门
+    B_DELETE_ROLE:'B_DELETE_ROLE',//移除角色
+    B_DELETE_USERS:'B_DELETE_USERS',//移除用户
+
 }

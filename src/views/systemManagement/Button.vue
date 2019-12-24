@@ -2,8 +2,8 @@
   <div>
     <el-row style="margin-top: 20px">
       <el-radio-group v-model="checkBoxType" size="small" @change="getMenuTree">
-        <el-radio-button :label="1">PC端</el-radio-button>
-        <el-radio-button :label="2">APP端</el-radio-button>
+        <el-radio-button :label="1">管理端</el-radio-button>
+        <el-radio-button :label="2">展示端</el-radio-button>
       </el-radio-group>
       <el-button type="primary" style="margin-left: 45px;" size="mini" v-if="buttonControl[_config.buttonCode.B_CREATE]" @click="showCreateButton = true"
                  icon="el-icon-plus">创建按钮

@@ -1,5 +1,5 @@
 //配置接口信息列表/center-users
-const gateway = '/center-users'//网关
+const gateway = '/center-users-ljw'//网关
 const version = '/v1'//版本号
 const apiList = {
   login: `${gateway+version}/m/sys/login`,//账户密码登录
@@ -13,7 +13,7 @@ const apiList = {
   dept: `${gateway+version}/m/sys/dept`,//部门管理
   location: `${gateway+version}/m/dict/localtion`,//位置信息
   sendCode: `${gateway+version}/m/sys/send`,//发动验证码
-  ueditorFileUpload: `${gateway+version}/m/cms/ueditor/execute`,//富文本文件上传
+  ueditorFileUpload: `${gateway+version}/m/cms/ueditor/execute`,//富文本文件配置获取
   fileUpload:`${gateway+version}/m/file/oss`,//非文件上传
   article: `${gateway+version}/m/cms/article`,//文章管理
   category: `${gateway+version}/m/cms/category`,//栏目管理

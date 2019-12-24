@@ -46,6 +46,7 @@
       <el-form-item label="站点LOGO" prop="logo" v-if="itemId">
         <el-upload
           :action="$baseUrl+$apiList.fileUpload"
+          :data="{businessFileType:6}"
           :on-success="handleAvatarSuccess"
           :on-error="handleAvatarError"
           :before-upload="beforeAvatarUpload"
@@ -66,6 +67,7 @@
       <el-form-item label="站点LOGO" prop="logo" v-else>
         <el-upload
           :action="$baseUrl+$apiList.fileUpload"
+          :data="{businessFileType:6}"
           :on-success="handleAvatarSuccess"
           :on-error="handleAvatarError"
           :before-upload="beforeAvatarUpload"

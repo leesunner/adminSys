@@ -6,10 +6,10 @@ export default {
   dict_platform_type: [
     {
       key: 1,
-      value: 'PC端'
+      value: '管理端'
     }, {
       key: 2,
-      value: '移动端'
+      value: '展示端'
     },
   ],
   // 用户性别
@@ -81,7 +81,7 @@ export default {
       value:'通知公告'
     }
   ],
-  //是否购买物料
+  //是否
   dict_isTrue: [
     {
       key: 0,
@@ -91,17 +91,8 @@ export default {
       value: '是'
     }
   ],
-
   // 部门类型
-  dict_dept_type: [
-    {
-      key: 0,
-      value: '其它部门'
-    }, {
-      key: 1,
-      value: '销售部门'
-    }
-  ],
+  dict_dept_type: [],
   // 按钮请求方式
   dict_method_type: [
     {
@@ -131,10 +122,6 @@ export default {
       value: '私有资源'
     }
   ],
-  //用户来源
-  dict_user_origin: [],
-  //合资人
-  dict_investor_list: [],
 
   // 全国各省省会城市的经纬度
   geoCoordMap: {

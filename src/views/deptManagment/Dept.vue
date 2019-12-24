@@ -49,27 +49,40 @@
                 icon="el-icon-view"
                 size="mini"
                 @click.stop="handleNodeClick(data)"
+                v-if="buttonControl[_config.buttonCode.B_DETAIL]"
               >详情</el-button>
               <el-button
                 size="mini"
                 type="warning"
                 icon="el-icon-plus"
+                v-if="buttonControl[_config.buttonCode.B_CREATE]"
                 @click.stop="handleCreate(data)"
               >添加子部门</el-button>
+              <el-dropdown @command="e=>handleCheckButton(e, data)"
+                           v-if="buttonControl[_config.buttonCode.B_DEPT_ROLE_LIST]||buttonControl[_config.buttonCode.B_DEPT_USER_LIST]">
+                <el-button
+                  type="primary"
+                  size="mini"
+                  @click.stop="()=>{}"
+                >查询按钮
+                  <i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item :command="1" v-if="buttonControl[_config.buttonCode.B_DEPT_ROLE_LIST]">
+                    查询角色
+                  </el-dropdown-item>
+                  <el-dropdown-item :command="2" v-if="buttonControl[_config.buttonCode.B_DEPT_USER_LIST]">
+                    查询用户
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
               <el-button
                 size="mini"
-                v-if="node.id !== 1"
-                icon="el-icon-search"
-                type="danger"
-                @click.stop="handleCreateRole(data)"
-              >查询角色</el-button>
-              <el-button
-                size="mini"
-                v-if="node.id !== 1"
-                icon="el-icon-search"
-                type="success"
-                @click.stop="handleCheckMember(data)"
-              >查询用戶</el-button>
+                :type="data.enabled?'danger':'success'"
+                :icon="data.enabled?'el-icon-minus':'el-icon-view'"
+                v-if="buttonControl[_config.buttonCode.B_STATUS]"
+                @click.stop="handleChangeStatus(data)"
+              >{{data.enabled?'禁用':'启用'}}</el-button>
             </span>
           </span>
         </el-tree>
@@ -112,8 +125,8 @@
         <el-form label-width="100px">
           <el-form-item size="mini">
             <el-button
-              v-if="checkType"
               @click="checkType = false"
+              v-if="checkType&&buttonControl[_config.buttonCode.B_UPDATE]"
             >启用编辑
             </el-button>
             <el-button v-else @click="checkType = true">关闭编辑</el-button>
@@ -132,7 +145,10 @@
         <el-table-column prop="name" label="角色名"></el-table-column>
         <el-table-column label="操作" width="90">
           <template v-slot="scope">
-            <el-button type="danger" size="mini" @click="handleDelRole(scope.$index, scope.row)">移除</el-button>
+            <el-button type="danger"
+                       size="mini"
+                       v-if="checkType&&buttonControl[_config.buttonCode.B_DELETE_ROLE]"
+                       @click="handleDelRole(scope.$index, scope.row)">移除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -175,6 +191,7 @@
         <el-button
           size="mini"
           type="primary"
+          v-if="buttonControl[_config.buttonCode.B_INTO_DEPT_ROLE]"
           @click="handleAddRole"
         >添加角色
         </el-button>
@@ -188,7 +205,7 @@
             <el-input v-model="userSearchData.realName" clearable placeholder="真实姓名"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="getUserGroupMemberById">查询</el-button>
+            <el-button type="primary" @click="getUserGroupMemberById" v-if="buttonControl[_config.buttonCode.B_UNOWN_USER_LIST]">查询</el-button>
           </el-form-item>
         </span>
       </el-form>
@@ -198,7 +215,10 @@
         <el-table-column prop="realName" label="真实名"></el-table-column>
         <el-table-column label="操作" width="90">
           <template v-slot="scope">
-            <el-button type="danger" size="mini" @click="handleDelMember(scope.$index, scope.row)">移除</el-button>
+            <el-button type="danger"
+                       size="mini"
+                       v-if="buttonControl[_config.buttonCode.B_DELETE_USERS]"
+                       @click="handleDelMember(scope.$index, scope.row)">移除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -254,6 +274,7 @@
         <el-button
           size="mini"
           type="primary"
+          v-if="buttonControl[_config.buttonCode.B_INTO_DEPT_USERS]"
           @click="handleAddMember"
         >添加成员
         </el-button>
@@ -340,6 +361,35 @@
       this.getDeptTree();
     },
     methods: {
+      // 查看权限拥有的按钮
+      handleCheckButton(type, data) {
+        if (type ==1){
+          this.handleCreateRole(data)
+        }else{
+          this.handleCheckMember(data)
+        }
+      },
+      //启用禁用
+      handleChangeStatus(data){
+        this.$confirm(`此操作将${data.enabled?'禁用':'启用'}该部门及其下属部门, 是否继续?`, "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(() => {
+            let obj = {
+              id:data.id,
+              enable:!data.enabled
+            }
+            this.$request.put(`${this.$apiList.dept}/enable`,obj).then(res=>{
+              this.$message.success(res.data.msg);
+              this.getDeptTree();
+            })
+          })
+          .catch(() => {
+            this.$message("已取消");
+          });
+      },
       // 角色---------------------------------------
       // 查询用户组角色按钮
       handleCheckRole(index, row) {

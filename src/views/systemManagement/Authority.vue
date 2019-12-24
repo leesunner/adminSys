@@ -139,9 +139,9 @@
                                v-if="buttonPermissions.length>0">
               <el-checkbox
                 style="width:180px;"
-                v-for="item in buttonPermissions"
+                v-for="(item,index) in buttonPermissions"
                 :label="item.id"
-                :key="item.id"
+                :key="index+20"
                 :disabled="checkType"
               >{{item.buttonName}}
               </el-checkbox>
