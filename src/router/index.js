@@ -34,9 +34,9 @@ router.beforeEach((to, from, next) => {
     //已登录（或已登录刷新）
     //因为vuex里面的刷新页面会丢失数据，所以重新赋值
     if (routerTree.length <= 0) {
-      _session.setLocalStorage('ROUTERS_LIST', null)
       store.dispatch('routerTree').then(res => {
-        next('/index')
+        //刷新时动态路由记录的name是404，但路由path是刷新的页面路由，默认next()跳转的是name路由，现指定刷新页面路由不变
+        next(to.path)
       }).catch(error=>{
         NProgress.done()
       })
