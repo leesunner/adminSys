@@ -35,10 +35,10 @@
             clearable></el-cascader>
         </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="getListByPage" icon="el-icon-search">查询</el-button>
+            <el-button type="primary" @click="getListByPage" v-if="buttonControl[_config.buttonCode.B_LIST]" icon="el-icon-search">查询</el-button>
           </el-form-item>
            <el-form-item>
-          <el-button type="primary" @click="showCreate = true" icon="el-icon-plus">发布文章</el-button>
+          <el-button type="primary" @click="showCreate = true" icon="el-icon-plus" v-if="buttonControl[_config.buttonCode.B_CREATE]">发布文章</el-button>
         </el-form-item>
         </span>
       </el-form>
@@ -79,6 +79,7 @@
               type="success"
               size="mini"
               icon="el-icon-view"
+              v-if="buttonControl[_config.buttonCode.B_DETAIL]"
               @click="handleEdit(scope.row)"
             >编辑
             </el-button>
@@ -86,6 +87,7 @@
               type="danger"
               size="mini"
               icon="el-icon-edit"
+              v-if="buttonControl[_config.buttonCode.B_STATUS]"
               @click="handleHide( scope.row)"
             >隐藏
             </el-button>
@@ -93,6 +95,7 @@
               type="warning"
               size="mini"
               icon="el-icon-view"
+              v-if="buttonControl[_config.buttonCode.B_EXAMINE]"
               @click="handleLook(scope.row)"
             >审核
             </el-button>
@@ -100,6 +103,7 @@
               type="primary"
               size="mini"
               icon="el-icon-upload2"
+              v-if="buttonControl[_config.buttonCode.B_TOP]"
               @click="handleTop(scope.row)"
             >置顶
             </el-button>
@@ -127,7 +131,7 @@
       ></el-pagination>
     </div>
     <!--发布文档弹框-->
-    <create-word :show="showCreate" @close="close" :itemId="wordId" :columnOptions="columnOptions"></create-word>
+    <create-word :show="showCreate" :buttonControl="buttonControl" @close="close" :itemId="wordId" :columnOptions="columnOptions"></create-word>
     <!--审核-->
     <el-dialog title="审核" :visible.sync="auditingShow">
       <el-form label-width="100px"

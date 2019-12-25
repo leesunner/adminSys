@@ -3,6 +3,7 @@ const gateway = '/center-users-ljw'//网关
 const version = '/v1'//版本号
 const apiList = {
   login: `${gateway+version}/m/sys/login`,//账户密码登录
+  loginOut:`${gateway+version}/m/sys/logout`,//账户密码登录
   account: `${gateway+version}/m/sys/user/account`,//用户修改自己信息
   menu: `${gateway+version}/m/sys/menu`,//菜单管理
   permission: `${gateway+version}/m/sys/permission`,//权限管理
@@ -14,7 +15,8 @@ const apiList = {
   location: `${gateway+version}/m/dict/localtion`,//位置信息
   sendCode: `${gateway+version}/m/sys/send`,//发动验证码
   ueditorFileUpload: `${gateway+version}/m/cms/ueditor/execute`,//富文本文件配置获取
-  fileUpload:`${gateway+version}/m/file/oss`,//非文件上传
+  fileUpload:`${gateway+version}/m/file/oss`,//oss外部文件上传
+  inFileUpload:`${gateway+version}/m/file/weed`,//内部（非OSS）文件上传
   article: `${gateway+version}/m/cms/article`,//文章管理
   category: `${gateway+version}/m/cms/category`,//栏目管理
   website: `${gateway+version}/m/cms/site`,//站点管理

@@ -67,9 +67,12 @@ export default {
     },
     //登出
     loginOut() {
-      _session.clearSession()
-      _session.clearLocalStorage()
-      router.go(0)
+      request.get(apiList.loginOut)
+      setTimeout(()=>{
+        _session.clearSession()
+        _session.clearLocalStorage()
+        router.go(0)
+      },5)
     },
     //获取路由树
     routerTree({dispatch, commit, state}) {

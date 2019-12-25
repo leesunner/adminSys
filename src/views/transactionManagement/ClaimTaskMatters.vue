@@ -11,7 +11,8 @@
       </el-form>
       <el-form size="mini" inline>
         <el-form-item>
-          <el-button type="primary" @click="getPageList" icon="el-icon-search">查询
+          <el-button type="primary" @click="getPageList" icon="el-icon-search"
+                     v-if="buttonControl[_config.buttonCode.B_LIST]">查询
           </el-button>
         </el-form-item>
       </el-form>
@@ -27,9 +28,10 @@
           <el-button
             type="primary"
             size="mini"
-            icon="el-icon-view"
-            @click="handleIntoFlow(scope.row)"
-          >进入
+            icon="el-icon-plus"
+            v-if="buttonControl[_config.buttonCode.B_CREATE]"
+            @click="handleConfirmFlow(scope.row)"
+          >认领
           </el-button>
         </template>
       </el-table-column>
@@ -46,18 +48,16 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     ></el-pagination>
-    <!--待办组件-->
-    <!--<transaction-detail :show="showDrag" :taskId="taskId" @close="val => showDrag = val" @reqList="getPageList"></transaction-detail>-->
   </div>
 </template>
 
 <script>
-  // const transactionDetail =()=> import('@/components/transactionManagement/transactionDetail')
+
   import mixin from '@/mixin/buttonPermission'
+
   export default {
     mixins: [mixin],
     name: "claim-task--matters",
-    // components: {transactionDetail},
     data() {
       return {
         searchData: {
@@ -66,7 +66,6 @@
           name: '',//任务名称
         },
         tableData: {},
-        showDrag: false,//弹窗控制
         taskId: '',
       }
     },
@@ -76,16 +75,27 @@
     methods: {
       //获取信息列表
       getPageList() {
-        this.$request.get(`${this.$apiList.workFlow}/claim`,{
-          params:this.searchData
+        this.$request.get(`${this.$apiList.workFlow}/claim`, {
+          params: this.searchData
         }).then(res => {
           this.tableData = res.data.data
         })
       },
-      //进入流程
-      handleIntoFlow(data) {
-        this.taskId = data.taskId
-        this.showDrag = true
+      //认领任务
+      handleConfirmFlow(data) {
+        this.$confirm("是否确认认领该任务?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(() => {
+            this.$request.post(`${this.$apiList.workFlow}/claim/${data.taskId}`).then(res => {
+              this.$message.success("认领成功");
+            })
+          })
+          .catch(() => {
+            this.$message("已取消删除");
+          });
       },
       // 翻页
       handleCurrentChange(val) {

@@ -75,7 +75,7 @@
       </div>
     </el-dialog>
     <el-row style="background:#fff;">
-      <el-col :span="12">
+      <el-col :span="9">
         <!-- 菜单树结构 -->
         <el-tree
           :default-expanded-keys="[1,2]"
@@ -115,7 +115,7 @@
           </span>
         </el-tree>
       </el-col>
-      <el-col :span="12" v-show="menuDetail.id">
+      <el-col :span="15" v-show="menuDetail.id">
         <!-- 查看菜单详情 -->
         <el-form
           :disabled="checkType"

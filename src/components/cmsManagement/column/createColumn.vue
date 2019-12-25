@@ -9,6 +9,7 @@
         <el-input
           placeholder="输入栏目名称"
           clearable
+          :disabled="!$attrs.buttonControl[_config.buttonCode.B_UPDATE]"
           v-model="columnData['name']">
         </el-input>
       </el-form-item>
@@ -16,6 +17,7 @@
         <el-tooltip :content="columnData.hideStatus?'隐藏后看不到栏目':'现在可以看到栏目了'" placement="right">
           <el-switch
             v-model="columnData.hideStatus"
+            :disabled="!$attrs.buttonControl[_config.buttonCode.B_UPDATE]"
             active-color="#ff4949"
             inactive-color="#13ce66"
             :active-value="true"
@@ -26,8 +28,8 @@
     </el-form>
     <div slot="footer">
       <el-button size="mini" @click="close">关闭</el-button>
-      <el-button size="mini" @click="keep" type="primary" v-if="$attrs.isEdit">保存</el-button>
-      <el-button size="mini" @click="create" type="primary" v-else>创建</el-button>
+      <el-button size="mini" @click="keep" type="primary" v-if="$attrs.isEdit&&$attrs.buttonControl[_config.buttonCode.B_UPDATE]">保存</el-button>
+      <el-button size="mini" @click="create" type="primary" v-if="!$attrs.isEdit&&$attrs.buttonControl[_config.buttonCode.B_CREATE]">创建</el-button>
     </div>
   </el-dialog>
 </template>

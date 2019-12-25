@@ -50,7 +50,7 @@
         </el-input>
         <el-upload
           v-if="val.formType ==='file'"
-          :action="$baseUrl+$apiList.fileUpload"
+          :action="$baseUrl+$apiList.inFileUpload"
           :headers="headers"
           :on-success="handleAvatarSuccess"
           :on-error="handleAvatarError"
@@ -64,7 +64,7 @@
         </el-upload>
         <el-upload
           v-if="val.formType ==='image'"
-          :action="$baseUrl+$apiList.fileUpload"
+          :action="$baseUrl+$apiList.inFileUpload"
           :headers="headers"
           :on-success="handleAvatarSuccess"
           :on-error="handleAvatarError"
@@ -194,7 +194,6 @@
           const arr = res.data.data
           const obj = {}
           // 过滤数据对象
-          console.log(arr)
           arr.forEach(item => {
             //提取按钮以及其他公用数据
             switch (item.formType){
@@ -213,7 +212,6 @@
             }
           })
           //将提取的数据对象赋值给formData（这么用的原因：直接将提取的属性给formData并赋值，会导致表格渲染时无法再输入）
-          console.log(obj)
           this.formData = obj
         })
       },

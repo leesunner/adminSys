@@ -105,7 +105,7 @@
             :props="menuDefaultProps"
           >
             <span class="select-tree" slot-scope="{ node, data }" @click="getPermissionAllButtonById(data)">
-               <span class="custom-tree-node-title">{{ node.label }}</span>
+               <span class="custom-tree-node-title" :class="currentMenuId==data.id?'color':''">{{ node.label }}</span>
             </span>
           </el-tree>
         </el-col>
@@ -439,6 +439,8 @@
           })
           if (this.buttonPermissions.length == this.checkedButtonPermissions.length) {
             this.checkAll = true
+          }else{
+            this.checkAll = false
           }
         })
       },
@@ -530,19 +532,24 @@
   };
 </script>
 <style lang="scss" scoped>
-  .permission
+  .permission{
+    .color{
+      background-color: $primary;
+      color: $white;
+    }
+    & /deep/ .el-checkbox:last-of-type {
+      margin-right: 8px;
+    }
+
+    & /deep/ .el-checkbox__input.is-disabled + span.el-checkbox__label {
+      color: #338ace;
+    }
+  }
+
   /deep/ .el-checkbox__input.is-disabled.is-checked
   .el-checkbox__inner {
     background: #409eff !important;
     border-color: #409eff !important;
-  }
-
-  .permission /deep/ .el-checkbox:last-of-type {
-    margin-right: 8px;
-  }
-
-  .permission /deep/ .el-checkbox__input.is-disabled + span.el-checkbox__label {
-    color: #338ace;
   }
 </style>
 

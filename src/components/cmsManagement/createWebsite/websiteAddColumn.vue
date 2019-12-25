@@ -39,7 +39,7 @@
     <!--&gt;</el-pagination>-->
     <div slot="footer">
       <el-button size="mini" @click="close">关闭</el-button>
-      <el-button size="mini" @click="submit" type="primary">提交</el-button>
+      <el-button size="mini" @click="submit" type="primary" v-if="itemId&&$attrs.buttonControl[_config.buttonCode.B_SUBMIT_COLUMN]">提交</el-button>
     </div>
   </el-dialog>
 </template>
@@ -138,7 +138,6 @@
       //获取选中的栏目
       handleSelectionChange(val) {
         this.multipleSelection = val;
-        console.log(val)
       },
       //获取要绑定的栏目list
       getColumnList() {

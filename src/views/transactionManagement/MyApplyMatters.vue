@@ -8,7 +8,7 @@
       </el-form>
       <el-form size="mini" inline>
         <el-form-item>
-          <el-button type="primary" @click="getPageList" icon="el-icon-search">查询
+          <el-button type="primary" @click="getPageList" icon="el-icon-search" v-if="buttonControl[_config.buttonCode.B_LIST]">查询
           </el-button>
         </el-form-item>
       </el-form>
@@ -23,6 +23,7 @@
             type="primary"
             size="mini"
             icon="el-icon-view"
+            v-if="buttonControl[_config.buttonCode.B_DETAIL]"
             @click="handleIntoFlow(scope.row)"
           >查看
           </el-button>

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import _session from '../tools/sessionTool'
-import {Loading,Message} from 'element-ui';
+import {Loading, Message} from 'element-ui';
 import router from '../router';
 import url from './api/realmnUrl'
 
@@ -11,12 +11,14 @@ axios.defaults.baseURL = url
 
 let loadingInstance = null
 let count = 0
+
 function close() {
   count--
   if (count === 0) {
     loadingInstance.close()
   }
 }
+
 function open() {
   count++
   loadingInstance = Loading.service({
@@ -25,6 +27,7 @@ function open() {
     background: 'rgba(0, 0, 0, 0.62)',
   });
 }
+
 //请求拦截器
 axios.interceptors.request.use(config => {
   open()
@@ -51,22 +54,23 @@ axios.interceptors.request.use(config => {
 //响应拦截器
 axios.interceptors.response.use(res => {
   close()
-  if (res.headers['content-type'].indexOf('image')>-1){
+  if (res.headers['content-type'] !== undefined && res.headers['content-type'].indexOf('image') > -1) {
     //获取系统中图片时，文件流传递过来做的拦截
     return res
   }
-  if (res.data.code===200){
+  if (res.data.code === 200) {
     return res
-  }else{
+  } else {
     //有需要可以根据code的值给出对应的提示
-    switch (res.data.code){
+    switch (res.data.code) {
       case 401:
+        console.log('登录已过期')
         _session.clearSession()
         _session.clearLocalStorage()
         Message.error('登录已过期')
-        setTimeout(()=>{
+        setTimeout(() => {
           router.go(0)
-        },500)
+        }, 500)
         break;
       case 403:
         Message.error('暂无权限')

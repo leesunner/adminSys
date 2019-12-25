@@ -22,7 +22,7 @@
       </el-form>
     </el-row>
     <el-col style="background:#fff;">
-      <el-col :span="10">
+      <el-col :span="6">
         <!-- 菜单树结构 -->
         <el-tree
           :default-expanded-keys="[1]"
@@ -51,7 +51,7 @@
           </span>
         </el-tree>
       </el-col>
-      <el-col :span="14" style="padding:20px 20px 20px 0;">
+      <el-col :span="18" style="padding:20px 20px 20px 0;">
         <!-- 按钮列表表格 -->
         <el-table :data="menuButtonDetail" size="mini" border>
           <el-table-column type="index" label="序号" width="50"></el-table-column>

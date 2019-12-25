@@ -4,14 +4,14 @@
       <div class="column-header-title">
         <span class="column-header-title-title">站点列表</span>
         <span class="column-header-title-num">（共{{tableData.total}}条数据）</span>
-        <span class="column-header-title-fresh" @click="getDataList">
+        <span class="column-header-title-fresh" @click="getDataList" v-if="buttonControl[_config.buttonCode.B_LIST]">
             <el-tooltip class="item" effect="dark" :content="'刷新列表'" placement="right">
             <i class="el-icon-refresh"></i>
             </el-tooltip>
         </span>
       </div>
       <el-button type="primary" class="column-header-button" size="mini" icon="el-icon-plus"
-                 @click="createShow = true">
+                 @click="createShow = true" v-if="buttonControl[_config.buttonCode.B_CREATE]">
         添加站点
       </el-button>
     </el-row>
@@ -51,12 +51,14 @@
             type="primary"
             icon="el-icon-plus"
             @click="handleAddColumn(scope.row)"
+            v-if="buttonControl[_config.buttonCode.B_DETAIL_COLUMN]"
           >分配栏目
           </el-button>
           <el-button
             size="mini"
             type="primary"
             icon="el-icon-edit"
+            v-if="buttonControl[_config.buttonCode.B_DETAIL]"
             @click="handleEdit(scope.row)"
           >编辑
           </el-button>
@@ -64,6 +66,7 @@
             size="mini"
             :type="scope.row.hideStatus?'success':'danger'"
             :icon="scope.row.hideStatus?'el-icon-view':'el-icon-minus'"
+            v-if="buttonControl[_config.buttonCode.B_STATUS]"
             @click="handleStatus(scope.row)"
           >{{scope.row.hideStatus?'显示':'隐藏'}}
           </el-button>
@@ -71,9 +74,9 @@
       </el-table-column>
     </el-table>
     <!--创建和编辑组件-->
-    <create-website :show="createShow" @close="handleClose" :itemId="editId"></create-website>
+    <create-website :show="createShow" :buttonControl="buttonControl"  @close="handleClose" :itemId="editId"></create-website>
     <!--添加栏目组件-->
-    <website-add-column :show="createColumnShow" @close="handleColumnClose" :itemId="editId"></website-add-column>
+    <website-add-column :show="createColumnShow" :buttonControl="buttonControl" @close="handleColumnClose" :itemId="editId"></website-add-column>
   </div>
 </template>
 

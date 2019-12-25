@@ -83,17 +83,18 @@
 </script>
 
 <style lang="scss" scoped>
+  $w:45px;
   .slider {
     user-select: none;
     width: 100%;
-    height: 40px;
+    height: $w;
     background-color: rgba(209, 209, 209, 0.95);
     position: relative;
     margin-top: 15px;
     text-align: center;
     font-size: 14px;
     &-text {
-      line-height: 40px;
+      line-height: $w;
       animation: sca 1s linear -10s infinite;
     }
     @keyframes sca {
@@ -111,9 +112,9 @@
       position: absolute;
       top: 0;
       left: 0;
-      height: 40px;
-      width: 40px;
-      line-height: 40px;
+      height: $w;
+      width: $w;
+      line-height: $w;
       background-color: $primary;
       color: $white;
       letter-spacing: 4px;
@@ -126,9 +127,9 @@
       position: absolute;
       top: 0;
       left: 0;
-      height: 40px;
-      width: 40px;
-      line-height: 40px;
+      height: $w;
+      width: $w;
+      line-height: $w;
       cursor: move;
       background-color: $primary;
       color: $white;

@@ -9,10 +9,10 @@
           <el-input v-model="searchData.defKey" clearable placeholder="工作流Key"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="getPageList" icon="el-icon-search">查询</el-button>
+          <el-button type="primary" @click="getPageList" icon="el-icon-search" v-if="buttonControl[_config.buttonCode.B_LIST]">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="showCreateFlow = true" icon="el-icon-plus">部署工作流</el-button>
+          <el-button type="primary" @click="showCreateFlow = true" icon="el-icon-plus" v-if="buttonControl[_config.buttonCode.B_CREATE]">部署工作流</el-button>
         </el-form-item>
       </el-form>
     </el-row>
@@ -28,6 +28,7 @@
             type="primary"
             size="mini"
             icon="el-icon-view"
+            v-if="buttonControl[_config.buttonCode.B_DETAIL]"
             @click="handleCheck(scope.row)"
           >查看
           </el-button>
@@ -147,9 +148,9 @@
             const src = URL.createObjectURL(res.data);
             this.srcList.push(src)
             this.$refs['bigImg'].clickHandler()
-            setTimeout(() => {
+            setTimeout(()=>{
               URL.revokeObjectURL(src);
-            }, 500)
+            },200)
         })
       },
       //确认部署工作流

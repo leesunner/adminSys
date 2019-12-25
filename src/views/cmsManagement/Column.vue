@@ -4,13 +4,13 @@
       <div class="column-header-title">
         <span class="column-header-title-title">栏目列表</span>
         <!--<span class="column-header-title-num">（共25条数据）</span>-->
-        <span class="column-header-title-fresh" @click="getDataList">
+        <span class="column-header-title-fresh" @click="getDataList" v-if="buttonControl[_config.buttonCode.B_LIST]">
           <el-tooltip class="item" effect="dark" :content="'刷新列表'" placement="right">
             <i class="el-icon-refresh"></i>
             </el-tooltip>
         </span>
       </div>
-      <el-button type="primary" class="column-header-button" size="mini" icon="el-icon-plus"
+      <el-button type="primary" class="column-header-button" v-if="buttonControl[_config.buttonCode.B_CREATE]" size="mini" icon="el-icon-plus"
                  @click="handleCreateColumn">
         添加顶级栏目
       </el-button>
@@ -47,6 +47,7 @@
             size="mini"
             type="primary"
             icon="el-icon-edit"
+            v-if="buttonControl[_config.buttonCode.B_DETAIL]"
             @click="handleEdit(scope.row)"
           >编辑
           </el-button>
@@ -54,6 +55,7 @@
             size="mini"
             type="primary"
             icon="el-icon-plus"
+            v-if="buttonControl[_config.buttonCode.B_CREATE]"
             @click="handleCreateColumn(scope.row)"
           >添加子栏目
           </el-button>
@@ -61,13 +63,14 @@
             size="mini"
             type="danger"
             icon="el-icon-delete"
+            v-if="buttonControl[_config.buttonCode.B_DELETE]"
             @click="handleDelete(scope.row)"
           >删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
-    <create-column :show="createShow" :topId="createParentId" @close="close" :columnId="columnId" :isEdit="isEdit"></create-column>
+    <create-column :show="createShow" :buttonControl="buttonControl" :topId="createParentId" @close="close" :columnId="columnId" :isEdit="isEdit"></create-column>
   </div>
 </template>
 

@@ -107,8 +107,8 @@
     </el-row>
     <div slot="footer">
       <el-button size="mini" @click="close">关闭</el-button>
-      <el-button size="mini" @click="edit" type="primary" v-if="itemId">保存</el-button>
-      <el-button size="mini" @click="create" type="primary" v-else>创建</el-button>
+      <el-button size="mini" @click="edit" type="primary" v-if="itemId&&$attrs.buttonControl[_config.buttonCode.B_UPDATE]">保存</el-button>
+      <el-button size="mini" @click="create" type="primary" v-if="!itemId&&$attrs.buttonControl[_config.buttonCode.B_CREATE]">创建</el-button>
     </div>
   </el-dialog>
 </template>
