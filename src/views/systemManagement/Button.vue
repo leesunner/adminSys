@@ -11,7 +11,7 @@
     </el-row>
     <el-row style="margin-top: 12px;">
       <el-form inline>
-        <el-form-item label="请输入按钮关键字:">
+        <el-form-item label="请输入菜单关键字:">
           <el-input
             size="small"
             placeholder="输入关键字进行搜索"
@@ -51,7 +51,7 @@
           </span>
         </el-tree>
       </el-col>
-      <el-col :span="18" style="padding:20px 20px 20px 0;">
+      <el-col :span="18" style="padding:20px 20px 90px 0;">
         <!-- 按钮列表表格 -->
         <el-table :data="menuButtonDetail" size="mini" border>
           <el-table-column type="index" label="序号" width="50"></el-table-column>

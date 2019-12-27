@@ -64,13 +64,12 @@ axios.interceptors.response.use(res => {
     //有需要可以根据code的值给出对应的提示
     switch (res.data.code) {
       case 401:
-        console.log('登录已过期')
         _session.clearSession()
         _session.clearLocalStorage()
         Message.error('登录已过期')
         setTimeout(() => {
           router.go(0)
-        }, 500)
+        }, 150)
         break;
       case 403:
         Message.error('暂无权限')

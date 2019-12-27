@@ -5,27 +5,27 @@
 </template>
 
 <script>
-    export default {
-        name: "lee-icon",
-      props:{
-        icon:{
-          type:String,
-          default:''
-        },
-        color:{
-          type:String,
-          default:'#DCDFE6'
-        },
-        fontSize:{
-          type:Number,
-          default:28
-        },
-      }
+  export default {
+    name: "lee-icon",
+    props: {
+      icon: {
+        type: String,
+        default: ''
+      },
+      color: {
+        type: String,
+        default: '#DCDFE6'
+      },
+      fontSize: {
+        type: Number,
+        default: 23
+      },
     }
+  }
 </script>
 
 <style lang="scss" scoped>
-  .icon{
+  .icon {
     position: absolute;
     z-index: 10;
     width: 30px;

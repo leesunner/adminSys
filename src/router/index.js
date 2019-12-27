@@ -36,11 +36,19 @@ router.beforeEach((to, from, next) => {
     if (routerTree.length <= 0) {
       store.dispatch('routerTree').then(res => {
         //刷新时动态路由记录的name是404，但路由path是刷新的页面路由，默认next()跳转的是name路由，现指定刷新页面路由不变
+        const data = _session.getLocalStorage('MENU_ITEM')
+        store.commit('setMenuNavTabs',{
+            type: 'add',//remove
+            value: data,
+          })
         next(to.path)
       }).catch(error=>{
         NProgress.done()
       })
     } else {
+      //更新每次停留的路由信息
+      let data = {url:to.path,menuName:to.name}
+      _session.setLocalStorage('MENU_ITEM',data)
       next()
     }
   }

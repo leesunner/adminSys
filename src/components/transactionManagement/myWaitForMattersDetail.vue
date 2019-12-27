@@ -254,7 +254,7 @@
       },
       //上传图片拦截
       beforeAvatarUpload(file) {
-        if (!(file.type === 'image/png' || file.type === 'image/jpg')) {
+        if (!(file.type === 'image/png' || file.type === 'image/jpeg')) {
           this.$message.error('只能上传png和jpg格式的图片')
           return false
         }

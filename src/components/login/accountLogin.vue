@@ -28,8 +28,6 @@
 <script>
   const Slider = () => import('@/components/checking/slider')
   const leeIcon = () => import('@/components/icon/index')
-  import {Encrypt} from '@/tools/utilTools'
-
   export default {
     name: "info-login",
     components: {
@@ -60,7 +58,7 @@
             }
             const params = {
               username: this.data.username,
-              password: Encrypt(this.data.password)
+              password: this._funs.Encrypt(this.data.password)
             }
             this.$store.dispatch('Login', params).then(res => {
               this.$router.push('/index')

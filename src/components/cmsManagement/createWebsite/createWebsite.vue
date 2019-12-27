@@ -139,7 +139,9 @@
     watch: {
       '$attrs.show'(newVal){
         if (newVal) {
-          this.getWesiteInfo()
+          if (this.itemId){
+            this.getWesiteInfo()
+          }
         }else{
           this.columnData = {
             description: "",
@@ -202,7 +204,7 @@
       },
       //上传拦截
       beforeAvatarUpload(file) {
-        if (!(file.type=='image/png'||file.type=='image/jpg')){
+        if (!(file.type=='image/png'||file.type=='image/jpeg')){
           this.$message.error('上传文件类型错误');
           return false
         }
@@ -221,9 +223,6 @@
       handlePictureCardPreview(file) {
         this.dialogVisible = true;
       },
-      // handleDownload(file) {
-      //   console.log(file);
-      // }
     }
   }
 </script>

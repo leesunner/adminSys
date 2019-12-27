@@ -21,8 +21,16 @@
       <el-table-column prop="taskId" label="任务ID"></el-table-column>
       <el-table-column prop="assigneeName" label="已办人"></el-table-column>
       <el-table-column prop="name" label="任务名称"></el-table-column>
-      <el-table-column prop="createTime" label="任务创建时间"></el-table-column>
-      <el-table-column prop="endTime" label="任务结束时间"></el-table-column>
+      <el-table-column prop="createTime" label="任务创建时间">
+        <template v-slot="scope">
+          <span>{{scope.row.createTime | formatTime}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="endTime" label="任务结束时间">
+        <template v-slot="scope">
+          <span>{{scope.row.endTime | formatTime}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="100">
         <template v-slot="scope">
           <el-button

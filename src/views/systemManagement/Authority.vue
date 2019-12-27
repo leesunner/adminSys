@@ -146,7 +146,8 @@
               >{{item.buttonName}}
               </el-checkbox>
             </el-checkbox-group>
-            <div style="color: #dcdcdc;" v-else>点击菜单获取按钮数据</div>
+            <div style="color: #dcdcdc;" v-if="!buttonPermissionsControl">点击菜单获取按钮数据</div>
+            <div style="color: #dcdcdc;" v-if="buttonPermissionsControl&&buttonPermissions.length<=0">暂无数据</div>
           </el-row>
         </el-col>
       </el-row>
@@ -236,6 +237,7 @@
         checkAll: false,//显示是否全选
         checkedButtonPermissions: [],
         buttonPermissions: [], //按钮checkBox列表
+        buttonPermissionsControl:false,
         permissionMenuTreeButton: [],//按钮树
         checkType: true, //区分查看还是编辑
         rowData: "", //行数据
@@ -260,6 +262,7 @@
           }
         },
         permissionDetail: {}, //权限详情
+        currentPermissionId:'',
         createPermission: {
           //创建权限信息
           permissionName: "",
@@ -415,6 +418,7 @@
       // ---------------------------------
       //查询对应权限按钮时菜单树
       getPermissionMenuTreeButton(type, id) {
+        this.currentPermissionId = id
         this.$request.get(`${this.$apiList.permission}/menus`, {
           params: {
             permissionId: id,
@@ -430,7 +434,12 @@
         this.checkedButtonPermissions = []
         this.buttonPermissions = []
         this.currentMenuId = data.id
-        this.$request.get(`${this.$apiList.menu}/${data.id}/permission/buttons`).then(res => {
+        this.$request.get(`${this.$apiList.menu}/permission/buttons`,{
+          params:{
+            menuId:data.id,
+            permissionId:this.currentPermissionId
+          }
+        }).then(res => {
           this.buttonPermissions = res.data.data
           res.data.data.forEach(item => {
             if (item.hasPermission) {
@@ -442,6 +451,7 @@
           }else{
             this.checkAll = false
           }
+          this.buttonPermissionsControl = true
         })
       },
       // 确定修改权限按钮

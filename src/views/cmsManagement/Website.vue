@@ -81,8 +81,8 @@
 </template>
 
 <script>
-  import createWebsite from '@/components/cmsManagement/createWebsite/createWebsite'
-  import websiteAddColumn from '@/components/cmsManagement/createWebsite/websiteAddColumn'
+  const createWebsite = ()=>import('@/components/cmsManagement/createWebsite/createWebsite')
+  const websiteAddColumn = ()=>import('@/components/cmsManagement/createWebsite/websiteAddColumn')
 
   import mixin from '@/mixin/buttonPermission'
   export default {

@@ -16,7 +16,11 @@
     <!-- 用户列表表格 -->
     <el-table size="mini" :data="tableData.list" border style="width: 100%">
       <el-table-column prop="businessName" label="事件名称"></el-table-column>
-      <el-table-column prop="createTime" label="申请时间"></el-table-column>
+      <el-table-column prop="createTime" label="申请时间">
+        <template v-slot="scope">
+          <span>{{scope.row.createTime | formatTime}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="100">
         <template v-slot="scope">
           <el-button

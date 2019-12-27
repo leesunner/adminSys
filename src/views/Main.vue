@@ -1,26 +1,28 @@
 <template>
-  <div class="index">
-    <el-container style="height: 100%;">
-      <el-header>
-        <lee-header></lee-header>
-      </el-header>
+  <!--<el-scrollbar style="height: 100%;">-->
+    <div class="index">
       <el-container style="height: 100%;">
-        <el-aside style="height: 100%" width="auto">
-          <nav-bar></nav-bar>
-        </el-aside>
-        <el-main style="overflow: hidden;">
-          <nav-bar-tabs v-if="$route.path!=='/index'"></nav-bar-tabs>
-          <el-scrollbar style="height: 100%;padding-bottom: 35px;">
-            <div class="content">
-              <!--<keep-alive>-->
-              <router-view/>
-              <!--</keep-alive>-->
-            </div>
-          </el-scrollbar>
-        </el-main>
+        <el-header>
+          <lee-header></lee-header>
+        </el-header>
+        <el-container style="height: 100%;">
+          <el-aside width="auto">
+            <nav-bar></nav-bar>
+          </el-aside>
+          <el-main style="overflow: hidden;">
+            <nav-bar-tabs v-if="$route.path!=='/index'"></nav-bar-tabs>
+            <el-scrollbar style="height: 100%;" class="mainScroll">
+              <div class="content">
+                <!--<keep-alive>-->
+                <router-view/>
+                <!--</keep-alive>-->
+              </div>
+            </el-scrollbar>
+          </el-main>
+        </el-container>
       </el-container>
-    </el-container>
-  </div>
+    </div>
+  <!--</el-scrollbar>-->
 </template>
 
 <script>
@@ -55,6 +57,11 @@
       padding-left: 10px;
       padding-right: 10px;
       margin-bottom: 15px;
+    }
+  }
+  .mainScroll{
+    & /deep/ .el-scrollbar__view{
+      margin-bottom: 120px;
     }
   }
 </style>
