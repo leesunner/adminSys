@@ -157,15 +157,15 @@
                     maxlength="11"
                     show-word-limit></el-input>
         </el-form-item>
-        <el-form-item label="所在部门" prop="deptIds">
-          <el-cascader
-            v-model="createUser.deptIds"
-            :props="prop"
-            @change="val=>createUser.deptIds = val "
-            :show-all-levels="false"
-            :options="deptTree"
-          ></el-cascader>
-        </el-form-item>
+        <!--<el-form-item label="所在部门" prop="deptIds">-->
+          <!--<el-cascader-->
+            <!--v-model="createUser.deptIds"-->
+            <!--:props="prop"-->
+            <!--@change="val=>createUser.deptIds = val "-->
+            <!--:show-all-levels="false"-->
+            <!--:options="deptTree"-->
+          <!--&gt;</el-cascader>-->
+        <!--</el-form-item>-->
         <el-form-item label="用户状态" prop="state">
           <el-select v-model="createUser.state" placeholder="请选择用户状态">
             <el-option
@@ -329,15 +329,15 @@
                     maxlength="11"
                     show-word-limit></el-input>
         </el-form-item>
-        <el-form-item label="所在部门" prop="deptIds">
-          <el-cascader
-            v-model="userDetail.deptIds"
-            :props="prop"
-            @change="val=>userDetail.deptIds = val"
-            :show-all-levels="false"
-            :options="deptTree"
-          ></el-cascader>
-        </el-form-item>
+        <!--<el-form-item label="所在部门" prop="deptIds">-->
+          <!--<el-cascader-->
+            <!--v-model="userDetail.deptIds"-->
+            <!--:props="prop"-->
+            <!--@change="val=>userDetail.deptIds = val"-->
+            <!--:show-all-levels="false"-->
+            <!--:options="deptTree"-->
+          <!--&gt;</el-cascader>-->
+        <!--</el-form-item>-->
         <el-form-item label="用户状态" prop="state">
           <el-select v-model="userDetail.state" placeholder="请选择用户状态">
             <el-option
@@ -513,7 +513,7 @@
           sex: "",
           state: "",
           telephone: "",
-          deptIds: "",
+          // deptIds: "",
           username: "",
           // password: ""
         }, //编辑用户表单数据
@@ -526,9 +526,9 @@
           realName: [
             {required: true, message: "请输入用户真实姓名", trigger: "blur"}
           ],
-          deptIds: [
-            {required: true, message: "请选择用户所在部门", trigger: "blur"}
-          ],
+          // deptIds: [
+          //   {required: true, message: "请选择用户所在部门", trigger: "blur"}
+          // ],
           state: [{required: true, message: "请选择用户状态", trigger: "blur"}],
           telephone: [
             {required: true, message: "请输入用户手机号", trigger: "blur"},
@@ -588,9 +588,12 @@
     methods: {
       //一起调用获取部门和省
       getAllRequest(){
-        this.$request.all([this.getDeptTree(),this.getAlreadyProvice()]).then(this.$request.spread((res1, res2) => {
-          this.deptTree = res1.data.data || [];
-          this.provinceOptions = res2.data.data ||[]
+        // this.$request.all([this.getDeptTree(),this.getAlreadyProvice()]).then(this.$request.spread((res1, res2) => {
+        //   this.deptTree = res1.data.data || [];
+        //   this.provinceOptions = res2.data.data ||[]
+        // }))
+        this.$request.all([this.getAlreadyProvice()]).then(this.$request.spread((res1) => {
+          this.provinceOptions = res1.data.data ||[]
         }))
       },
       //获取可用的省
@@ -599,24 +602,44 @@
       },
       //获取根据省获取可用的市ss
       getCityByProvice(code){
+        this.createUser.cityCode = ''
+        this.userDetail.cityCode = ''
+        this.createUser.districtCode = ''
+        this.userDetail.districtCode = ''
+        this.createUser.townCode = ''
+        this.userDetail.townCode = ''
+        this.createUser.villageCode = ''
+        this.userDetail.villageCode = ''
         this.$request.get(`${this.$apiList.location}/province/${code}/city`).then(res=>{
           this.cityOptions = res.data.data
         })
       },
       //获取根据市获取可用的区/县
       getDistrictByCity(code){
+        this.createUser.districtCode = ''
+        this.userDetail.districtCode = ''
+        this.createUser.townCode = ''
+        this.userDetail.townCode = ''
+        this.createUser.villageCode = ''
+        this.userDetail.villageCode = ''
         this.$request.get(`${this.$apiList.location}/province/city/${code}/district`).then(res=>{
           this.districtOptions = res.data.data
         })
       },
       //获取根据区/县获取可用的乡/镇/街道
       getTownByDistrict(code){
+        this.createUser.townCode = ''
+        this.userDetail.townCode = ''
+        this.createUser.villageCode = ''
+        this.userDetail.villageCode = ''
         this.$request.get(`${this.$apiList.location}/province/city/district/${code}/town`).then(res=>{
           this.townOptions = res.data.data
         })
       },
       //获取根据乡/镇/街道获取可用的村/小区
       getVillageByTown(code){
+        this.createUser.villageCode = ''
+        this.userDetail.villageCode = ''
         this.$request.get(`${this.$apiList.location}/province/city/district/town/${code}/village`).then(res=>{
           this.villageOptions = res.data.data
         })
@@ -813,7 +836,6 @@
         this.$refs[str].validate(valid => {
           if (valid) {
             let data = this.formatFormDatas(this.userDetail)
-            console.log(data)
             this.$request
               .put(this.$apiList.user, data)
               .then(res => {
@@ -834,6 +856,24 @@
             var data = res.data;
             if (data.code == 200) {
               this.userDetail = data.data || {};
+              const cDate = this._funs.copyObject(data.data)
+              if (cDate.provinceCode){
+                this.getCityByProvice(cDate.provinceCode)
+                this.userDetail.provinceCode = cDate.provinceCode
+              }
+              if (cDate.cityCode){
+                this.getDistrictByCity(cDate.cityCode)
+                this.userDetail.cityCode = cDate.cityCode
+              }
+              if (cDate.districtCode){
+                this.getTownByDistrict(cDate.districtCode)
+                this.userDetail.districtCode = cDate.districtCode
+              }
+              if (cDate.townCode){
+                this.getVillageByTown(cDate.townCode)
+                this.userDetail.townCode = cDate.townCode
+              }
+              this.userDetail.villageCode = cDate.villageCode
             }
           })
           .catch(err => {
@@ -863,19 +903,11 @@
                       obj.stateVal = item.value;
                     }
                   });
-                  // this._config.dict_user_origin.find(item => {
-                  //   if (item.key == obj.userOrigin) {
-                  //     obj.userOriginVal = item.value;
-                  //   }
-                  // });
                 }
               }
-              this.userData = data.data || [];
+              this.userData = data.data
             }
           })
-          .catch(err => {
-            this.$message.error(err);
-          });
       },
       // 翻页
       handleCurrentChange(val) {
