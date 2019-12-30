@@ -142,7 +142,7 @@
 
   export default {
     name: "create-banner",
-    props: ['itemId','buttonControl'],
+    props: ['itemId','buttonControl','showTypeRadio'],
     data() {
       return {
         checkType: true,
@@ -157,7 +157,6 @@
           imgUrl: ""
         },
         imgUrl: '',
-        showTypeRadio: [],
         headers: {
           'Authorization': `Bearer ${this._session.getSessoin('AUTH_TOKEN')}`
         },
@@ -171,7 +170,6 @@
     watch: {
       '$attrs.show'(newVal) {
         if (newVal) {
-          this.showRadioType()
           if (this.itemId) {
             this.getWesiteInfo()
             this.checkType = true
@@ -195,12 +193,6 @@
     methods: {
       close() {
         this.$emit('close', false)
-      },
-      //获取类型
-      showRadioType() {
-        this.$request.get(`${this.$apiList.banner}/show-type`).then(res => {
-          this.showTypeRadio = res.data.data
-        })
       },
       checkInfo() {
         let st = this.columnData.startTime, et = this.columnData.endTime;

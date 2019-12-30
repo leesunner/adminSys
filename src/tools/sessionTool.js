@@ -15,7 +15,7 @@ export default {
     let source = null;
     if (id) {
       const data = window.sessionStorage.getItem(id)
-      source = JSON.parse(data)
+      data?source = JSON.parse(data):''
     }
     return source
   },
@@ -42,7 +42,7 @@ export default {
     let source = null;
     if (id) {
       const data = window.localStorage.getItem(id)
-      source = JSON.parse(data)
+      data?source = JSON.parse(data):''
     }
     return source
   },

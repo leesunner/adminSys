@@ -77,7 +77,7 @@
       childTree(item, arrs) {
         item.forEach(itemArr => {
           arrs.push(itemArr.id)
-          if (itemArr.children.length > 0) {
+          if (itemArr.children && itemArr.children.length > 0) {
             this.childTree(itemArr.children, arrs)
           }
         })
@@ -96,7 +96,7 @@
           if (id == item.id) {
             this.$refs.multipleTable.toggleRowSelection(item, true)
           }
-          if (item.children.length > 0) {
+          if (item.children && item.children.length > 0) {
             this.formatArr(item.children, id)
           }
         })

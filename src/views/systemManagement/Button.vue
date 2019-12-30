@@ -51,7 +51,7 @@
           </span>
         </el-tree>
       </el-col>
-      <el-col :span="18" style="padding:20px 20px 90px 0;">
+      <el-col :span="18" style="padding:20px 20px 90px 0;margin-bottom: 30px;">
         <!-- 按钮列表表格 -->
         <el-table :data="menuButtonDetail" size="mini" border>
           <el-table-column type="index" label="序号" width="50"></el-table-column>

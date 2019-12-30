@@ -146,14 +146,16 @@
         <el-form-item label="登录账号" prop="username">
           <el-input v-model="createUser.username"></el-input>
         </el-form-item>
-        <el-form-item label="登录密码" prop="password">
-          <el-input v-model="createUser.password"></el-input>
-        </el-form-item>
+        <!--<el-form-item label="登录密码">-->
+          <!--<el-input v-model="createUser.password"></el-input>-->
+        <!--</el-form-item>-->
         <el-form-item label="真实姓名" prop="realName">
           <el-input v-model="createUser.realName"></el-input>
         </el-form-item>
         <el-form-item label="手机号" prop="telephone">
-          <el-input v-model="createUser.telephone"></el-input>
+          <el-input v-model="createUser.telephone"
+                    maxlength="11"
+                    show-word-limit></el-input>
         </el-form-item>
         <el-form-item label="所在部门" prop="deptIds">
           <el-cascader
@@ -178,7 +180,9 @@
           <el-input v-model="createUser.email"></el-input>
         </el-form-item>
         <el-form-item label="身份证号">
-          <el-input v-model="createUser.idCard"></el-input>
+          <el-input v-model="createUser.idCard"
+                    maxlength="18"
+                    show-word-limit></el-input>
         </el-form-item>
         <el-form-item label="生日">
           <el-date-picker
@@ -198,56 +202,56 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <!--<el-form-item label="所在省">-->
-        <!--<el-select v-model="createUser.provinceCode" filterable placeholder="请选择">-->
-        <!--<el-option-->
-        <!--v-for="item in provinceOptions"-->
-        <!--:key="item.locationCode"-->
-        <!--:label="item.locationName"-->
-        <!--:value="item.locationCode">-->
-        <!--</el-option>-->
-        <!--</el-select>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="所在市">-->
-        <!--<el-select v-model="createUser.cityCode" filterable placeholder="请选择">-->
-        <!--<el-option-->
-        <!--v-for="item in cityOptions"-->
-        <!--:key="item.locationCode"-->
-        <!--:label="item.locationName"-->
-        <!--:value="item.locationCode">-->
-        <!--</el-option>-->
-        <!--</el-select>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="所在区/县">-->
-        <!--<el-select v-model="createUser.districtCode" filterable placeholder="请选择">-->
-        <!--<el-option-->
-        <!--v-for="item in districtOptions"-->
-        <!--:key="item.locationCode"-->
-        <!--:label="item.locationName"-->
-        <!--:value="item.locationCode">-->
-        <!--</el-option>-->
-        <!--</el-select>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="所在乡/镇/街道">-->
-        <!--<el-select v-model="createUser.townCode" filterable placeholder="请选择">-->
-        <!--<el-option-->
-        <!--v-for="item in townOptions"-->
-        <!--:key="item.locationCode"-->
-        <!--:label="item.locationName"-->
-        <!--:value="item.locationCode">-->
-        <!--</el-option>-->
-        <!--</el-select>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="所在村/小区">-->
-        <!--<el-select v-model="createUser.villageCode" filterable placeholder="请选择">-->
-        <!--<el-option-->
-        <!--v-for="item in villageOptions"-->
-        <!--:key="item.locationCode"-->
-        <!--:label="item.locationName"-->
-        <!--:value="item.locationCode">-->
-        <!--</el-option>-->
-        <!--</el-select>-->
-        <!--</el-form-item>-->
+        <el-form-item label="所在省" prop="provinceCode">
+          <el-select v-model="createUser.provinceCode" @change="getCityByProvice"  filterable placeholder="请选择">
+            <el-option
+              v-for="item in provinceOptions"
+              :key="item.locationCode"
+              :label="item.locationName"
+              :value="item.locationCode">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所在市" prop="cityCode">
+          <el-select v-model="createUser.cityCode" @change="getDistrictByCity" filterable placeholder="请选择">
+            <el-option
+              v-for="item in cityOptions"
+              :key="item.locationCode"
+              :label="item.locationName"
+              :value="item.locationCode">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所在区/县" prop="districtCode">
+          <el-select v-model="createUser.districtCode" @change="getTownByDistrict" filterable placeholder="请选择">
+            <el-option
+              v-for="item in districtOptions"
+              :key="item.locationCode"
+              :label="item.locationName"
+              :value="item.locationCode">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所在乡/镇/街道" prop="townCode">
+          <el-select v-model="createUser.townCode" @change="getVillageByTown" filterable placeholder="请选择">
+            <el-option
+              v-for="item in townOptions"
+              :key="item.locationCode"
+              :label="item.locationName"
+              :value="item.locationCode">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所在村/小区" prop="villageCode">
+          <el-select v-model="createUser.villageCode" filterable placeholder="请选择">
+            <el-option
+              v-for="item in villageOptions"
+              :key="item.locationCode"
+              :label="item.locationName"
+              :value="item.locationCode">
+            </el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer">
         <el-button size="mini" @click="showCreateUser = false">取消</el-button>
@@ -309,19 +313,22 @@
         :disabled="checkType"
         :model="userDetail"
         inline
+        :rules="rules"
         size="mini"
         :label-width="formLabelWidth"
       >
         <el-form-item label="登录账号">
-          <el-input v-model="userDetail.username"></el-input>
+          <el-input v-model="userDetail.username" prop="username"></el-input>
         </el-form-item>
         <el-form-item label="真实姓名">
-          <el-input v-model="userDetail.realName"></el-input>
+          <el-input v-model="userDetail.realName" prop="realName"></el-input>
         </el-form-item>
-        <el-form-item label="手机号">
-          <el-input v-model="userDetail.telephone"></el-input>
+        <el-form-item label="手机号" prop="telephone">
+          <el-input v-model="userDetail.telephone"
+                    maxlength="11"
+                    show-word-limit></el-input>
         </el-form-item>
-        <el-form-item label="所在部门">
+        <el-form-item label="所在部门" prop="deptIds">
           <el-cascader
             v-model="userDetail.deptIds"
             :props="prop"
@@ -330,7 +337,7 @@
             :options="deptTree"
           ></el-cascader>
         </el-form-item>
-        <el-form-item label="用户状态">
+        <el-form-item label="用户状态" prop="state">
           <el-select v-model="userDetail.state" placeholder="请选择用户状态">
             <el-option
               v-for="(item,index) of _config.dict_user_status"
@@ -344,7 +351,9 @@
           <el-input v-model="userDetail.email"></el-input>
         </el-form-item>
         <el-form-item label="身份证号">
-          <el-input v-model="userDetail.idCard"></el-input>
+          <el-input v-model="userDetail.idCard"
+                    maxlength="18"
+                    show-word-limit></el-input>
         </el-form-item>
         <el-form-item label="生日">
           <el-date-picker
@@ -363,56 +372,56 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <!--<el-form-item label="所在省">-->
-        <!--<el-select v-model="userDetail.provinceCode" filterable placeholder="请选择">-->
-        <!--<el-option-->
-        <!--v-for="item in provinceOptions"-->
-        <!--:key="item.locationCode"-->
-        <!--:label="item.locationName"-->
-        <!--:value="item.locationCode">-->
-        <!--</el-option>-->
-        <!--</el-select>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="所在市">-->
-        <!--<el-select v-model="userDetail.cityCode" filterable placeholder="请选择">-->
-        <!--<el-option-->
-        <!--v-for="item in cityOptions"-->
-        <!--:key="item.locationCode"-->
-        <!--:label="item.locationName"-->
-        <!--:value="item.locationCode">-->
-        <!--</el-option>-->
-        <!--</el-select>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="所在区/县">-->
-        <!--<el-select v-model="userDetail.districtCode" filterable placeholder="请选择">-->
-        <!--<el-option-->
-        <!--v-for="item in districtOptions"-->
-        <!--:key="item.locationCode"-->
-        <!--:label="item.locationName"-->
-        <!--:value="item.locationCode">-->
-        <!--</el-option>-->
-        <!--</el-select>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="所在乡/镇/街道">-->
-        <!--<el-select v-model="userDetail.townCode" filterable placeholder="请选择">-->
-        <!--<el-option-->
-        <!--v-for="item in townOptions"-->
-        <!--:key="item.locationCode"-->
-        <!--:label="item.locationName"-->
-        <!--:value="item.locationCode">-->
-        <!--</el-option>-->
-        <!--</el-select>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="所在村/小区">-->
-        <!--<el-select v-model="userDetail.villageCode" filterable placeholder="请选择">-->
-        <!--<el-option-->
-        <!--v-for="item in villageOptions"-->
-        <!--:key="item.locationCode"-->
-        <!--:label="item.locationName"-->
-        <!--:value="item.locationCode">-->
-        <!--</el-option>-->
-        <!--</el-select>-->
-        <!--</el-form-item>-->
+        <el-form-item label="所在省" prop="provinceCode">
+          <el-select v-model="createUser.provinceCode" @change="getCityByProvice"  filterable placeholder="请选择">
+            <el-option
+              v-for="item in provinceOptions"
+              :key="item.locationCode"
+              :label="item.locationName"
+              :value="item.locationCode">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所在市" prop="cityCode">
+          <el-select v-model="createUser.cityCode" @change="getDistrictByCity" filterable placeholder="请选择">
+            <el-option
+              v-for="item in cityOptions"
+              :key="item.locationCode"
+              :label="item.locationName"
+              :value="item.locationCode">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所在区/县" prop="districtCode">
+          <el-select v-model="createUser.districtCode" @change="getTownByDistrict" filterable placeholder="请选择">
+            <el-option
+              v-for="item in districtOptions"
+              :key="item.locationCode"
+              :label="item.locationName"
+              :value="item.locationCode">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所在乡/镇/街道" prop="townCode">
+          <el-select v-model="createUser.townCode" @change="getVillageByTown" filterable placeholder="请选择">
+            <el-option
+              v-for="item in townOptions"
+              :key="item.locationCode"
+              :label="item.locationName"
+              :value="item.locationCode">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="村/小区" prop="villageCode">
+          <el-select v-model="userDetail.villageCode" filterable placeholder="请选择">
+            <el-option
+              v-for="item in villageOptions"
+              :key="item.locationCode"
+              :label="item.locationName"
+              :value="item.locationCode">
+            </el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer">
         <el-button
@@ -479,6 +488,11 @@
           multiple: true,
           checkStrictly: true
         },
+        provinceOptions: [],//省
+        cityOptions: [],//市
+        districtOptions: [],//区/县
+        townOptions: [],//乡/镇/街道
+        villageOptions: [],//村/小区
         createUser: {
           //创建用户信息
           birthday: "",
@@ -508,9 +522,6 @@
           username: [
             {required: true, message: "请输入用户登录账号", trigger: "blur"}
           ],
-          password: [
-            {required: true, message: "请输入用户登录密码", trigger: "blur"}
-          ],
           realName: [
             {required: true, message: "请输入用户真实姓名", trigger: "blur"}
           ],
@@ -526,7 +537,12 @@
               message: "手机号必须为11位数字",
               trigger: "blur"
             }
-          ]
+          ],
+          districtCode: [{required: true, message: "请选择县/区", trigger: "change"}],
+          cityCode:[{required: true, message: "请选择城市", trigger: "change"}],
+          provinceCode: [{required: true, message: "请选择省", trigger: "change"}],
+          townCode: [{required: true, message: "请选择乡/镇/街道", trigger: "change"}],
+          villageCode: [{required: true, message: "请选择村/小区", trigger: "change"}],
         },
         changePwdRule: {
           //修改密码校验规则
@@ -549,13 +565,13 @@
     computed: {
       userRoleData() {
         //角色穿梭框中的数据
-        var roleData = this.userRoleDetail; //已拥有角色
-        var noRoleData = this.userNoRoleDetail; //未拥有角色
-        var data = roleData.concat(noRoleData);
-        var valArr = []; //目标列表中的数据项,值为原数据的key值,这里取的id
-        var len = roleData.length;
-        for (var i = 0; i < len; i++) {
-          var item = roleData[i];
+        let roleData = this.userRoleDetail; //已拥有角色
+        let noRoleData = this.userNoRoleDetail; //未拥有角色
+        let data = roleData.concat(noRoleData);
+        let valArr = []; //目标列表中的数据项,值为原数据的key值,这里取的id
+        let len = roleData.length;
+        for (let i = 0; i < len; i++) {
+          let item = roleData[i];
           valArr.push(item.id);
         }
         this.valueArr = valArr;
@@ -564,9 +580,46 @@
     },
     mounted() {
       this.getUserByPage();
-      this.getDeptTree();
+      this.getAllRequest()
+      // this.getDeptTree();
+      // this.getAlreadyProvice()
     },
     methods: {
+      //一起调用获取部门和省
+      getAllRequest(){
+        this.$request.all([this.getDeptTree(),this.getAlreadyProvice()]).then(this.$request.spread((res1, res2) => {
+          this.deptTree = res1.data.data || [];
+          this.provinceOptions = res2.data.data ||[]
+        }))
+      },
+      //获取可用的省
+      getAlreadyProvice(){
+       return this.$request.get(`${this.$apiList.location}/province`)
+      },
+      //获取根据省获取可用的市
+      getCityByProvice(code){
+        this.$request.get(`${this.$apiList.location}/province/${code}/city`).then(res=>{
+          this.cityOptions = res.data.data
+        })
+      },
+      //获取根据市获取可用的区/县
+      getDistrictByCity(code){
+        this.$request.get(`${this.$apiList.location}/province/city/${code}/district`).then(res=>{
+          this.districtOptions = res.data.data
+        })
+      },
+      //获取根据区/县获取可用的乡/镇/街道
+      getTownByDistrict(code){
+        this.$request.get(`${this.$apiList.location}/province/city/district/${code}/town`).then(res=>{
+          this.townOptions = res.data.data
+        })
+      },
+      //获取根据乡/镇/街道获取可用的村/小区
+      getVillageByTown(code){
+        this.$request.get(`${this.$apiList.location}/province/city/district/town/${code}/village`).then(res=>{
+          this.villageOptions = res.data.data
+        })
+      },
       // 修改密码
       handleChangePwd(index, row) {
         this.showChangePwd = true;
@@ -602,12 +655,8 @@
       },
       // 查询部门树
       getDeptTree() {
-        this.$request
+       return this.$request
           .get(this.$apiList.dept + "/all/tree")
-          .then(res => {
-            var data = res.data;
-            this.deptTree = data.data || [];
-          })
       },
       // 角色穿梭框变化
       handleRoleChange(value, direction, movedKeys) {
@@ -709,11 +758,12 @@
         this.$refs[createUser].validate(valid => {
           if (valid) {
             //加密密码
-            this.createUser.password = this._funs.Encrypt(
-              this.createUser.password
+            let data = this._funs.copyObject(this.createUser)
+            data.password = this._funs.Encrypt(
+              data.password
             );
             this.$request
-              .post(this.$apiList.user, this.createUser)
+              .post(this.$apiList.user, data)
               .then(res => {
                 if (res.data.code == 200) {
                   this.$message.success(res.data.msg);
@@ -820,7 +870,7 @@
     }
     .createuser {
       & /deep/ .el-input__inner, .el-input {
-        width: 180px;
+        width: 190px;
       }
     }
   }

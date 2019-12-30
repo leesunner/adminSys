@@ -2,24 +2,25 @@
   <div>
     <el-row>
       <el-form inline :model="searchData" size="mini">
-        <span>
-          <el-form-item>
-            <el-input v-model="searchData.username" clearable placeholder="登录账号"></el-input>
-          </el-form-item>
-        </span>
-      </el-form>
-      <el-form size="mini" inline>
+        <el-form-item>
+          <el-input v-model="searchData.username" clearable placeholder="请输入banner标题"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="searchData.createUserRealName" clearable placeholder="请输入创建人姓名"></el-input>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary"
                      @click="getPageList"
                      v-if="buttonControl[_config.buttonCode.B_LIST]"
-                     icon="el-icon-search">查询</el-button>
+                     icon="el-icon-search">查询
+          </el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary"
                      @click="createShow = true"
                      v-if="buttonControl[_config.buttonCode.B_CREATE]"
-                     icon="el-icon-plus">创建banner</el-button>
+                     icon="el-icon-plus">创建banner
+          </el-button>
         </el-form-item>
       </el-form>
     </el-row>
@@ -30,6 +31,7 @@
           <span>{{scope.row.createTime | formatTime}}</span>
         </template>
       </el-table-column>
+      <el-table-column label="创建时间" prop="createUserRealName" width="160"></el-table-column>
       <el-table-column prop="title" label="banner标题"></el-table-column>
       <el-table-column label="状态" width="90">
         <template v-slot="scope">
@@ -81,7 +83,11 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     ></el-pagination>
-    <create-banner :show="createShow" :buttonControl="buttonControl" @close="handleClose" :itemId="editId"
+    <create-banner :show="createShow"
+                   :buttonControl="buttonControl"
+                   @close="handleClose"
+                   :showTypeRadio="showTypeRadio"
+                   :itemId="editId"
                    @fresh="getPageList"></create-banner>
   </div>
 </template>
@@ -101,16 +107,27 @@
           //用户列表查询条件
           pageNum: 1,
           pageSize: this._config.sizeArr[0],
+          title: '',
+          enable: '',
+          createUserRealName:'',
         },
+        showTypeRadio: [],
         tableData: {},
         srcList: [],
         editId: '',
       }
     },
     created() {
+      this.showRadioType()
       this.getPageList()
     },
     methods: {
+      //获取类型
+      showRadioType() {
+        this.$request.get(`${this.$apiList.banner}/show-type`).then(res => {
+          this.showTypeRadio = res.data.data
+        })
+      },
       //关闭弹框回调
       handleClose(val) {
         this.createShow = val
@@ -122,9 +139,9 @@
         this.createShow = true
       },
       handleDelete(data) {
-        this.$request.put(`${this.$apiList.banner}/disabled`,{
-          id:data.id,
-          enable:!data.enable
+        this.$request.put(`${this.$apiList.banner}/disabled`, {
+          id: data.id,
+          enable: !data.enable
         }).then(res => {
           this.$message.success('修改成功')
           this.getPageList()
@@ -132,6 +149,7 @@
       },
       //获取列表信息
       getPageList() {
+        console.log(this.searchData)
         this.$request.get(this.$apiList.banner, this.searchData).then(res => {
           this.tableData = res.data.data
           this.srcList = []

@@ -5,8 +5,6 @@
         <el-form-item>
           <el-input v-model="searchData.name" clearable placeholder="请输入事件名称关键字"></el-input>
         </el-form-item>
-      </el-form>
-      <el-form size="mini" inline>
         <el-form-item>
           <el-button type="primary" @click="getPageList" icon="el-icon-search" v-if="buttonControl[_config.buttonCode.B_LIST]">查询
           </el-button>
