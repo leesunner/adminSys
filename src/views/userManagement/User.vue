@@ -758,8 +758,9 @@
       confirmCreate(createUser) {
         this.$refs[createUser].validate(valid => {
           if (valid) {
+            let data = this.formatFormDatas(this.createUser)
             this.$request
-              .post(this.$apiList.user, this.createUser)
+              .post(this.$apiList.user, data)
               .then(res => {
                 if (res.data.code == 200) {
                   this.$message.success(res.data.msg);
@@ -773,12 +774,48 @@
           }
         });
       },
+      formatFormDatas(datas){
+        let data = this._funs.copyObject(datas)
+        for (let i in  this.provinceOptions){
+          if (this.provinceOptions[i].locationCode===data.provinceCode){
+            data.provinceName = this.provinceOptions[i].locationName
+            break;
+          }
+        }
+        for (let i in  this.cityOptions){
+          if (this.cityOptions[i].locationCode===data.cityCode){
+            data.cityName = this.cityOptions[i].locationName
+            break;
+          }
+        }
+        for (let i in  this.districtOptions){
+          if (this.districtOptions[i].locationCode===data.districtCode){
+            data.districtName = this.districtOptions[i].locationName
+            break;
+          }
+        }
+        for (let i in  this.townOptions){
+          if (this.townOptions[i].locationCode===data.townCode){
+            data.townName = this.townOptions[i].locationName
+            break;
+          }
+        }
+        for (let i in  this.villageOptions){
+          if (this.villageOptions[i].locationCode===data.villageCode){
+            data.villageName = this.villageOptions[i].locationName
+            break;
+          }
+        }
+        return data
+      },
       // 确认修改用户信息
       confirmChange(str) {
         this.$refs[str].validate(valid => {
           if (valid) {
+            let data = this.formatFormDatas(this.userDetail)
+            console.log(data)
             this.$request
-              .put(this.$apiList.user, this.userDetail)
+              .put(this.$apiList.user, data)
               .then(res => {
                 if (res.data.code == 200) {
                   this.$message.success(res.data.msg);

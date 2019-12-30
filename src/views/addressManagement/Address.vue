@@ -172,7 +172,7 @@
             break;
           //通过乡镇查村
           case 'town':
-            return '村/小区'
+            return '村/社区'
             break;
           case 'village':
             return '户'
