@@ -314,6 +314,7 @@
         :model="userDetail"
         inline
         :rules="rules"
+        ref="userDetail"
         size="mini"
         :label-width="formLabelWidth"
       >
@@ -373,7 +374,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="所在省" prop="provinceCode">
-          <el-select v-model="createUser.provinceCode" @change="getCityByProvice"  filterable placeholder="请选择">
+          <el-select v-model="userDetail.provinceCode" @change="getCityByProvice"  filterable placeholder="请选择">
             <el-option
               v-for="item in provinceOptions"
               :key="item.locationCode"
@@ -383,7 +384,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="所在市" prop="cityCode">
-          <el-select v-model="createUser.cityCode" @change="getDistrictByCity" filterable placeholder="请选择">
+          <el-select v-model="userDetail.cityCode" @change="getDistrictByCity" filterable placeholder="请选择">
             <el-option
               v-for="item in cityOptions"
               :key="item.locationCode"
@@ -393,7 +394,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="所在区/县" prop="districtCode">
-          <el-select v-model="createUser.districtCode" @change="getTownByDistrict" filterable placeholder="请选择">
+          <el-select v-model="userDetail.districtCode" @change="getTownByDistrict" filterable placeholder="请选择">
             <el-option
               v-for="item in districtOptions"
               :key="item.locationCode"
@@ -403,7 +404,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="所在乡/镇/街道" prop="townCode">
-          <el-select v-model="createUser.townCode" @change="getVillageByTown" filterable placeholder="请选择">
+          <el-select v-model="userDetail.townCode" @change="getVillageByTown" filterable placeholder="请选择">
             <el-option
               v-for="item in townOptions"
               :key="item.locationCode"
@@ -432,7 +433,7 @@
         </el-button>
         <el-button size="mini" v-else @click="checkType = true">关闭编辑</el-button>
         <el-button size="mini" @click="showUserDetail = false">关闭</el-button>
-        <el-button size="mini" v-show="!checkType" type="primary" @click="confirmChange">保存</el-button>
+        <el-button size="mini" v-show="!checkType" type="primary" @click="confirmChange('userDetail')">保存</el-button>
       </div>
     </el-dialog>
     <!-- 分页 -->
@@ -514,7 +515,7 @@
           telephone: "",
           deptIds: "",
           username: "",
-          password: ""
+          // password: ""
         }, //编辑用户表单数据
         formLabelWidth: "120px",
         rules: {
@@ -596,7 +597,7 @@
       getAlreadyProvice(){
        return this.$request.get(`${this.$apiList.location}/province`)
       },
-      //获取根据省获取可用的市
+      //获取根据省获取可用的市ss
       getCityByProvice(code){
         this.$request.get(`${this.$apiList.location}/province/${code}/city`).then(res=>{
           this.cityOptions = res.data.data
@@ -757,13 +758,8 @@
       confirmCreate(createUser) {
         this.$refs[createUser].validate(valid => {
           if (valid) {
-            //加密密码
-            let data = this._funs.copyObject(this.createUser)
-            data.password = this._funs.Encrypt(
-              data.password
-            );
             this.$request
-              .post(this.$apiList.user, data)
+              .post(this.$apiList.user, this.createUser)
               .then(res => {
                 if (res.data.code == 200) {
                   this.$message.success(res.data.msg);
@@ -778,19 +774,20 @@
         });
       },
       // 确认修改用户信息
-      confirmChange() {
-        this.$request
-          .put(this.$apiList.user, this.userDetail)
-          .then(res => {
-            if (res.data.code == 200) {
-              this.$message.success(res.data.msg);
-            }
-            this.showUserDetail = false;
-            this.getUserByPage();
-          })
-          .catch(err => {
-            this.$message.error(err);
-          });
+      confirmChange(str) {
+        this.$refs[str].validate(valid => {
+          if (valid) {
+            this.$request
+              .put(this.$apiList.user, this.userDetail)
+              .then(res => {
+                if (res.data.code == 200) {
+                  this.$message.success(res.data.msg);
+                }
+                this.showUserDetail = false;
+                this.getUserByPage();
+              })
+          }
+        })
       },
       // 查询用户详情
       getUserById(id) {
