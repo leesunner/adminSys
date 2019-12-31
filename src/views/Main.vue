@@ -9,10 +9,11 @@
           <el-aside width="auto">
             <nav-bar></nav-bar>
           </el-aside>
-          <el-main style="overflow: hidden;">
+          <el-main style="overflow: hidden;padding: 0;">
             <nav-bar-tabs v-if="$route.path!=='/index'"></nav-bar-tabs>
             <el-scrollbar style="height: 100%;" class="mainScroll">
-              <div class="content">
+              <router-view v-if="$route.path==='/index'"/>
+              <div class="content" v-else>
                 <!--<keep-alive>-->
                 <router-view/>
                 <!--</keep-alive>-->
@@ -54,8 +55,7 @@
       padding: 10px;
     }
     .content{
-      padding-left: 10px;
-      padding-right: 10px;
+      padding: 10px 20px;
       margin-bottom: 15px;
     }
   }

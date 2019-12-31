@@ -12,7 +12,7 @@
     data() {
       return {
         canvas: null,
-        height:window.innerHeight-70,
+        height:window.innerHeight,
         width:window.innerWidth-200,
         echarEle:null
       }
@@ -52,7 +52,7 @@
 </script>
 <style lang="scss" scoped>
 .echart{
-  height: 100%;
+  /*height: 100%;*/
   width: 100%;
 }
 </style>

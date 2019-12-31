@@ -82,8 +82,7 @@
       },
       //进入流程
       handleIntoFlow(data) {
-        // this.taskId = data.actProcInstId
-        this.taskId = "ef259a4c-1d8b-11ea-b176-9cb6d0202a49"
+        this.taskId = data.actProcInstId
         this.showDrag = true
       },
       // 翻页
