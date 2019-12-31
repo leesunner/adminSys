@@ -8,6 +8,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state:{
     menuNavTabs:[],//存放导航信息列表
+    leftControl:false,//左边导航显隐
   },
   getters:GETTERS,
   mutations:MUTATIONS,

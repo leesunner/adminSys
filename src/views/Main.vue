@@ -11,9 +11,9 @@
           </el-aside>
           <el-main style="overflow: hidden;padding: 0;">
             <nav-bar-tabs v-if="$route.path!=='/index'"></nav-bar-tabs>
-            <el-scrollbar style="height: 100%;" class="mainScroll">
-              <router-view v-if="$route.path==='/index'"/>
-              <div class="content" v-else>
+            <router-view v-if="$route.path==='/index'"/>
+            <el-scrollbar style="height: 100%;" class="mainScroll" v-else>
+              <div class="content">
                 <!--<keep-alive>-->
                 <router-view/>
                 <!--</keep-alive>-->

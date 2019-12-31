@@ -28,4 +28,7 @@ export default {
       }
     }
   },
+  setLeftControl(state, data){
+    state.leftControl = data
+  },
 }

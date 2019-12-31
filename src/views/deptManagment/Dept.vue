@@ -6,6 +6,9 @@
         <el-form-item label="部门名称" prop="name">
           <el-input v-model="createDept.name" clearable placeholder="请输入部门名称"></el-input>
         </el-form-item>
+        <el-form-item label="部门编码" prop="code">
+          <el-input v-model="createDept.code"  clearable placeholder="请输入部门编码"></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer">
         <el-button size="mini" @click="showInputDeptName = false">取消</el-button>
@@ -25,7 +28,7 @@
       </el-form>
     </el-row>
     <el-col style="background:#fff;">
-      <el-col :span="16">
+      <el-col :span="15">
         <!-- 部门树结构 -->
         <el-tree :data="deptTree"
                  class="filter-tree"
@@ -37,7 +40,7 @@
             <el-tooltip class="item" effect="dark" :content="node.label" placement="right">
               <span class="custom-tree-node-title">{{ node.label }}</span>
             </el-tooltip>
-            <span style="width:445px;text-align: left;">
+            <span style="width:392px;text-align: left;">
               <!--<span-->
               <!--v-if="!data.dingSync"-->
               <!--@click.stop="syncToDing(data)"-->
@@ -87,27 +90,30 @@
           </span>
         </el-tree>
       </el-col>
-      <el-col :span="8" v-show="deptDetail.id">
+      <el-col :span="9" v-show="deptDetail.id">
         <!-- 部门详情 -->
         <el-form
           :model="deptDetail"
           size="mini"
           :disabled="checkType"
-          label-width="100px"
+          label-width="90px"
           style="width:400px;padding:20px 0 0;"
         >
           <el-form-item label="部门名称">
             <el-input v-model="deptDetail.name"></el-input>
           </el-form-item>
-          <el-form-item label="部门类型">
-            <el-select style="width:100%;" v-model="deptDetail.type" clearable placeholder="部门类型">
-              <el-option
-                v-for="(item,index) of _config.dict_dept_type"
-                :key="index"
-                :label="item.value"
-                :value="item.key"
-              ></el-option>
-            </el-select>
+          <!--<el-form-item label="部门类型">-->
+            <!--<el-select style="width:100%;" v-model="deptDetail.type" clearable placeholder="部门类型">-->
+              <!--<el-option-->
+                <!--v-for="(item,index) of _config.dict_dept_type"-->
+                <!--:key="index"-->
+                <!--:label="item.value"-->
+                <!--:value="item.key"-->
+              <!--&gt;</el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
+          <el-form-item label="部门编码">
+            <el-input v-model="deptDetail.code"></el-input>
           </el-form-item>
           <el-form-item label="所在部门">
             <el-cascader
@@ -304,9 +310,11 @@
         createDept: {
           description: "",
           name: "",
+          code:'',
         }, //新增部门
         DeptRules: {
-          name: [{required: true, message: '请输入部门名', trigger: 'blur'}]
+          name: [{required: true, message: '请输入部门名', trigger: 'blur'}],
+          code: [{required: true, message: '请输入部门编码', trigger: 'blur'}]
         },
         showInputDeptName: false, //添加子部门弹窗
         parentDeptName: "", //父部门名称

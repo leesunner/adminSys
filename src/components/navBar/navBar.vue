@@ -1,6 +1,6 @@
 <template>
   <div class="left" @mouseover="showBox" @mouseleave="hiddenBox">
-    <div class="left-control" @click="isCollapse = !isCollapse" ref="leftControl">
+    <div class="left-control" @click="controlBtn" ref="leftControl">
       <i :class="['touch',isCollapse?'el-icon-arrow-right':'el-icon-arrow-left']"></i>
     </div>
     <el-scrollbar style="height: 100%;">
@@ -39,8 +39,13 @@
     },
     methods: {
       ...mapMutations([
-        'setMenuNavTabs'
+        'setMenuNavTabs',
+        'setLeftControl'
       ]),
+      controlBtn(){
+        this.isCollapse = !this.isCollapse
+        this.setLeftControl(this.isCollapse)
+      },
       showBox(){
         this.$refs['leftControl'].style.transform = 'translateX(0px)'
       },
