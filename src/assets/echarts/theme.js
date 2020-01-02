@@ -9,7 +9,7 @@ export default {
     "#d2f5a6",
     "#76f2f2"
   ],
-  "backgroundColor": "rgba(11,26,82,1)",
+  "backgroundColor": "",
   "textStyle": {},
   "title": {
     "textStyle": {
@@ -53,11 +53,11 @@ export default {
     "itemStyle": {
       "normal": {
         "barBorderWidth": 0,
-        "barBorderColor": "#ccc"
+        "barBorderColor": "#ffffff"
       },
       "emphasis": {
         "barBorderWidth": 0,
-        "barBorderColor": "#ccc"
+        "barBorderColor": "#ffffff"
       }
     }
   },
@@ -65,11 +65,11 @@ export default {
     "itemStyle": {
       "normal": {
         "borderWidth": 0,
-        "borderColor": "#ccc"
+        "borderColor": "#ffffff"
       },
       "emphasis": {
         "borderWidth": 0,
-        "borderColor": "#ccc"
+        "borderColor": "#ffffff"
       }
     }
   },
@@ -160,7 +160,7 @@ export default {
     "itemStyle": {
       "normal": {
         "borderWidth": 0,
-        "borderColor": "#ccc"
+        "borderColor": "#ffffff"
       }
     },
     "lineStyle": {
@@ -194,7 +194,7 @@ export default {
     "itemStyle": {
       "normal": {
         "areaColor": "#f3f3f3",
-        "borderColor": "#999999",
+        "borderColor": "#ffffff",
         "borderWidth": 0.5
       },
       "emphasis": {
@@ -220,7 +220,7 @@ export default {
     "itemStyle": {
       "normal": {
         "areaColor": "#f3f3f3",
-        "borderColor": "#999999",
+        "borderColor": "#ffffff",
         "borderWidth": 0.5
       },
       "emphasis": {
@@ -246,7 +246,7 @@ export default {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#666666"
+        "color": "#e6e6e6"
       }
     },
     "axisTick": {
@@ -258,7 +258,7 @@ export default {
     "axisLabel": {
       "show": true,
       "textStyle": {
-        "color": "#aaaaaa"
+        "color": "#e6e6e6"
       }
     },
     "splitLine": {
@@ -283,7 +283,7 @@ export default {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#666666"
+        "color": "#e6e6e6"
       }
     },
     "axisTick": {
@@ -295,7 +295,7 @@ export default {
     "axisLabel": {
       "show": true,
       "textStyle": {
-        "color": "#aaaaaa"
+        "color": "#e6e6e6"
       }
     },
     "splitLine": {
@@ -320,7 +320,7 @@ export default {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#666666"
+        "color": "#e6e6e6"
       }
     },
     "axisTick": {
@@ -332,7 +332,7 @@ export default {
     "axisLabel": {
       "show": true,
       "textStyle": {
-        "color": "#aaaaaa"
+        "color": "#e6e6e6"
       }
     },
     "splitLine": {
@@ -357,7 +357,7 @@ export default {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#666666"
+        "color": "#e6e6e6"
       }
     },
     "axisTick": {
@@ -369,7 +369,7 @@ export default {
     "axisLabel": {
       "show": true,
       "textStyle": {
-        "color": "#aaaaaa"
+        "color": "#e6e6e6"
       }
     },
     "splitLine": {
@@ -393,16 +393,16 @@ export default {
   "toolbox": {
     "iconStyle": {
       "normal": {
-        "borderColor": "#999999"
+        "borderColor": "#e6e6e6"
       },
       "emphasis": {
-        "borderColor": "#666666"
+        "borderColor": "#e6e6e6"
       }
     }
   },
   "legend": {
     "textStyle": {
-      "color": "#999999"
+      "color": "#ffffff"
     }
   },
   "tooltip": {
@@ -467,25 +467,25 @@ export default {
     ]
   },
   "dataZoom": {
-    "backgroundColor": "rgba(255,255,255,0)",
+    "backgroundColor": "rgba(255,255,255,0.1)",
     "dataBackgroundColor": "rgba(114,204,255,1)",
     "fillerColor": "rgba(114,204,255,0.2)",
     "handleColor": "#72ccff",
     "handleSize": "100%",
     "textStyle": {
-      "color": "#333333"
+      "color": "#ffffff"
     }
   },
   "markPoint": {
     "label": {
       "normal": {
         "textStyle": {
-          "color": "#293441"
+          "color": "#ffffff"
         }
       },
       "emphasis": {
         "textStyle": {
-          "color": "#293441"
+          "color": "#ffffff"
         }
       }
     }

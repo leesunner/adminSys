@@ -1,5 +1,5 @@
 //配置接口信息列表/center-users
-const gateway = '/center-users-test'//网关
+const gateway = '/center-users-ljw'//网关
 const version = '/v1'//版本号
 function headString(url) {
   return gateway+version+url
@@ -25,6 +25,7 @@ const apiList = {
   category: headString(`/m/cms/category`),//栏目管理
   website: headString(`/m/cms/site`),//站点管理
   workFlow:headString(`/m/activiti`),//工作流（事务/BPM）
+  summary:headString(`/api/summary`),//按照年龄段统计
 }
 
 export {apiList,gateway}

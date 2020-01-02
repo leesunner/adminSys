@@ -1,7 +1,6 @@
 <template>
-  <div class="echart" ref="echartContent">
-    <div @click="fullScreen" class="full" v-if="!fullscreen">全屏显示</div>
-    <div ref="canvas" :style="`height: ${height};width: ${width};`"></div>
+  <div class="echart" ref="echartContent" :style="`height: ${height};width: ${width};`">
+    <div ref="canvas" style="width:100%;height: 100%;"></div>
   </div>
 </template>
 
@@ -11,39 +10,50 @@
 
   export default {
     name: "index",
+    props: {
+      height: {
+        type: String,
+        default: '100%'
+      },
+      width: {
+        type: String,
+        default: '100%'
+      },
+      options: {
+        type: Object,
+        default: {}
+      },
+    },
     data() {
       return {
         canvas: null,
-        height: window.innerHeight + 'px',
-        width: '100%',
         echarEle: null,
-        fullscreen:false,
       }
     },
-    props: ['options'],
     watch: {
       '$store.state.leftControl'(newVal) {
-        setTimeout(()=>{
-          this.canvas.resize();
-        },5)
+        this.resize();
       },
+      options:{
+        handler(newVal){
+          if (newVal){
+            this.setOption()
+          }
+        },
+        deep:true,
+        immediate:true,
+      }
     },
     mounted() {
       this.$nextTick(() => {
         this.echarEle = this.$refs.echartContent
-        window.onresize = (e) => {
-          // this.height = this.echarEle.clientHeight+'px'
-          // this.width = this.echarEle.clientWidth+'px'
-          this.canvas.resize();
-        }
-        this.endFullScreen()
         //注入自定义主题
         $e.registerTheme('chalk', theme)
         this.init()
-        this.setOption()
       })
     },
     methods: {
+      //初始化echarts
       init() {
         let that = this
         this.canvas = $e.init(this.$refs.canvas, 'chalk')
@@ -54,49 +64,15 @@
             }
           })
         });
+        this.$emit('handlerInit',true)
       },
+      //设置数据源
       setOption() {
         this.canvas.setOption(this.options)
       },
-      //开始全屏
-      fullScreen() {
-        const docElm = this.$refs['echartContent'];
-        //W3C
-        if (docElm.requestFullscreen) {
-          docElm.requestFullscreen();
-        }
-
-        //FireFox
-        else if (docElm.mozRequestFullScreen) {
-          docElm.mozRequestFullScreen();
-        }
-        //Chrome等
-        else if (docElm.webkitRequestFullScreen) {
-          docElm.webkitRequestFullScreen();
-        }
-        //IE11
-        else if (elem.msRequestFullscreen) {
-          elem.msRequestFullscreen();
-        }
-        this.fullscreen = true
-      },
-
-      //退出全屏
-      endFullScreen() {
-        document.addEventListener("fullscreenchange", () =>{
-          this.fullscreen = false
-        }, false);
-        document.addEventListener("mozfullscreenchange", () =>{
-          this.fullscreen = false
-        }, false);
-
-        document.addEventListener("webkitfullscreenchange", () =>{
-          this.fullscreen = false
-        }, false);
-
-        document.addEventListener("msfullscreenchange", () => {
-          this.fullscreen = false
-        }, false);
+      //重绘
+      resize(){
+        this.canvas.resize();
       }
     }
   }
@@ -105,21 +81,5 @@
   .echart {
     /*height: 100%;*/
     position: relative;
-    width: 100%;
-    .full{
-      position: absolute;
-      top: 0;
-      right: 0;
-      left: 0;
-      margin-left: 6%;
-      z-index: 300;
-      width: 100px;
-      color: #ffffff;
-      height: 36px;
-      line-height: 36px;
-      text-align: center;
-      cursor: pointer;
-      background-color: rgba(0,0,0,0.35);
-    }
   }
 </style>

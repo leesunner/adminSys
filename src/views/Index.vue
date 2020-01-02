@@ -1,49 +1,250 @@
 <template>
-  <div>
-    <lee-echarts :options="option"></lee-echarts>
+  <div class="index" ref="fullScreenBox">
+    <div @click="screenStatus" class="full" :style="`background-image: url(${imgUrl});`" v-show="!screenStatu"></div>
+    <el-row class="title">
+      <p>某某村可视化数据</p>
+    </el-row>
+    <div class="content">
+      <el-col class="left" :span="6">
+        <div class="canvas-item">
+          <!--<lee-echarts :options="option" ref="canvas1"></lee-echarts>-->
+        </div>
+        <div class="canvas-item">
+
+        </div>
+      </el-col>
+      <el-col class="center" :span="11">
+        <div class="canvas-item">
+          <!--<lee-echarts :options="option1" ref="canvas2"></lee-echarts>-->
+        </div>
+        <div class="canvas-item">
+          <lee-echarts :options="lineOption" ref="lineOption"></lee-echarts>
+        </div>
+      </el-col>
+      <el-col class="right" :span="6">
+        <div class="canvas-item">
+          <!--<lee-echarts :options="option" ref="canvas3"></lee-echarts>-->
+        </div>
+        <div class="canvas-item">
+
+        </div>
+      </el-col>
+    </div>
   </div>
 </template>
 
 <script>
-  const leeEcharts = ()=>import('../components/echarts/index.vue')
+  // const leeEcharts = () => import('../components/echarts/index.vue')
+  import leeEcharts from '../components/echarts/index.vue'
   // import 'echarts/map/js/china.js'// 引入中国地图数据
   export default {
     name: "index",
     components: {leeEcharts},
     data() {
       return {
-        option:{
-          aria: {
-            show: true
-          },
-          title: {
-            text: '',
-            x: 'center'
-          },
-          legend:{
-            type: 'scroll',
-            top:30,
-            data:['通山县','公安县','牛栏县','石首市','江陵县']
-          },
-          series: [
-            {
-              name: '数据来源',
-              type: 'pie',
-              data: [
-                { value: 335, name: '通山县' },
-                { value: 310, name: '公安县' },
-                { value: 234, name: '牛栏县' },
-                { value: 135, name: '石首市' },
-                { value: 548, name: '江陵县' },
-              ],
-            }
-          ]
-        },
+        //折线图
+        lineOption: null,
+        //圆饼图（占比）
+        pieOption: null,
+        //柱状图
+        pictorialBarOption:null,
+        screenStatu: false,
+        imgUrl: require('@/assets/img/full.png'),
+        docElm:null,
       }
     },
+    beforeDestroy(){
+      window.onresize=null
+    },
+    mounted(){
+      this.$nextTick(()=>{
+        this.docElm = this.$refs['fullScreenBox'];
+        this.docElm.addEventListener('fullscreenchange', ()=>{
+          this.screenStatu = !this.screenStatu
+          if (this.screenStatu){
+            this.imgUrl = require('@/assets/img/scale.png')
+          }else{
+            this.imgUrl = require('@/assets/img/full.png')
+          }
+        });
+        //窗口变动监听
+        window.onresize = (e) =>{
+          // this.$refs.canvas1.resize()
+          this.$refs['lineOption'].resize()
+          // this.$refs.canvas3.resize()
+        }
+        this.getAllRequest()
+      })
+    },
+    methods: {
+      getAllRequest(){
+        this.getBusinessNumByTime()
+      },
+      //获取业务统计数量
+      getBusinessNumByTime(){
+        this.$request.get(`${this.$apiList.summary}/business/time`).then(res=>{
+          const data = res.data.data
+          this.lineOption = {
+            title: {
+              text: '业务数量趋势',
+              x: 'center'
+            },
+            tooltip: {
+              trigger: 'axis'
+            },
+            xAxis: {
+              data: data.map(function (item) {
+                return item.name;
+              })
+            },
+            yAxis: {
+              splitLine: {
+                show: false
+              }
+            },
+            dataZoom: [{
+              startValue: '2015'
+            }, {
+              type: 'inside'
+            }],
+            series: [
+              {
+                name: '业务数量',
+                type: 'line',
+                smooth: true,//开启平滑
+                smoothMonotone:'x',//x方向平滑
+                connectNulls:true,//连接空的点
+                data: data.map(function (item) {
+                  return item.value;
+                }),
+                itemStyle:{
+                  normal: {
+                    lineStyle : {  //线的颜色
+                      color : '#fff',
+                      opacity:1,
+                    },
+                    //以及在折线图每个日期点顶端显示数字
+                    label: {
+                      show: true,
+                      position: 'top',
+                      textStyle: {
+                        color: '#fff'
+                      }
+                    },
+                    color: {
+                      type: 'radial',
+                      x: 0.5,
+                      y: 0.5,
+                      r: 0.5,
+                      colorStops: [{
+                        offset: 0, color: 'green' // 0% 处的颜色
+                      }, {
+                        offset: 1, color: 'blue' // 100% 处的颜色
+                      }],
+                      global: false // 缺省为 false
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        })
+      },
+      screenStatus() {
+        if (this.screenStatu) {
+          this.endFullScreen()
+        } else {
+          this.fullScreen()
+        }
+      },
+      //开始全屏
+      fullScreen() {
+        if (this.docElm.requestFullscreen) {
+          this.docElm.requestFullscreen();
+        }else if (this.docElm.webkitRequestFullscreen){
+          this.docElm.webkitRequestFullscreen();
+        }else if (this.docElm.msRequestFullscreen){
+          this.docElm.msRequestFullscreen();
+        }else{
+          this.docElm.mozRequestFullscreen();
+        }
+      },
+      //退出全屏
+      endFullScreen() {
+        if(this.docElm.exitFullscreen){
+          this.docElm.exitFullscreen();
+        }else if(this.docElm.mozCancelFullScreen){
+          this.docElm.mozCancelFullScreen();
+        }else if(this.docElm.msExitFullscreen){
+          this.docElm.msExiFullscreen();
+        }else if(this.docElm.webkitCancelFullScreen){
+          this.docElm.webkitCancelFullScreen();
+        }
+      }
+    }
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  .index {
+    position: relative;
+    background-image: url("../assets/img/indebackgimg.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-position: center;
+    .full {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 300;
+      width: 30px;
+      color: #ffffff;
+      height: 30px;
+      text-align: center;
+      cursor: pointer;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      background-position: center;
+    }
+  }
+  .title{
+    text-align: center;
+    font-size: 30px;
+    height: 5%;
+  }
+  .content{
+    height: 95%;
+    width: 100%;
+  }
+  .left {
+    height: 100%;
+    background-color: rgba(0,0,0,0.3);
+    margin-left: 1%;
+    border-radius: 8px;
+  }
 
+  .center {
+    height: 100%;
+    background-color: rgba(0,0,0,0.3);
+    margin-left: 1%;
+    margin-right: 1%;
+    border-radius: 8px;
+  }
+
+  .right {
+    height: 100%;
+    background-color: rgba(0,0,0,0.3);
+    margin-right: 1%;
+    border-radius: 8px;
+  }
+  .canvas-item {
+    height: 50%;
+  }
+  :-webkit-full-screen { }
+
+  :-moz-full-screen { }
+
+  :-ms-fullscreen { }
+
+  :fullscreen { }
 </style>
