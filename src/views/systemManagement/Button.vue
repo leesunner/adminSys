@@ -5,13 +5,10 @@
         <el-radio-button :label="1">管理端</el-radio-button>
         <el-radio-button :label="2">展示端</el-radio-button>
       </el-radio-group>
-      <el-button type="primary" style="margin-left: 45px;" size="mini" v-if="buttonControl[_config.buttonCode.B_CREATE]" @click="showCreateButton = true"
-                 icon="el-icon-plus">创建按钮
-      </el-button>
     </el-row>
     <el-row style="margin-top: 12px;">
       <el-form inline>
-        <el-form-item label="请输入菜单关键字:">
+        <el-form-item label="按钮名称:">
           <el-input
             size="small"
             placeholder="输入关键字进行搜索"
@@ -19,13 +16,19 @@
             v-model="filterText">
           </el-input>
         </el-form-item>
+        <el-form-item>
+          <el-button type="primary" style="margin-left: 45px;" size="mini"
+                     v-if="buttonControl[_config.buttonCode.B_CREATE]" @click="showCreateButton = true"
+                     icon="el-icon-plus">创建按钮
+          </el-button>
+        </el-form-item>
       </el-form>
     </el-row>
-    <el-col style="background:#fff;">
-      <el-col :span="6">
+    <el-row style="background:#fff;">
+      <el-col :span="7" style="min-width: 260px;max-width: 450px;">
         <!-- 菜单树结构 -->
         <el-tree
-          :default-expanded-keys="[1]"
+          :default-expanded-keys="[1,2]"
           node-key="id"
           class="filter-tree"
           :filter-node-method="filterNode"
@@ -34,24 +37,24 @@
           :props="defaultProps"
           highlight-current
         >
-          <span class="custom-tree-node" slot-scope="{ node, data }">
-            <span>{{ node.label }}</span>
-            <span v-if="data.level == 1">
-              <el-button size="mini"
-                         @click.stop="() => handleNodeClick(data)"
-                         v-if="buttonControl[_config.buttonCode.B_LIST]"
-                         :type="currentName==data.menuName?'primary':''">公共按钮</el-button>
+            <span class="custom-tree-node" slot-scope="{ node, data }">
+              <span>{{ node.label }}</span>
+              <span v-if="data.level == 1">
+                <el-button size="mini"
+                           @click.stop="() => handleNodeClick(data)"
+                           v-if="buttonControl[_config.buttonCode.B_LIST]"
+                           :type="currentName==data.menuName?'primary':''">公共按钮</el-button>
+              </span>
+              <span v-if="data.level >1">
+                <el-button size="mini"
+                           @click.stop="() => handleNodeClick(data)"
+                           icon="el-icon-view" v-if="buttonControl[_config.buttonCode.B_LIST]"
+                           :type="currentName==data.menuName?'primary':''">按钮列表</el-button>
+              </span>
             </span>
-            <span v-if="data.level >1">
-              <el-button size="mini"
-                         @click.stop="() => handleNodeClick(data)"
-                         icon="el-icon-view" v-if="buttonControl[_config.buttonCode.B_LIST]"
-                         :type="currentName==data.menuName?'primary':''">按钮列表</el-button>
-            </span>
-          </span>
         </el-tree>
       </el-col>
-      <el-col :span="18" style="padding:20px 20px 90px 0;margin-bottom: 30px;">
+      <el-col :span="17" style="padding-top:5px;margin-bottom: 30px;min-width: 630px;">
         <!-- 按钮列表表格 -->
         <el-table :data="menuButtonDetail" size="mini" border>
           <el-table-column type="index" label="序号" width="50"></el-table-column>
@@ -65,17 +68,21 @@
           </el-table-column>
           <el-table-column label="详情" width="80">
             <template v-slot="scope">
-              <el-link type="primary" @click="handleCheck(scope.$index, scope.row)" icon="el-icon-view" v-if="buttonControl[_config.buttonCode.B_DETAIL]">查看</el-link>
+              <el-link type="primary" @click="handleCheck(scope.$index, scope.row)" icon="el-icon-view"
+                       v-if="buttonControl[_config.buttonCode.B_DETAIL]">查看
+              </el-link>
             </template>
           </el-table-column>
           <el-table-column label="删除" width="80">
             <template v-slot="scope">
-              <el-link type="danger" icon="el-icon-delete" @click="handleDelete(scope.$index, scope.row)" v-if="buttonControl[_config.buttonCode.B_DELETE]">删除</el-link>
+              <el-link type="danger" icon="el-icon-delete" @click="handleDelete(scope.$index, scope.row)"
+                       v-if="buttonControl[_config.buttonCode.B_DELETE]">删除
+              </el-link>
             </template>
           </el-table-column>
         </el-table>
       </el-col>
-    </el-col>
+    </el-row>
     <!-- 创建按钮弹窗 -->
     <el-dialog title="创建按钮" :visible.sync="showCreateButton">
       <el-form :model="createButton" size="mini" :rules="rules" ref="formRules" :label-width="formLabelWidth">
@@ -132,7 +139,9 @@
       </el-form>
       <div slot="footer">
         <el-button size="mini" @click="showCreateButton = false">取消</el-button>
-        <el-button size="mini" type="primary" @click="confirmCreate" v-if="buttonControl[_config.buttonCode.B_CREATE]">确定</el-button>
+        <el-button size="mini" type="primary" @click="confirmCreate" v-if="buttonControl[_config.buttonCode.B_CREATE]">
+          确定
+        </el-button>
       </div>
     </el-dialog>
     <!-- 查看按钮详情弹窗 -->
@@ -195,7 +204,9 @@
         </el-button>
         <el-button size="mini" v-else @click="checkType = true">关闭编辑</el-button>
         <el-button size="mini" @click="showButtonDetail = false">关闭</el-button>
-        <el-button size="mini" type="primary" @click="confirmChange" v-if="!checkType&&buttonControl[_config.buttonCode.B_UPDATE]">保存</el-button>
+        <el-button size="mini" type="primary" @click="confirmChange"
+                   v-if="!checkType&&buttonControl[_config.buttonCode.B_UPDATE]">保存
+        </el-button>
       </div>
     </el-dialog>
   </div>
@@ -209,7 +220,7 @@
     mixins: [mixin, treeMixin],
     data() {
       return {
-        currentName:'',//当前选取的菜单名
+        currentName: '',//当前选取的菜单名
         checkBoxType: 1,
         checkType: true, //区分查看还是编辑
         rowData: "", //行数据
@@ -241,7 +252,7 @@
           menuId: "",
           type: '',
         },
-        formLabelWidth: "120px",
+        formLabelWidth: "106px",
         rules: {
           type: [
             {required: true, message: "请选择平台", trigger: "blur"}
@@ -377,6 +388,7 @@
             var data = res.data;
             if (data.code == 200) {
               this.menuTreeData = data.data || [];
+              this.handleNodeClick(data.data[0])
             }
           })
           .catch(error => {

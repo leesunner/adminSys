@@ -9,7 +9,7 @@
                :model="columnData">
         <el-tabs v-model="tabActiveName">
           <el-tab-pane label="文章基本配置" name="first">
-            <el-col style="width: 480px;">
+            <el-col>
               <el-form-item label="文章标题" prop="title">
                 <el-input
                   placeholder="文章标题"
@@ -193,18 +193,30 @@
       create() {
         this.$refs['formRules'].validate(valid => {
           if (valid) {
-            this.$request.post(this.$apiList.article, this.columnData).then(res => {
-              this.$message.success(res.data.msg)
-              this.close(1)
-            })
+            if (this.columnData.content.length>200){
+              this.$request.post(this.$apiList.article, this.columnData).then(res => {
+                this.$message.success(res.data.msg)
+                this.close(1)
+              })
+            }else{
+              this.$message.success('文章内容不够200字')
+            }
           }
         })
       },
       //编辑
       edit() {
-        this.$request.put(this.$apiList.article, this.columnData).then(res => {
-          this.$message.success(res.data.msg)
-          this.close(1)
+        this.$refs['formRules'].validate(valid => {
+          if (valid) {
+            if (this.columnData.content.length>200) {
+              this.$request.put(this.$apiList.article, this.columnData).then(res => {
+                this.$message.success(res.data.msg)
+                this.close(1)
+              })
+            }else{
+              this.$message.success('文章内容不够200字')
+            }
+          }
         })
       },
       //搜索获取站点

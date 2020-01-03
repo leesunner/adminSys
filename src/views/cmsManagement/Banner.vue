@@ -26,28 +26,27 @@
     </el-row>
     <!-- 用户列表表格 -->
     <el-table size="mini" :data="tableData.list" border style="width: 100%">
-      <el-table-column label="创建时间" width="160">
-        <template v-slot="scope">
-          <span>{{scope.row.createTime | formatTime}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" prop="createUserRealName" width="160"></el-table-column>
       <el-table-column prop="title" label="banner标题"></el-table-column>
-      <el-table-column label="状态" width="90">
-        <template v-slot="scope">
-          <el-link :underline="false" :type="scope.row.enable?'success':'danger'">{{scope.row.enable?'启用':'禁用'}}
-          </el-link>
-        </template>
-      </el-table-column>
-      <el-table-column label="图片(点击查看大图)" width="180">
+      <el-table-column label="图片(点击查看大图)" width="240">
         <template v-slot="scope">
           <el-image
             v-if="scope.row.imgUrl"
-            style="width: 156px;"
             :src="scope.row.imgUrl"
             :preview-src-list="[scope.row.imgUrl]"
             fit="scale-down"></el-image>
           <span v-else>暂无图片</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="创建时间">
+        <template v-slot="scope">
+          <span>{{scope.row.createTime | formatTime}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="创建人" prop="createUserRealName" width="160"></el-table-column>
+      <el-table-column label="状态" width="90">
+        <template v-slot="scope">
+          <el-link :underline="false" :type="scope.row.enable?'success':'danger'">{{scope.row.enable?'已启用':'已禁用'}}
+          </el-link>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="190">

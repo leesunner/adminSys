@@ -27,14 +27,16 @@
         </el-form-item>
       </el-form>
     </el-row>
-    <el-col style="background:#fff;">
+    <el-row style="background:#fff;">
       <el-col :span="15">
         <!-- 部门树结构 -->
         <el-tree :data="deptTree"
                  class="filter-tree"
                  :filter-node-method="filterNode"
                  ref="tree"
-                 default-expand-all
+                 :default-expanded-keys="expandedKeys"
+                 node-key="id"
+                 accordion
                  :props="defaultProps">
           <span class="custom-tree-node" slot-scope="{ node, data }">
             <el-tooltip class="item" effect="dark" :content="node.label" placement="right">
@@ -81,11 +83,11 @@
               </el-dropdown>
               <el-button
                 size="mini"
-                :type="data.enabled?'danger':'success'"
-                :icon="data.enabled?'el-icon-minus':'el-icon-view'"
+                :type="data.enabled?'success':'danger'"
+                :icon="data.enabled?'el-icon-view':'el-icon-minus'"
                 v-if="buttonControl[_config.buttonCode.B_STATUS]"
                 @click.stop="handleChangeStatus(data)"
-              >{{data.enabled?'禁用':'启用'}}</el-button>
+              >{{data.enabled?'已启用':'已禁用'}}</el-button>
             </span>
           </span>
         </el-tree>
@@ -140,7 +142,7 @@
           </el-form-item>
         </el-form>
       </el-col>
-    </el-col>
+    </el-row>
     <!-- 查看角色列表弹窗 -->
     <el-dialog :title="`角色列表：${rowData.name}`" :visible.sync="dialogTableRoleVisible">
       <el-table :data="userGroupRoleDetail.list"
@@ -298,6 +300,7 @@
     name: "dept",
     data() {
       return {
+        expandedKeys:[1],
         checkType: true, //区分查看还是编辑
         deptDetail: {}, //部门详情
         deptTree: [], //部门树结构
@@ -709,6 +712,7 @@
         this.parentDeptName = data.name;
         this.showInputDeptName = true;
         this.createDept.pid = data.id;
+        this.expandedKeys = [data.id]
       },
       // 创建部门
       confirmCreate() {
@@ -764,6 +768,7 @@
             var data = res.data;
             if (data.code == 200) {
               this.deptTree = data.data || [];
+              this.handleNodeClick(data.data[0])
             }
           })
       }

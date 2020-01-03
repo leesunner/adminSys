@@ -1,5 +1,5 @@
 //配置接口信息列表/center-users
-const gateway = '/center-users-ljw'//网关
+const gateway = '/center-users-test'//网关
 const version = '/v1'//版本号
 function headString(url) {
   return gateway+version+url

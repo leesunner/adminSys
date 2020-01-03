@@ -263,6 +263,7 @@
       <el-table size="mini" :data="userRoleDetail" border style="width: 100%">
         <el-table-column type="index" label="序号" width="50"></el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
+        <el-table-column prop="code" label="用户编码"></el-table-column>
       </el-table>
       <el-dialog
         width="725px"

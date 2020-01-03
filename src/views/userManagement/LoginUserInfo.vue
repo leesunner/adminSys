@@ -19,7 +19,7 @@
         <el-input type="password" v-model="userInfo.confirmPassWord" clearable placeholder="再次输入新密码"></el-input>
       </el-form-item>
       <el-form-item label="上次登录">
-        <el-row>
+        <el-row style="color: #8c939d;">
           <el-col :span="9">IP：{{userInfo.ip}}</el-col>
           <el-col :span="15">时间：{{userInfo.time|formatTime('LLLL')}}</el-col>
         </el-row>

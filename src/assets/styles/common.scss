@@ -35,6 +35,22 @@ $gay:#909399;
 .el-tree-node{
   margin-top: 6px;
 }
+//form-item 文本居左
+.el-form-item__label{
+  text-align: left!important;
+ }
+//修改必填项的样式
+.is-required{
+  & .el-form-item__label::after{
+    content: '*';
+    color: #F56C6C;
+    margin-left: 4px;
+  }
+  & .el-form-item__label::before{
+    content: ''!important;
+    margin-right: 0px!important;
+  }
+}
 .custom-tree-node {
   flex: 1;
   display: flex;

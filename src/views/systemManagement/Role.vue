@@ -7,6 +7,9 @@
             <el-input v-model="searchData.roleName" clearable placeholder="角色名称"></el-input>
           </el-form-item>
           <el-form-item>
+            <el-input v-model="searchData.roleCode" clearable placeholder="角色编码"></el-input>
+          </el-form-item>
+          <el-form-item>
             <el-button type="primary"
                        @click="getRoleByPage(1)"
                        v-if="buttonControl[_config.buttonCode.B_LIST]"
@@ -191,7 +194,8 @@
         searchData: {
           pageNum: 1,
           pageSize: this._config.sizeArr[0],
-          roleName: ""
+          roleName: "",
+          roleCode:'',
         },
         showCreateRole: false, //创建角色弹窗
         showRoleDetail: false, //查看角色详情弹窗

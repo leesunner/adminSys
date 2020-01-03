@@ -1,26 +1,24 @@
 <template>
   <div>
     <el-row style="margin-top: 20px">
-      <el-col :span="4">
-        <el-radio-group v-model="checkBoxType" size="small" @change="getMenuTree">
-          <el-radio-button :label="1">管理端</el-radio-button>
-          <el-radio-button :label="2">展示端</el-radio-button>
-        </el-radio-group>
-      </el-col>
-      <el-col :span="4">
-        <el-button
-          type="primary"
-          v-if="buttonControl[_config.buttonCode.B_CREATE]"
-          icon="el-icon-plus"
-          size="small"
-          @click="showDialogCreate({id:0})"
-        >添加一级菜单
-        </el-button>
-      </el-col>
+      <el-radio-group v-model="checkBoxType" size="small" @change="getMenuTree">
+        <el-radio-button :label="1">管理端</el-radio-button>
+        <el-radio-button :label="2">展示端</el-radio-button>
+      </el-radio-group>
+      <!--<el-col :span="4">-->
+        <!--<el-button-->
+          <!--type="primary"-->
+          <!--v-if="buttonControl[_config.buttonCode.B_CREATE]"-->
+          <!--icon="el-icon-plus"-->
+          <!--size="small"-->
+          <!--@click="showDialogCreate({id:0})"-->
+        <!--&gt;添加一级菜单-->
+        <!--</el-button>-->
+      <!--</el-col>-->
     </el-row>
     <el-row style="margin-top: 12px;" class="search">
       <el-form inline>
-        <el-form-item label="请输入菜单关键字:">
+        <el-form-item label="菜单名称:">
           <el-input
             size="small"
             placeholder="输入关键字进行搜索"
@@ -75,10 +73,10 @@
       </div>
     </el-dialog>
     <el-row style="background:#fff;">
-      <el-col :span="9">
+      <el-col :span="9" style="min-width: 456px;max-width: 600px;">
         <!-- 菜单树结构 -->
         <el-tree
-          :default-expanded-keys="[1,2]"
+          :default-expanded-keys="expandedKeys"
           node-key="id"
           class="filter-tree"
           :filter-node-method="filterNode"
@@ -115,7 +113,7 @@
           </span>
         </el-tree>
       </el-col>
-      <el-col :span="15" v-show="menuDetail.id">
+      <el-col :span="10" v-show="menuDetail.id" style="margin-left: 8px;">
         <!-- 查看菜单详情 -->
         <el-form
           :disabled="checkType"
@@ -129,10 +127,10 @@
           <el-form-item label="菜单名称" prop="menuName">
             <el-input v-model="menuDetail.menuName"></el-input>
           </el-form-item>
-          <el-form-item label="菜单链接" prop="url">
+          <el-form-item label="菜单链接">
             <el-input v-model="menuDetail.url"></el-input>
           </el-form-item>
-          <el-form-item label="文件路径" prop="menuPath">
+          <el-form-item label="文件路径">
             <el-input v-model="menuDetail.menuPath"></el-input>
           </el-form-item>
           <el-form-item label="菜单图标">
@@ -198,6 +196,7 @@
     mixins: [mixin, treeMixin],
     data() {
       return {
+        expandedKeys:[1,2],
         dialogVisible: false,//创建弹框
         num: 0,
         checkBoxType: 1,
@@ -294,6 +293,7 @@
         this.createMenu.type = parseInt(this.checkBoxType)
         this.createMenu.level = data.level + 1
         this.dialogVisible = true
+        this.expandedKeys = [data.id]
       },
       // 创建菜单信息
       confirmCreate() {
@@ -319,7 +319,7 @@
       confirmChange() {
         this.$refs['formEditRules'].validate(valid => {
           if (valid) {
-            if (this.menuDetail.id == "") {
+            if (this.menuDetail.id !== "") {
               this.$request
                 .put(this.$apiList.menu, this.menuDetail)
                 .then(res => {
@@ -328,7 +328,10 @@
                   this.checkType = true;
                   this.getMenuTree();
                   this.refreshTree()
+                  this.expandedKeys = [this.menuDetail.id]
                 })
+            }else{
+              this.$message.success('请先选择菜单');
             }
           }
         })
@@ -365,6 +368,7 @@
             var data = res.data;
             if (data.code == 200) {
               this.menuTreeData = data.data || [];
+              this.handleNodeClick(data.data[0])
             }
           })
       }

@@ -22,7 +22,7 @@
             <el-input v-model="createData.locationCode" clearable placeholder="请输入位置编号"></el-input>
           </el-form-item>
           <el-form-item label="是否禁用">
-            <el-tooltip class="item" effect="dark" :content="createData.disabled?'禁用中':'启用中'" placement="right">
+            <el-tooltip class="item" effect="dark" :content="createData.disabled?'已禁用':'已启用'" placement="right">
               <el-switch
                 v-model="createData.disabled"
                 active-color="#13ce66"
@@ -87,7 +87,7 @@
                 :icon="data.disabled?'el-icon-close':'el-icon-check'"
                 @click.stop="handleForbidden(data)"
                 v-if="buttonControl[_config.buttonCode.B_UPDATE]"
-              >{{data.disabled?'禁用中':'启用中'}}</el-button>
+              >{{data.disabled?'已禁用':'已启用'}}</el-button>
               <el-button
                 size="mini"
                 type="danger"

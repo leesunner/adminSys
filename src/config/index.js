@@ -55,7 +55,7 @@ export default {
     },
   ],
   // 翻页中每页显示的数据条数
-  sizeArr: [30, 45, 60],
+  sizeArr: [20, 50, 100],
 
   // 短信发送状态
   dict_sms_status: [

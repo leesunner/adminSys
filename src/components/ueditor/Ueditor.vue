@@ -6,13 +6,12 @@
 
 <script>
   import VueUeditorWrap from 'vue-ueditor-wrap';
-
   export default {
     name: "ueditor",
     components: {VueUeditorWrap},
     data() {
       return {
-        msg:'您可以点击右上角的屏幕小标全屏编辑内容',
+        msg:"您可以点击富文本工具栏右上角的屏幕小标全屏编辑内容哦！",
         myConfig: {
           //外部的div不转P
           allowDivTransToP: false,

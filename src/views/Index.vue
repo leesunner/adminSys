@@ -7,17 +7,17 @@
     <div class="content">
       <el-col class="left" :span="6">
         <div class="canvas-item">
-          <!--<lee-echarts :options="option" ref="canvas1"></lee-echarts>-->
+          <lee-echarts :options="pieOption" ref="pieOption"></lee-echarts>
         </div>
         <div class="canvas-item">
 
         </div>
       </el-col>
       <el-col class="center" :span="11">
-        <div class="canvas-item">
+        <div class="canvas-item center-top">
           <!--<lee-echarts :options="option1" ref="canvas2"></lee-echarts>-->
         </div>
-        <div class="canvas-item">
+        <div class="canvas-item center-bottom">
           <lee-echarts :options="lineOption" ref="lineOption"></lee-echarts>
         </div>
       </el-col>
@@ -69,7 +69,7 @@
         });
         //窗口变动监听
         window.onresize = (e) =>{
-          // this.$refs.canvas1.resize()
+          this.$refs['pieOption'].resize()
           this.$refs['lineOption'].resize()
           // this.$refs.canvas3.resize()
         }
@@ -79,8 +79,9 @@
     methods: {
       getAllRequest(){
         this.getBusinessNumByTime()
+        this.getALLUserNum()
       },
-      //获取业务统计数量
+      //获取业务统计数量趋势
       getBusinessNumByTime(){
         this.$request.get(`${this.$apiList.summary}/business/time`).then(res=>{
           const data = res.data.data
@@ -90,17 +91,42 @@
               x: 'center'
             },
             tooltip: {
-              trigger: 'axis'
+              trigger: 'axis',//随鼠标提示
+              axisPointer: {
+                type: 'cross',
+                label:{
+                  show:true,
+                },
+              }
             },
             xAxis: {
               data: data.map(function (item) {
                 return item.name;
-              })
+              }),
+              // axisLine:{
+              //   symbol:['none','arrow']
+              // },
+              splitLine: {
+                show: true,
+                lineStyle: {
+                  color: '#eee',
+                  type:'dotted',
+                  opacity:0.1
+                },
+              },
+              axisLabel:{
+                interval:0,
+              },
             },
             yAxis: {
               splitLine: {
-                show: false
-              }
+                show: true,
+                lineStyle: {
+                  color: '#eee',
+                  type:'dotted',
+                  opacity:0.1
+                },
+              },
             },
             dataZoom: [{
               startValue: '2015'
@@ -117,10 +143,29 @@
                 data: data.map(function (item) {
                   return item.value;
                 }),
+                areaStyle:{
+                  color:{
+                    type: 'linear',
+                    x: 0,
+                    y: 0,
+                    x2: 1,
+                    y2: 1,
+                    colorStops: [{
+                      offset: 0,
+                      color: '#76f2f2' // 0% 处的颜色
+                    }, {
+                      offset: 1,
+                      color: '#72ccff' // 100% 处的颜色
+                    }],
+                    global: false, // 缺省为 false
+                  },
+                  opacity:0.3
+                },
                 itemStyle:{
+                  show:true,
                   normal: {
                     lineStyle : {  //线的颜色
-                      color : '#fff',
+                      color : '#53baff',
                       opacity:1,
                     },
                     //以及在折线图每个日期点顶端显示数字
@@ -129,6 +174,9 @@
                       position: 'top',
                       textStyle: {
                         color: '#fff'
+                      },
+                      formatter:function (val) {
+                        return `${val.value}个`
                       }
                     },
                     color: {
@@ -145,6 +193,59 @@
                     }
                   }
                 }
+              }
+            ]
+          }
+        })
+      },
+      //用户统计
+      getALLUserNum(){
+        this.$request.get(`${this.$apiList.summary}/users/age`).then(res=>{
+          const data = res.data.data
+          this.pieOption = {
+            title:{
+              text:'用户年龄分布',
+              right:10,
+              top:10,
+            },
+            tooltip: {
+              trigger: 'item',
+              formatter: '{a} <br/>{b}: {c} ({d}%)'
+            },
+            legend: {
+              orient: 'vertical',
+              left: 10,
+              top:10,
+              data: data.map(function (item) {
+                return item.name
+              })
+            },
+            series: [
+              {
+                name: '用户年龄段',
+                type: 'pie',
+                radius: ['50%', '70%'],
+                avoidLabelOverlap: false,
+                label: {
+                  normal: {
+                    show: false,
+                    position: 'center'
+                  },
+                  emphasis: {
+                    show: true,
+                    textStyle: {
+                      fontSize: '16',
+                      fontWeight: 'bold'
+                    },
+                    formatter: '{b}: {d}%'
+                  }
+                },
+                labelLine: {
+                  normal: {
+                    show: false
+                  }
+                },
+                data: data
               }
             ]
           }
@@ -192,10 +293,11 @@
     background-repeat: no-repeat;
     background-size: 100% 100%;
     background-position: center;
+    padding-top: 15px;
     .full {
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 30px;
+      right: 30px;
       z-index: 300;
       width: 30px;
       color: #ffffff;
@@ -210,11 +312,27 @@
   .title{
     text-align: center;
     font-size: 30px;
-    height: 5%;
+    height: 60px;
+    color: $white;
+    background-image: url("../assets/img/titlepng.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-position: bottom;
   }
   .content{
-    height: 95%;
+    height: 93%;
     width: 100%;
+  }
+  .canvas-item{
+    height: 50%;
+    &::before{
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-image: url("../assets/img/lefttop.png");
+      background-repeat: no-repeat;
+    }
   }
   .left {
     height: 100%;
@@ -229,6 +347,12 @@
     margin-left: 1%;
     margin-right: 1%;
     border-radius: 8px;
+    &-top{
+      height: 60%;
+    }
+    &-bottom{
+      height: 40%;
+    }
   }
 
   .right {
@@ -236,9 +360,6 @@
     background-color: rgba(0,0,0,0.3);
     margin-right: 1%;
     border-radius: 8px;
-  }
-  .canvas-item {
-    height: 50%;
   }
   :-webkit-full-screen { }
 
