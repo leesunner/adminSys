@@ -79,7 +79,6 @@
 </script>
 <style lang="scss" scoped>
   .echart {
-    /*height: 100%;*/
     position: relative;
   }
 </style>

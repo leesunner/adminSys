@@ -222,6 +222,7 @@
     created(){
       this.getListByPage()
       this.getColumnTree()
+      this.getSites()
     },
     methods:{
       //关闭
@@ -253,15 +254,18 @@
       remoteMethod(){
         if (!this.loading){
           this.loading = true
-          this.$request.get(`${this.$apiList.website}`, {
-            params: this.searchWebData
-          }).then(res => {
-            this.loading = false
-            this.webOptions = res.data.data.list
-          })
+          this.getSites()
         }else{
           this.$message.warning('正在查询中...')
         }
+      },
+      getSites(){
+        this.$request.get(`${this.$apiList.website}`, {
+          params: this.searchWebData
+        }).then(res => {
+          this.loading = false
+          this.webOptions = res.data.data.list
+        })
       },
       //获取文章列表
       getListByPage(){

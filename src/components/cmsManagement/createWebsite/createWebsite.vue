@@ -42,9 +42,10 @@
           v-model="columnData.description">
         </el-input>
       </el-form-item>
-      <!--编辑弹框-->
-      <el-form-item label="站点LOGO" prop="logo" v-if="itemId">
+      <el-form-item label="站点LOGO" prop="logo">
+        <!--编辑弹框-->
         <el-upload
+          v-if="itemId"
           :action="$baseUrl+$apiList.fileUpload"
           :data="{businessFileType:6}"
           :on-success="handleAvatarSuccess"
@@ -59,13 +60,9 @@
           :auto-upload="true">
           <i class="el-icon-plus"></i>
         </el-upload>
-        <el-row style="padding-left: 12px;font-size: 12px;color: #f56c6c;">
-          * 上传LOGO限制一张
-        </el-row>
-      </el-form-item>
-      <!--创建弹框-->
-      <el-form-item label="站点LOGO" prop="logo" v-else>
+        <!--创建弹框-->
         <el-upload
+          v-else
           :action="$baseUrl+$apiList.fileUpload"
           :data="{businessFileType:6}"
           :on-success="handleAvatarSuccess"

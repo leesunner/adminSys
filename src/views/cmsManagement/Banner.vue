@@ -138,7 +138,7 @@
         this.createShow = true
       },
       handleDelete(data) {
-        this.$request.put(`${this.$apiList.banner}/disabled`, {
+        this.$request.put(`${this.$apiList.banner}/enable`, {
           id: data.id,
           enable: !data.enable
         }).then(res => {
@@ -148,7 +148,6 @@
       },
       //获取列表信息
       getPageList() {
-        console.log(this.searchData)
         this.$request.get(this.$apiList.banner, this.searchData).then(res => {
           this.tableData = res.data.data
           this.srcList = []

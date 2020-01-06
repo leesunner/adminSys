@@ -5,6 +5,7 @@ $white: #fff;
 $primary: #409EFF;
 $success: #67c23a;
 $gay:#909399;
+$borderRadius: #41a2ff;
 //自定义控制字符行数隐藏
 @mixin text-over($val:1) {
   @if ($val<=1) {
