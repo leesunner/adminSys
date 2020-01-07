@@ -98,6 +98,7 @@
     }
     & /deep/.el-checkbox{
       color: $white;
+      margin-right: 160px;
     }
     & /deep/.is-checked{
       color: $primary;

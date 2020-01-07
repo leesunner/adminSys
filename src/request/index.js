@@ -58,7 +58,7 @@ axios.interceptors.response.use(res => {
     //获取系统中图片时，文件流传递过来做的拦截
     return res
   }
-  if (res.data.code === 200) {
+  if (res.data.code === 200||res.data.type=='FeatureCollection') {
     return res
   } else {
     //有需要可以根据code的值给出对应的提示

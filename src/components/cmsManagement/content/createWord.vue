@@ -87,7 +87,7 @@
                 </el-form-item>
               </el-row>
               <el-row>
-                <el-form-item label="banner封面图" prop="image" >
+                <el-form-item label="文章封面图" prop="image" >
                   <!--编辑图片-->
                   <el-upload
                     v-if="itemId"

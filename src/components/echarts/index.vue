@@ -1,5 +1,5 @@
 <template>
-  <div class="echart" ref="echartContent" :style="`height: ${height};width: ${width};`">
+  <div class="echart" :class="!$attrs.showBackground?'showBackground':''" ref="echartContent" :style="`height: ${height};width: ${width};`">
     <div ref="canvas" style="width:100%;height: 100%;"></div>
   </div>
 </template>
@@ -46,16 +46,28 @@
     },
     mounted() {
       this.$nextTick(() => {
-        this.echarEle = this.$refs.echartContent
         //注入自定义主题
         $e.registerTheme('chalk', theme)
         this.init()
       })
     },
     methods: {
+      //注册地图
+      beginShowMap(name,json){
+        $e.registerMap(name,json)
+        this.setOption()
+      },
+      //注册点击事件 type:注册标识
+      registerOnEvent(type){
+        let that = this
+        this.canvas.on('click', function(params) {
+          that.$emit('clickEvent', params)
+        })
+      },
       //初始化echarts
       init() {
         let that = this
+        this.echarEle = this.$refs.echartContent
         this.canvas = $e.init(this.$refs.canvas, 'chalk')
         this.canvas.on('mouseover', function (e) {
           that.canvas.setOption({
@@ -64,11 +76,12 @@
             }
           })
         });
-        this.$emit('handlerInit',true)
       },
       //设置数据源
       setOption() {
-        this.canvas.setOption(this.options)
+        if(this.options!==null){
+          this.canvas.setOption(this.options)
+        }
       },
       //重绘
       resize(){
@@ -80,5 +93,9 @@
 <style lang="scss" scoped>
   .echart {
     position: relative;
+  }
+  .showBackground{
+    /*background-color: #062964;*/
+    background-color: $borderBackColor;
   }
 </style>

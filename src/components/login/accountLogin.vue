@@ -92,8 +92,4 @@
   .passBack {
     height: 25px;
   }
-
-  /deep/ .el-checkbox {
-    margin-right: 160px;
-  }
 </style>

@@ -1,22 +1,22 @@
 export default {
   "color": [
     "#5873ff",
-    "#37ffb5",
-    "#fffb55",
-    "#72ccff",
     "#fcae61",
+    "#fffb55",
+    "#76f2f2",
+    "#32C5E9",
+    "#37ffb5",
     "#d4a4eb",
     "#d2f5a6",
-    "#76f2f2"
   ],
   "backgroundColor": "",
   "textStyle": {},
   "title": {
     "textStyle": {
-      "color": "#ffffff"
+      "color": "#0EE5F8"
     },
     "subtextStyle": {
-      "color": "#dddddd"
+      "color": "#70e6f8"
     }
   },
   "line": {
@@ -53,11 +53,11 @@ export default {
     "itemStyle": {
       "normal": {
         "barBorderWidth": 0,
-        "barBorderColor": "#ffffff"
+        "barBorderColor": "#0EE5F8"
       },
       "emphasis": {
         "barBorderWidth": 0,
-        "barBorderColor": "#ffffff"
+        "barBorderColor": "#0EE5F8"
       }
     }
   },
@@ -65,11 +65,11 @@ export default {
     "itemStyle": {
       "normal": {
         "borderWidth": 0,
-        "borderColor": "#ffffff"
+        "borderColor": "#0EE5F8"
       },
       "emphasis": {
         "borderWidth": 0,
-        "borderColor": "#ffffff"
+        "borderColor": "#0EE5F8"
       }
     }
   },
@@ -77,11 +77,11 @@ export default {
     "itemStyle": {
       "normal": {
         "borderWidth": 0,
-        "borderColor": "#ccc"
+        "borderColor": "#0EE5F8"
       },
       "emphasis": {
         "borderWidth": 0,
-        "borderColor": "#ccc"
+        "borderColor": "#0EE5F8"
       }
     }
   },
@@ -246,26 +246,26 @@ export default {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#e6e6e6"
+        "color": "#0EE5F8"
       }
     },
     "axisTick": {
       "show": false,
       "lineStyle": {
-        "color": "#333"
+        "color": "#0EE5F8"
       }
     },
     "axisLabel": {
       "show": true,
       "textStyle": {
-        "color": "#e6e6e6"
+        "color": "#0EE5F8"
       }
     },
     "splitLine": {
       "show": false,
       "lineStyle": {
         "color": [
-          "#e6e6e6"
+          "#0EE5F8"
         ]
       }
     },
@@ -283,26 +283,26 @@ export default {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#e6e6e6"
+        "color": "#0EE5F8"
       }
     },
     "axisTick": {
       "show": false,
       "lineStyle": {
-        "color": "#333"
+        "color": "#0EE5F8"
       }
     },
     "axisLabel": {
       "show": true,
       "textStyle": {
-        "color": "#e6e6e6"
+        "color": "#0EE5F8"
       }
     },
     "splitLine": {
       "show": false,
       "lineStyle": {
         "color": [
-          "#e6e6e6"
+          "#0EE5F8"
         ]
       }
     },
@@ -320,7 +320,7 @@ export default {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#e6e6e6"
+        "color": "#0EE5F8"
       }
     },
     "axisTick": {
@@ -332,14 +332,14 @@ export default {
     "axisLabel": {
       "show": true,
       "textStyle": {
-        "color": "#e6e6e6"
+        "color": "#0EE5F8"
       }
     },
     "splitLine": {
       "show": false,
       "lineStyle": {
         "color": [
-          "#e6e6e6"
+          "#0EE5F8"
         ]
       }
     },
@@ -357,26 +357,26 @@ export default {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#e6e6e6"
+        "color": "#0EE5F8"
       }
     },
     "axisTick": {
       "show": false,
       "lineStyle": {
-        "color": "#333"
+        "color": "#0EE5F8"
       }
     },
     "axisLabel": {
       "show": true,
       "textStyle": {
-        "color": "#e6e6e6"
+        "color": "#0EE5F8"
       }
     },
     "splitLine": {
       "show": false,
       "lineStyle": {
         "color": [
-          "#e6e6e6"
+          "#0EE5F8"
         ]
       }
     },
@@ -393,26 +393,26 @@ export default {
   "toolbox": {
     "iconStyle": {
       "normal": {
-        "borderColor": "#e6e6e6"
+        "borderColor": "#0EE5F8"
       },
       "emphasis": {
-        "borderColor": "#e6e6e6"
+        "borderColor": "#0EE5F8"
       }
     }
   },
   "legend": {
     "textStyle": {
-      "color": "#ffffff"
+      "color": "#0EE5F8"
     }
   },
   "tooltip": {
     "axisPointer": {
       "lineStyle": {
-        "color": "#cccccc",
+        "color": "#0EE5F8",
         "width": 1
       },
       "crossStyle": {
-        "color": "#cccccc",
+        "color": "#0EE5F8",
         "width": 1
       }
     }
@@ -473,19 +473,19 @@ export default {
     "handleColor": "#72ccff",
     "handleSize": "100%",
     "textStyle": {
-      "color": "#ffffff"
+      "color": "#0EE5F8"
     }
   },
   "markPoint": {
     "label": {
       "normal": {
         "textStyle": {
-          "color": "#ffffff"
+          "color": "#0EE5F8"
         }
       },
       "emphasis": {
         "textStyle": {
-          "color": "#ffffff"
+          "color": "#0EE5F8"
         }
       }
     }
