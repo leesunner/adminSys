@@ -85,7 +85,7 @@
 <script>
   import echartsBox from '../components/echarts/frameBox';
   import leeEcharts from '../components/echarts/index.vue'
-  import 'echarts/map/js/province/hubei.js'// 引入中国地图数据
+  // import 'echarts/map/js/province/hubei.js'// 引入中国地图数据
   import axios from 'axios'
   const _axios = axios.create({
     baseURL:'',
@@ -475,30 +475,33 @@
       //获取省
       getProvice(){
         _axios.get(`../../static/mapJson/${this.proviceName}/datas.json`).then(res=>{
+          let dataCity = []
           this.city_mapOption= {
             title: {
               text: this.proviceName,
               // subtext: '湖北省',
-              left: 'left'
+              left: 'left',
+              triggerEvent:true,
+              top:45,
             },
             visualMap: {
               show: false,//色系条是否显示
               min: 0,
-              max: 45000,//取其区间值就代表色系inRange中的一种颜色
+              max: 4000,//取其区间值就代表色系inRange中的一种颜色
               left: 'left',
               top: 'bottom',
               text: ['大', '小'], // 文本，默认为数值文本
               calculable: true,
               inRange:{
                 color: [
-                  "#5873ff",
-                  "#fcae61",
-                  "#fffb55",
+                  "#2eff97",
                   "#76f2f2",
                   "#32C5E9",
-                  "#37ffb5",
-                  "#d4a4eb",
-                  "#d2f5a6",
+                  "#5873ff",
+                  "#fffb55",
+                  "#fcae61",
+                  "#eb5c36",
+                  "#f5000b",
                 ],//上色范围
               }
             },
@@ -506,25 +509,63 @@
               name:this.proviceName,
               type:'map',
               map:this.proviceName,
-              emphasis: {
-                label: {
-                  show: true
+              emphasis:{
+                label:{
+                  show:true,
+                  color:'#fff'
+                },
+                itemStyle:{
+                  areaColor:'rgba(6,41,100,.85)',
                 }
+              },
+              label:{
+                show:true,
+                color:'#fff'
+              },
+              itemStyle:{
+                areaColor:'#0EE5F8',
+                borderColor:'#5873ff',
               },
               // 文本位置修正
               textFixed: {
                 Alaska: [20, -20]
               },
+              data:[
+                {
+                  name:'武汉市',
+                  value:parseInt(Math.random()*4000),
+                },
+                {
+                  name:'荆州市',
+                  value:parseInt(Math.random()*4000),
+                },
+                {
+                  name:'潜江市',
+                  value:parseInt(Math.random()*4000),
+                },
+              ],
             }]
           }
           this.$refs['city_mapOption'].beginShowMap(this.proviceName, res.data)
           this.$refs['city_mapOption'].registerOnEvent()
+          this.cityName = ''
         })
       },
       //点击地图回调
       clickEvent(val){
         if(val.componentType=='title'){
-          console.log(val)
+          let title = val.event.target.style.text
+          switch(true){
+            case title==this.proviceName:
+              this.getProvice()
+              break;
+            case title==this.cityName:
+              this.getCity()
+              break;
+            case title==this.districtName:
+              this.getStrict()
+              break;
+          }
         }else{
           switch(true){
             case !this.cityName:
@@ -546,28 +587,8 @@
               text: this.proviceName,
               subtext:this.cityName,
               left: 'left',
-              triggerEvent:true
-            },
-            visualMap: {
-              show: false,//色系条是否显示
-              min: 0,
-              max: 45000,//取其区间值就代表色系inRange中的一种颜色
-              left: 'left',
-              top: 'bottom',
-              text: ['大', '小'], // 文本，默认为数值文本
-              calculable: true,
-              inRange:{
-                color: [
-                  "#5873ff",
-                  "#fcae61",
-                  "#fffb55",
-                  "#76f2f2",
-                  "#32C5E9",
-                  "#37ffb5",
-                  "#d4a4eb",
-                  "#d2f5a6",
-                ],//上色范围
-              }
+              triggerEvent:true,
+              top:45,
             },
             series:[{
               name:this.cityName,
@@ -585,7 +606,7 @@
             }]
           }
           this.$refs['city_mapOption'].beginShowMap(this.cityName, res.data)
-          // this.$refs['city_mapOption'].registerOnEvent()
+          this.districtName = ''
         })
       },
       //获取县区
@@ -595,28 +616,9 @@
             title: {
               text: this.cityName,
               subtext:this.districtName,
-              left: 'left'
-            },
-            visualMap: {
-              show: false,//色系条是否显示
-              min: 0,
-              max: 45000,//取其区间值就代表色系inRange中的一种颜色
               left: 'left',
-              top: 'bottom',
-              text: ['大', '小'], // 文本，默认为数值文本
-              calculable: true,
-              inRange:{
-                color: [
-                  "#5873ff",
-                  "#fcae61",
-                  "#fffb55",
-                  "#76f2f2",
-                  "#32C5E9",
-                  "#37ffb5",
-                  "#d4a4eb",
-                  "#d2f5a6",
-                ],//上色范围
-              }
+              triggerEvent:true,
+              top:45,
             },
             series:[{
               name:this.districtName,
@@ -634,7 +636,6 @@
             }]
           }
           this.$refs['city_mapOption'].beginShowMap(this.districtName, res.data)
-          // this.$refs['city_mapOption'].registerOnEvent()
         })
       },
       screenStatus() {

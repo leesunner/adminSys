@@ -28,6 +28,7 @@
       return {
         canvas: null,
         echarEle: null,
+        initOnNum:0,//限制只注册一次
       }
     },
     watch: {
@@ -59,23 +60,30 @@
       },
       //注册点击事件 type:注册标识
       registerOnEvent(type){
+        if (!this.initOnNum){
+          this.initOnNum = 1
+          let that = this
+          this.canvas.on('click', function(params) {
+            that.$emit('clickEvent', params)
+          })
+        }
+      },
+      //注册鼠标移入事件
+      mouseOverEvent(){
         let that = this
-        this.canvas.on('click', function(params) {
-          that.$emit('clickEvent', params)
-        })
+        this.canvas.on('mouseover', function (e) {
+          console.log(e)
+          that.canvas.setOption({
+            tooltip: {
+              formatter: `${e.name}:${e.value?e.value:'暂无数据'}`,
+            },
+          })
+        });
       },
       //初始化echarts
       init() {
-        let that = this
         this.echarEle = this.$refs.echartContent
         this.canvas = $e.init(this.$refs.canvas, 'chalk')
-        this.canvas.on('mouseover', function (e) {
-          that.canvas.setOption({
-            tooltip: {
-              formatter: `${e.name}:${e.value}`
-            }
-          })
-        });
       },
       //设置数据源
       setOption() {

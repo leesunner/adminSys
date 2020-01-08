@@ -193,8 +193,8 @@ export default {
   "map": {
     "itemStyle": {
       "normal": {
-        "areaColor": "#f3f3f3",
-        "borderColor": "#ffffff",
+        "areaColor": "#0EE5F8",
+        "borderColor": "#5873ff",
         "borderWidth": 0.5
       },
       "emphasis": {
@@ -206,12 +206,12 @@ export default {
     "label": {
       "normal": {
         "textStyle": {
-          "color": "#893448"
+          "color": "#0EE5F8"
         }
       },
       "emphasis": {
         "textStyle": {
-          "color": "rgb(137,52,72)"
+          "color": "#5873ff"
         }
       }
     }
@@ -219,20 +219,20 @@ export default {
   "geo": {
     "itemStyle": {
       "normal": {
-        "areaColor": "#f3f3f3",
-        "borderColor": "#ffffff",
+        "areaColor": "#0EE5F8",
+        "borderColor": "#5873ff",
         "borderWidth": 0.5
       },
       "emphasis": {
-        "areaColor": "rgba(255,178,72,1)",
-        "borderColor": "#eb8146",
+        "areaColor": "#0EE5F8",
+        "borderColor": "#5873ff",
         "borderWidth": 1
       }
     },
     "label": {
       "normal": {
         "textStyle": {
-          "color": "#893448"
+          "color": "#5873ff"
         }
       },
       "emphasis": {
