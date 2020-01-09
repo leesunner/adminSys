@@ -241,6 +241,7 @@
       getArticelInfo() {
         this.$request.get(`${this.$apiList.article}/${this.itemId}`).then(res => {
           this.columnData = res.data.data
+          this.editData.url = res.data.data.image
           this.$refs.ueditor.msg = res.data.data.content
         })
       },

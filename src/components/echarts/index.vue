@@ -72,12 +72,7 @@
       mouseOverEvent(){
         let that = this
         this.canvas.on('mouseover', function (e) {
-          console.log(e)
-          that.canvas.setOption({
-            tooltip: {
-              formatter: `${e.name}:${e.value?e.value:'暂无数据'}`,
-            },
-          })
+
         });
       },
       //初始化echarts

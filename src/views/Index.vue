@@ -2,7 +2,7 @@
   <div class="index" ref="fullScreenBox">
     <div @click="screenStatus" class="full" :style="`background-image: url(${imgUrl});`" v-show="!screenStatu"></div>
     <el-row class="name">
-      <p>数字政务平台</p>
+      <p class="title">数字政务平台</p>
     </el-row>
     <div class="content">
       <el-col class="left" :span="6">
@@ -38,7 +38,7 @@
         <div class="left-center">
           <p class="title">事件提交时间分布</p>
           <echarts-box class="canvas-item">
-              <lee-echarts :options="num_scatterOption" ref="num_scatterOption"></lee-echarts>
+              <lee-echarts :options="num_barOption" ref="num_barOption"></lee-echarts>
           </echarts-box>
         </div>
         <div class="left-bottom">
@@ -57,12 +57,11 @@
       </el-col>
       <el-col class="center" :span="11">
         <div class="canvas-item center-top">
-          <div class="center-top-left">
-            <lee-echarts :options="city_mapOption" :showBackground="true" ref="city_mapOption" @clickEvent="clickEvent"></lee-echarts>
-          </div>
-          <div class="center-top-right">
-
-          </div>
+          <ul class="center-top-bread">
+            <li v-for="item in tabTitleArr" :key="item.locationCode" @click="changeTabTitle(item)">{{item.locationName}}</li>
+          </ul>
+          <!--地图-->
+          <lee-echarts :options="city_mapOption" :showBackground="true" ref="city_mapOption" @clickEvent="clickEvent"></lee-echarts>
         </div>
         <div class="canvas-item center-bottom">
           <echarts-box>
@@ -71,21 +70,38 @@
         </div>
       </el-col>
       <el-col class="right" :span="6">
-        <div class="canvas-item">
-          <!--<lee-echarts :options="option" ref="canvas3"></lee-echarts>-->
+        <div class="canvas-item right-top">
+          <echarts-box>
+            <div class="box-con">
+              <ul class="numCount">
+                <li>
+                  <span class="numCount-text">事件总计：</span>
+                  <span class="numCount-num">{{animatedAllCount}}</span>
+                  <span class="numCount-text">件</span>
+                </li>
+                <li>
+                  <span class="numCount-text">处理中：</span>
+                  <span class="numCount-num">{{animatedAllCount}}</span>
+                  <span class="numCount-text">件</span>
+                </li>
+              </ul>
+            </div>
+          </echarts-box>
         </div>
-        <div class="canvas-item">
-
+        <div class="canvas-item right-bottom">
+          <p class="title">实时事件播报</p>
+          <echarts-box>
+          </echarts-box>
         </div>
       </el-col>
     </div>
   </div>
 </template>
-
 <script>
   import echartsBox from '../components/echarts/frameBox';
-  import leeEcharts from '../components/echarts/index.vue'
+  import leeEcharts from '../components/echarts/index.vue';
   // import 'echarts/map/js/province/hubei.js'// 引入中国地图数据
+  import TweenAminate from '../tools/TweenLite.js'
   import axios from 'axios'
   const _axios = axios.create({
     baseURL:'',
@@ -104,23 +120,55 @@
         sex_pieOption: null,//性别
         event_pieOption: null,
         //柱状图
-        barOption: null,
+        num_barOption: null,
         //地图
         city_mapOption:null,
         screenStatu: false,
         imgUrl: require('@/assets/img/full.png'),
         docElm: null,
-        countryName:'中国',
-        proviceName:'湖北省',
-        cityName:'',
-        districtName:'',
+        locationData:{
+          locationName:'湖北省',
+          locationCode:420000,
+          locationLevel:2
+        },
+        tabTitleArr:[//存title的数据源
+          {
+            locationName:'湖北省',
+            locationCode:420000,
+            locationLevel:2
+          }
+        ],
+        tweenedAllCount:0,
+        tweenedAllNumber:0,
       }
     },
     beforeDestroy() {
       window.onresize = null
     },
+    //字体动画效果 ----------开始
+    computed: {
+      animatedAllCount: function() {
+        let num = this.tweenedAllCount.toFixed(0).toString().split('')
+        for (let i in num){
+          if ((i+1)%3===0&&i<num.length-1){
+            let q = i-2
+            num[q] = num[q]+','
+          }
+        }
+        return num.join('');
+      }
+    },
+    watch: {
+      tweenedAllNumber: function(newValue) {
+        TweenAminate.TweenLite.to(this.$data, 0.5, { tweenedAllCount: newValue });
+      }
+    },
+    // ----------结束
     mounted() {
       this.$nextTick(() => {
+        setTimeout(()=>{
+          this.tweenedAllNumber = 20000
+        },1500)
         this.docElm = this.$refs['fullScreenBox'];
         this.docElm.addEventListener('fullscreenchange', () => {
           this.screenStatu = !this.screenStatu
@@ -135,7 +183,7 @@
           this.$refs['age_pieOption'].resize()
           this.$refs['sex_pieOption'].resize()
           this.$refs['num_lineOption'].resize()
-          this.$refs['num_scatterOption'].resize()
+          this.$refs['num_barOption'].resize()
           this.$refs['city_mapOption'].resize()
           for (let i = 0; i < 6; i++) {
             this.$refs[`event_pieOption${i + 1}`].resize()
@@ -150,7 +198,15 @@
         this.getAllUserNum()
         this.getAllUserSex()
         this.getBusinessNodeNumByTime()
-        this.getProvice()
+        this.getMapAndData()
+      },
+      //复制对象属性值
+      copyClickMapData(data){
+        let obj = {}
+        obj.locationName = data.name||data.locationName
+        obj.locationCode = data.locationCode
+        obj.locationLevel = parseInt(data.locationLevel)+1
+        return obj
       },
       //获取业务统计数量趋势
       getBusinessNumByTime() {
@@ -404,7 +460,7 @@
           }
         }).then(res => {
           const data = res.data.data
-          this.num_scatterOption = {
+          this.num_barOption = {
             tooltip: {
               trigger: 'axis',//随鼠标提示
               axisPointer:{
@@ -439,7 +495,7 @@
             series: [
               {
                 name: '节点数量',
-                type: 'scatter',
+                type: 'bar',
                 data: data.map(function (item) {
                   return item.value;
                 }),
@@ -450,18 +506,19 @@
                       show: true,
                       position: 'top',
                       textStyle: {
-                        color: '#f3ff47'
+                        color: '#76f2f2'
                       },
                     },
                     color: {
-                      type: 'radial',
-                      x: 0.5,
-                      y: 0.5,
-                      r: 0.5,
+                      type: 'linear',
+                      x: 0,
+                      y: 1,
+                      x2: 0,
+                      y2: 0,
                       colorStops: [{
-                        offset: 0, color: '#f3ff47' // 0% 处的颜色
+                        offset: 0, color: '#76f2f2' // 0% 处的颜色
                       }, {
-                        offset: 1, color: 'rgba(243,255,71,0.65)' // 100% 处的颜色
+                        offset: 1, color: '#5873ff' // 100% 处的颜色
                       }],
                       global: false // 缺省为 false
                     }
@@ -472,171 +529,122 @@
           }
         })
       },
-      //获取省
-      getProvice(){
-        _axios.get(`../../static/mapJson/${this.proviceName}/datas.json`).then(res=>{
-          let dataCity = []
-          this.city_mapOption= {
-            title: {
-              text: this.proviceName,
-              // subtext: '湖北省',
-              left: 'left',
-              triggerEvent:true,
-              top:45,
-            },
-            visualMap: {
-              show: false,//色系条是否显示
-              min: 0,
-              max: 4000,//取其区间值就代表色系inRange中的一种颜色
-              left: 'left',
-              top: 'bottom',
-              text: ['大', '小'], // 文本，默认为数值文本
-              calculable: true,
-              inRange:{
-                color: [
-                  "#2eff97",
-                  "#76f2f2",
-                  "#32C5E9",
-                  "#5873ff",
-                  "#fffb55",
-                  "#fcae61",
-                  "#eb5c36",
-                  "#f5000b",
-                ],//上色范围
-              }
-            },
-            series:[{
-              name:this.proviceName,
-              type:'map',
-              map:this.proviceName,
-              emphasis:{
+      //点击地图查询业务数量
+      getNumByArea(){
+        return this.$request.get(`${this.$apiList.summary}/business/location`,{
+          params:this.locationData
+        })
+      },
+      //获取地图和对应数据
+      getMapAndData(){
+        this.$request.all([this.getMapJson(),this.getNumByArea()]).then(
+          this.$request.spread((mapRes,valRes) => {
+            //事件只注册一次
+            if (this.city_mapOption===null){
+              this.$refs['city_mapOption'].registerOnEvent()
+              // this.$refs['city_mapOption'].mouseOverEvent()
+            }
+            this.city_mapOption= {
+              visualMap: {
+                show: true,//色系条是否显示
+                min: 0,
+                max: 4000,//取其区间值就代表色系inRange中的一种颜色
+                left: 'left',
+                top: 'bottom',
+                text: ['高', '低'], // 文本，默认为数值文本
+                calculable: true,
+                textStyle:{
+                  color:'#fff'
+                },
+                inRange:{
+                  symbolSize:2,
+                  color: [
+                    "#32C5E9",
+                    "#5873ff",
+                    "#fffb55",
+                    "#fcae61",
+                    "#eb5c36",
+                    "#f5000b",
+                  ],//上色范围
+                }
+              },
+              series:[{
+                name:mapRes.data.data.locationName,
+                type:'map',
+                map:mapRes.data.data.locationName,
+                emphasis:{
+                  label:{
+                    show:true,
+                    color:'#fff'
+                  },
+                  itemStyle:{
+                    areaColor:'rgba(6,41,100,.85)',
+                  }
+                },
                 label:{
                   show:true,
                   color:'#fff'
                 },
                 itemStyle:{
-                  areaColor:'rgba(6,41,100,.85)',
-                }
-              },
-              label:{
-                show:true,
-                color:'#fff'
-              },
-              itemStyle:{
-                areaColor:'#0EE5F8',
-                borderColor:'#5873ff',
-              },
-              // 文本位置修正
-              textFixed: {
-                Alaska: [20, -20]
-              },
-              data:[
-                {
-                  name:'武汉市',
-                  value:parseInt(Math.random()*4000),
+                  areaColor:'#5873ff',
+                  borderColor:'#5873ff',
                 },
-                {
-                  name:'荆州市',
-                  value:parseInt(Math.random()*4000),
+                zoom:1.15,
+                roam:true,
+                scaleLimit:{
+                  min:1,
+                  max:2,
                 },
-                {
-                  name:'潜江市',
-                  value:parseInt(Math.random()*4000),
+                // 文本位置修正
+                textFixed: {
+                  Alaska: [20, -20]
                 },
-              ],
-            }]
-          }
-          this.$refs['city_mapOption'].beginShowMap(this.proviceName, res.data)
-          this.$refs['city_mapOption'].registerOnEvent()
-          this.cityName = ''
-        })
+                data:valRes.data.data,
+              }]
+            }
+            this.$refs['city_mapOption'].beginShowMap(mapRes.data.data.locationName, mapRes.data.data.mapJson||{})
+          })
+        )
+      },
+      //获取地图数据
+      getMapJson(){
+       return this.$request.get(`${this.$apiList.location}/map/${this.locationData.locationCode}`)
       },
       //点击地图回调
       clickEvent(val){
-        if(val.componentType=='title'){
-          let title = val.event.target.style.text
-          switch(true){
-            case title==this.proviceName:
-              this.getProvice()
+        //模拟数字
+        this.tweenedAllNumber = parseInt(Math.random()*20000)
+        if (val.data){
+          this.locationData = this.copyClickMapData(val.data)
+          const arr = this.tabTitleArr
+          //匹配数据添到面包屑数据中
+          let isInside = false
+          for (let i in arr){
+            if (arr[i].locationLevel!=this.locationData.locationLevel){
+              isInside = true
+            }else{
+              isInside = false
               break;
-            case title==this.cityName:
-              this.getCity()
-              break;
-            case title==this.districtName:
-              this.getStrict()
-              break;
+            }
           }
-        }else{
-          switch(true){
-            case !this.cityName:
-              this.cityName = val.name
-              this.getCity()
-              break;
-            case !this.districtName:
-              this.districtName = val.name
-              this.getStrict()
-              break;
-          }
+          isInside?arr.push(this.locationData):''
+          this.getMapAndData()
         }
       },
-      //获取市
-      getCity(){
-        _axios.get(`../../static/mapJson/${this.proviceName}/${this.cityName}/datas.json`).then(res=>{
-          this.city_mapOption= {
-            title: {
-              text: this.proviceName,
-              subtext:this.cityName,
-              left: 'left',
-              triggerEvent:true,
-              top:45,
-            },
-            series:[{
-              name:this.cityName,
-              type:'map',
-              map:this.cityName,
-              emphasis: {
-                label: {
-                  show: true
-                }
-              },
-              // 文本位置修正
-              textFixed: {
-                Alaska: [20, -20]
-              },
-            }]
+      //点击title切换数据
+      changeTabTitle(val){
+        if (this.locationData.locationLevel!=val.locationLevel){
+          this.locationData = val
+          const arr = this.tabTitleArr
+          for (let i in arr){
+            if (arr[i].locationLevel==this.locationData.locationLevel){
+              let num = parseInt(i)+1;
+              arr.splice(num,arr.length-num)
+              break;
+            }
           }
-          this.$refs['city_mapOption'].beginShowMap(this.cityName, res.data)
-          this.districtName = ''
-        })
-      },
-      //获取县区
-      getStrict(){
-        _axios.get(`../../static/mapJson/${this.proviceName}/${this.cityName}/${this.districtName}/datas.json`).then(res=>{
-          this.city_mapOption= {
-            title: {
-              text: this.cityName,
-              subtext:this.districtName,
-              left: 'left',
-              triggerEvent:true,
-              top:45,
-            },
-            series:[{
-              name:this.districtName,
-              type:'map',
-              map:this.districtName,
-              emphasis: {
-                label: {
-                  show: true
-                }
-              },
-              // 文本位置修正
-              textFixed: {
-                Alaska: [20, -20]
-              },
-            }]
-          }
-          this.$refs['city_mapOption'].beginShowMap(this.districtName, res.data)
-        })
+          this.getMapAndData()
+        }
       },
       screenStatus() {
         if (this.screenStatu) {
@@ -696,7 +704,7 @@
     }
     .name {
       position: absolute;
-      top: 15px;
+      top: 0;
       left: 0;
       text-align: center;
       font-size: 30px;
@@ -707,13 +715,20 @@
       background-repeat: no-repeat;
       background-size: 100% 100%;
       background-position: bottom;
+      .title{
+        margin-top: 10px;
+        color: #0EE5F8;
+        font-size: 33px;
+        letter-spacing: 5px;
+        font-weight: 500;
+      }
     }
     .content {
       height: 100%;
       width: 100%;
       .title{
         color: #0EE5F8;
-        line-height: 35px;
+        line-height: 30px;
         text-align: center;
         margin: 5px auto;
         /*background-color: $borderBackColor;*/
@@ -739,6 +754,7 @@
       border-radius: 8px;
       &-top {
         height: 34%;
+        margin-top: 14px;
         .item {
           width: 33.333333333333%;
           height: 50%;
@@ -769,17 +785,30 @@
         height: 60%;
         padding-top: 45px;
         padding-bottom: 10px;
-        &-left{
-          display: inline-block;
-          width: 55%;
-          height: 100%;
-          vertical-align: middle;
-        }
-        &-right{
-          display: inline-block;
-          width: 45%;
-          height: 100%;
-          vertical-align: middle;
+        position: relative;
+        &-bread{
+          position: absolute;
+          top: 12%;
+          left: 10px;
+          z-index: 10;
+          li{
+            height: 24px;
+            color: #0EE8F9;
+            font-size: 18px;
+            font-weight: bold;
+            font-family: 'Avenir', Helvetica, Arial, sans-serif;
+            cursor: pointer;
+            margin-bottom: 3px;
+            padding-right: 20px;
+            transition: all 0.15s ease-in-out;
+            background-image:none;
+          }
+          li:hover{
+            background-image: url("../assets/img/clickHand.png");
+            background-repeat: no-repeat;
+            background-position: right;
+            background-size: contain;
+          }
         }
       }
       &-bottom {
@@ -791,6 +820,52 @@
       height: 100%;
       margin-right: 1%;
       border-radius: 8px;
+      padding-top: 3%;
+      &-top{
+        display: inline-block;
+        width: 100%;
+        height: 53%;
+        vertical-align: middle;
+        position: relative;
+        .box-con{
+          background-color: rgba(6,41,100,0.85);
+          height: 100%;
+          background-image: url("../assets/img/firemhon.png");
+          background-repeat: no-repeat;
+          background-position: 50% 100%;
+          background-size: 90%;
+        }
+        .numCount{
+          position: absolute;
+          top: 9%;
+          width: 100%;
+          li{
+            text-align: center;
+          }
+          &-text{
+            color: #0EE8F9;
+            font-size: 20px;
+            text-align: right;
+            margin-top: 6px;
+          }
+          &-num{
+            color: #FFD500;
+            font-weight: bold;
+            font-size: 34px;
+          }
+        }
+      }
+      &-bottom{
+        height: 38.5%;
+        margin-top: 14px;
+        .title{
+          color: #0EE5F8;
+          line-height: 30px;
+          text-align: center;
+          margin: 5px auto;
+          width: 100%;
+        }
+      }
     }
 
     :-webkit-full-screen {
