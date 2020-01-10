@@ -8,7 +8,6 @@
       ref="multipleTable"
       @selection-change="handleSelectionChange"
       row-key="id"
-      default-expand-all
       :header-row-style="{'background-color': '#f7f7f7'}"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
       <el-table-column

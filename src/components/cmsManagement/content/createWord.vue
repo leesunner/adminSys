@@ -17,7 +17,7 @@
                   v-model="columnData.title">
                 </el-input>
               </el-form-item>
-              <el-form-item label="所属站点" prop="siteId" v-if="!itemId">
+              <el-form-item label="所属站点" :required="columnData.type!=1" v-if="!itemId">
                 <el-select
                   v-model="columnData.siteId"
                   filterable
@@ -35,7 +35,7 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="所属栏目" prop="categoryId">
+              <el-form-item label="所属栏目" :required="columnData.type!=1">
                 <el-cascader
                   v-model="columnData.categoryId"
                   :options="$attrs.columnOptions"
@@ -68,7 +68,7 @@
                 </el-input>
               </el-form-item>
               <el-row>
-                <el-form-item label="专题分类" prop="type">
+                <el-form-item label="文章分类" prop="type">
                   <el-radio-group v-model="columnData.type">
                     <el-radio :label="item.key" v-for="item in _config.dict_wordType" :key="item.key">{{item.value}}
                     </el-radio>
@@ -204,8 +204,6 @@
         rules: {
           content: [{required: true, message: '请输入文章内容', trigger: 'blur'}],
           title: [{required: true, message: '请输入文章标题', trigger: 'blur'}],
-          siteId: [{required: this.itemId ? false : true, message: '请选择站点', trigger: 'blur'}],
-          categoryId: [{required: true, message: '请选择栏目', trigger: 'blur'}],
           type: [{required: true, message: '请选择文章分类', trigger: 'change'}],
           image:[{required: true, message: '文章封面图不能为空', trigger: 'blur'}]
         }
@@ -214,7 +212,7 @@
     watch: {
       '$attrs.show'(newVal) {
         if (newVal) {
-          this.getArticelInfo()
+          this.itemId?this.getArticelInfo():''
           this.getSites()
         } else {
           this.columnData = {
@@ -245,17 +243,37 @@
           this.$refs.ueditor.msg = res.data.data.content
         })
       },
+      //验证信息
+      checkFormDataInfo(data){
+        let control = true
+        if (data.type!=1){
+          if (data.siteId===''){
+            this.$message.error('非国内新闻，请选择发布的站点')
+            control = false
+            return control
+          }
+          if (data.categoryId===''){
+            this.$message.error('非国内新闻，请选择发布的栏目')
+            control = false
+            return control
+          }
+        }else{
+          data.siteId = ''
+          data.categoryId = ''
+        }
+        return control
+      },
       //创建
       create() {
         this.$refs['formRules'].validate(valid => {
-          if (valid) {
+          if (valid&&this.checkFormDataInfo(this.columnData)) {
             if (this.columnData.content.length>200){
               this.$request.post(this.$apiList.article, this.columnData).then(res => {
                 this.$message.success(res.data.msg)
                 this.close(1)
               })
             }else{
-              this.$message.success('文章内容不够200字')
+              this.$message.error('文章内容不够100字')
             }
           }
         })
@@ -263,14 +281,15 @@
       //编辑
       edit() {
         this.$refs['formRules'].validate(valid => {
-          if (valid) {
+          if (valid&&this.checkFormDataInfo(this.columnData)) {
             if (this.columnData.content.length>200) {
+              this.columnData.createTime = ''
               this.$request.put(this.$apiList.article, this.columnData).then(res => {
                 this.$message.success(res.data.msg)
                 this.close(1)
               })
             }else{
-              this.$message.success('文章内容不够200字')
+              this.$message.error('文章内容不够100字')
             }
           }
         })

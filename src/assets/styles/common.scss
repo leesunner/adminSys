@@ -12,6 +12,8 @@ $borderBackColor: rgba(6,41,100,.85);
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
   } @else {
     overflow: hidden;
     text-overflow: ellipsis;

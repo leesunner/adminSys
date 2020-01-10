@@ -43,7 +43,7 @@
         label="站点描述">
       </el-table-column>
       <el-table-column
-        width="300"
+        width="310"
         label="操作">
         <template v-slot="scope">
           <el-button
@@ -64,11 +64,11 @@
           </el-button>
           <el-button
             size="mini"
-            :type="scope.row.hideStatus?'success':'danger'"
-            :icon="scope.row.hideStatus?'el-icon-view':'el-icon-minus'"
+            :type="scope.row.hideStatus?'danger':'success'"
+            :icon="scope.row.hideStatus?'el-icon-minus':'el-icon-view'"
             v-if="buttonControl[_config.buttonCode.B_STATUS]"
             @click="handleStatus(scope.row)"
-          >{{scope.row.hideStatus?'显示':'隐藏'}}
+          >{{scope.row.hideStatus?'已隐藏':'已显示'}}
           </el-button>
         </template>
       </el-table-column>

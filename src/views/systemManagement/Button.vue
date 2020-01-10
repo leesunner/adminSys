@@ -123,15 +123,10 @@
             :options="menuTreeData"
           ></el-cascader>
         </el-form-item>
-        <el-form-item label="是否公共资源">
-          <el-select v-model="createButton.resourceType" clearable placeholder="请选择">
-            <el-option
-              v-for="(item,index) of _config.dict_button_type"
-              :key="index"
-              :label="item.value"
-              :value="item.key"
-            ></el-option>
-          </el-select>
+        <el-form-item label="资源类型">
+          <el-radio-group v-model="createButton.resourceType">
+            <el-radio v-for="(item,index) of _config.dict_button_type" :key="index+10" :label="item.key" >{{item.value}}</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="是否启用">
           <el-switch v-model="createButton.enabled"></el-switch>

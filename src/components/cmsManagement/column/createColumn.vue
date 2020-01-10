@@ -42,7 +42,7 @@
       return {
         columnData: {
           name: '',
-          hideStatus: false,//隐藏
+          hideStatus: false,//显示
           parentId: 0,//顶级目录是0
         },
         rules: {
@@ -60,6 +60,11 @@
     methods: {
       close() {
         this.$emit('close', false)
+        this.columnData = {
+          name: '',
+          hideStatus: false,//显示
+          parentId: 0,//顶级目录是0
+        }
       },
       create() {
         this.$refs['formRules'].validate(valid => {

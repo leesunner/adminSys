@@ -73,10 +73,10 @@
             {{scope.row.createTime|formatTime}}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="360">
+        <el-table-column label="操作" width="380">
           <template v-slot="scope">
             <el-button
-              type="success"
+              type="primary"
               size="mini"
               icon="el-icon-view"
               v-if="buttonControl[_config.buttonCode.B_DETAIL]"
@@ -84,20 +84,20 @@
             >编辑
             </el-button>
             <el-button
-              type="danger"
+              :type="scope.row.hideStatus?'danger':'success'"
               size="mini"
               icon="el-icon-edit"
               v-if="buttonControl[_config.buttonCode.B_STATUS]"
               @click="handleHide( scope.row)"
-            >隐藏
+            >{{scope.row.hideStatus?'已隐藏':'已显示'}}
             </el-button>
             <el-button
-              type="warning"
+              :type="scope.row.auditStatus?'success':'warning'"
               size="mini"
               icon="el-icon-view"
               v-if="buttonControl[_config.buttonCode.B_EXAMINE]"
               @click="handleLook(scope.row)"
-            >审核
+            >{{scope.row.auditStatus?'已审核':'未审核'}}
             </el-button>
             <el-button
               type="primary"
@@ -228,6 +228,7 @@
       //关闭
       close(val){
         this.showCreate = false
+        this.wordId = ''
         if (val !=undefined){
           this.getListByPage()
         }

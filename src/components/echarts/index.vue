@@ -6,6 +6,7 @@
 
 <script>
   import * as $e from 'echarts';
+  // 自定义主题
   import theme from '@/assets/echarts/theme';
 
   export default {
@@ -84,6 +85,7 @@
       setOption() {
         if(this.options!==null){
           this.canvas.setOption(this.options)
+          this.resize()
         }
       },
       //重绘

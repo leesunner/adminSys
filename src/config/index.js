@@ -78,7 +78,7 @@ export default {
     },
     {
       key:3,
-      value:'通知公告'
+      value:'新闻专题'
     }
   ],
   //是否

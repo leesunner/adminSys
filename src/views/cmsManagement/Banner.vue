@@ -49,10 +49,10 @@
           </el-link>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="190">
+      <el-table-column label="操作" width="200">
         <template v-slot="scope">
           <el-button
-            type="success"
+            type="primary"
             size="mini"
             icon="el-icon-view"
             v-if="buttonControl[_config.buttonCode.B_DETAIL]"
@@ -60,12 +60,12 @@
           >详情
           </el-button>
           <el-button
-            :type="scope.row.enable?'danger':'success'"
+            :type="scope.row.enable?'success':'danger'"
             size="mini"
             icon="el-icon-edit"
             v-if="buttonControl[_config.buttonCode.B_STATUS]"
             @click="handleDelete(scope.row)"
-          >{{scope.row.enable?'禁用':'启用'}}
+          >{{scope.row.enable?'已启用':'已禁用'}}
           </el-button>
         </template>
       </el-table-column>

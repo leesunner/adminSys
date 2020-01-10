@@ -109,6 +109,7 @@
         this.createShow = false
         this.isEdit = false
         this.columnId = ''
+        this.getDataList()
       },
       //编辑
       handleEdit(data) {

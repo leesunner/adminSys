@@ -79,6 +79,19 @@
         append-to-body
         :visible.sync="showEditorUserGroupRoleDetail"
       >
+        <el-form inline size="mini" :model="searchUserNoRole">
+        <span>
+          <el-form-item>
+            <el-input v-model="searchUserNoRole.name" clearable placeholder="角色名称"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary"
+                       v-if="buttonControl[_config.buttonCode.B_UNOWNE_ROLELIST]"
+                       size="mini"
+                       @click="getUserGroupNoRoleById">查询</el-button>
+          </el-form-item>
+        </span>
+        </el-form>
         <el-table
           ref="noRoleTable"
           row-key="id"
@@ -154,6 +167,22 @@
         append-to-body
         :visible.sync="showEditorUserGroupMemberDetail"
       >
+        <el-form inline size="mini" :model="searchUserNoMember">
+        <span>
+          <el-form-item>
+            <el-input v-model="searchUserNoMember.userName" clearable placeholder="用户账号"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-input v-model="searchUserNoMember.realName" clearable placeholder="真实姓名"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary"
+                       v-if="buttonControl[_config.buttonCode.B_UNOWNE_USERLIST]"
+                       size="mini"
+                       @click="getUserGroupNoMemberById">查询</el-button>
+          </el-form-item>
+        </span>
+        </el-form>
         <el-table
           ref="noMemberTable"
           row-key="userId"
@@ -300,7 +329,9 @@
           //用户组未拥有成员查询
           groupId: "",
           pageNum: 1,
-          pageSize: this._config.sizeArr[0]
+          pageSize: this._config.sizeArr[0],
+          realName:'',
+          userName:'',
         },
         selectMemberArr: [], //选中的成员
         userGroupRoleDetail: [], //用户组角色列表
@@ -309,7 +340,9 @@
           //用户组未拥有角色查询
           groupId: "",
           pageNum: 1,
-          pageSize: this._config.sizeArr[0]
+          pageSize: this._config.sizeArr[0],
+          name:'',
+          code:'',
         },
         selectRoleArr: [], //选中的角色
         createUserGroup: {

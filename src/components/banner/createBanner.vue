@@ -185,7 +185,8 @@
             showType: 'APP',
             state: 1,
             title: "",
-            imgUrl: ""
+            imgUrl: "",
+            enable: true,
           }
         }
       },
