@@ -3,10 +3,13 @@
     <el-row>
       <el-form inline :model="searchData" size="mini">
         <el-form-item>
-          <el-input v-model="searchData.name" clearable placeholder="请输入任务名关键字"></el-input>
+          <el-input v-model="searchData.content" clearable placeholder="请输入反馈内容"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="searchData.contactWay" clearable placeholder="请输入反馈联系方式"></el-input>
         </el-form-item>
         <!--<el-form-item>-->
-          <!--<el-input v-model="searchData.procDefName" clearable placeholder="请输入流程名关键字"></el-input>-->
+        <!--<el-input v-model="searchData.procDefName" clearable placeholder="请输入流程名关键字"></el-input>-->
         <!--</el-form-item>-->
         <el-form-item>
           <el-button type="primary" @click="getPageList" icon="el-icon-search" v-if="buttonControl[_config.buttonCode.B_LIST]">查询
@@ -16,17 +19,15 @@
     </el-row>
     <!-- 用户列表表格 -->
     <el-table size="mini" :data="tableData.list" border style="width: 100%">
-      <el-table-column prop="taskId" label="任务ID"></el-table-column>
-      <el-table-column prop="assigneeName" label="已办人"></el-table-column>
-      <el-table-column prop="name" label="任务名称"></el-table-column>
+      <el-table-column prop="contactWay" label="联系方式"></el-table-column>
+      <el-table-column prop="content" label="反馈内容">
+        <template v-slot="scope">
+          <span class="content">{{scope.row.content}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="createTime" label="任务创建时间">
         <template v-slot="scope">
           <span>{{scope.row.createTime | formatTime}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="endTime" label="任务结束时间">
-        <template v-slot="scope">
-          <span>{{scope.row.endTime | formatTime}}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="100">
@@ -54,26 +55,25 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     ></el-pagination>
-    <!--已办组件-->
-    <my-already-matters-detail :show="showDrag" :taskId="taskId"
-                               @close="val => showDrag = val"></my-already-matters-detail>
+    <!--待办组件-->
+    <feed-back-detail :show="showDrag" :taskId="taskId" @close="val => showDrag = val" @reqList="getPageList"></feed-back-detail>
   </div>
 </template>
 
 <script>
-  const myAlreadyMattersDetail = () => import('@/components/transactionManagement/myAlreadyMattersDetail')
-  import mixin from '@/mixin/buttonPermission'
+  const feedBackDetail =()=> import('@/components/feedBack/index');
+  import mixin from '@/mixin/buttonPermission';
   export default {
     mixins: [mixin],
-    name: "my-already-matters",
-    components: {myAlreadyMattersDetail},
+    name: "feed-back",
+    components: {feedBackDetail},
     data() {
       return {
         searchData: {
           pageSize: this._config.sizeArr[0],
           pageNum: 1,
-          name: '',//任务名称
-          procDefName: '',//流程名称
+          content: '',
+          contactWay: '',
         },
         tableData: {},
         showDrag: false,//弹窗控制
@@ -86,7 +86,7 @@
     methods: {
       //获取信息列表
       getPageList() {
-        this.$request.get(`${this.$apiList.workFlow}/endGtasks`,{
+        this.$request.get(`${this.$apiList.feedBack}`,{
           params:this.searchData
         }).then(res => {
           this.tableData = res.data.data
@@ -94,7 +94,7 @@
       },
       //进入流程
       handleIntoFlow(data) {
-        this.taskId = data.taskId
+        this.taskId = data.id
         this.showDrag = true
       },
       // 翻页
@@ -111,7 +111,9 @@
   }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.content{
+  @include text-over(1);
+}
 </style>
 

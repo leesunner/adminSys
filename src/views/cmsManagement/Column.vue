@@ -10,7 +10,8 @@
             </el-tooltip>
         </span>
       </div>
-      <el-button type="primary" class="column-header-button" v-if="buttonControl[_config.buttonCode.B_CREATE]" size="mini" icon="el-icon-plus"
+      <el-button type="primary" class="column-header-button" v-if="buttonControl[_config.buttonCode.B_CREATE]"
+                 size="mini" icon="el-icon-plus"
                  @click="handleCreateColumn">
         添加顶级栏目
       </el-button>
@@ -37,10 +38,10 @@
         label="操作">
         <template v-slot="scope">
           <!--<el-button-->
-            <!--size="mini"-->
-            <!--type="primary"-->
-            <!--icon="el-icon-view"-->
-            <!--@click="handleContent(scope.row)"-->
+          <!--size="mini"-->
+          <!--type="primary"-->
+          <!--icon="el-icon-view"-->
+          <!--@click="handleContent(scope.row)"-->
           <!--&gt;内容-->
           <!--</el-button>-->
           <el-button
@@ -70,7 +71,8 @@
         </template>
       </el-table-column>
     </el-table>
-    <create-column :show="createShow" :buttonControl="buttonControl" :topId="createParentId" @close="close" :columnId="columnId" :isEdit="isEdit"></create-column>
+    <create-column :show="createShow" :buttonControl="buttonControl" :topId="createParentId" @close="close"
+                   :columnId="columnId" :isEdit="isEdit"></create-column>
   </div>
 </template>
 
@@ -78,6 +80,7 @@
   import createColumn from '@/components/cmsManagement/column/createColumn'
 
   import mixin from '@/mixin/buttonPermission'
+
   export default {
     mixins: [mixin],
     name: "column",
@@ -87,8 +90,8 @@
         tableData: [],
         createShow: false, //创建顶级栏目弹框
         createParentId: '',//创建父ID
-        isEdit:false, //编辑控制字段
-        columnId:'',
+        isEdit: false, //编辑控制字段
+        columnId: '',
       }
     },
     mounted() {
@@ -105,7 +108,7 @@
       handleContent(index, data) {
       },
       //关闭
-      close(data){
+      close(data) {
         this.createShow = false
         this.isEdit = false
         this.columnId = ''
@@ -126,9 +129,19 @@
       },
       //删除栏目
       handleDelete(data) {
-        this.$request.delete(`${this.$apiList.category}/${data.id}`).then(res => {
-          this.getDataList()
+        this.$confirm("此操作将永久删除该栏目, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
         })
+          .then(() => {
+            this.$request.delete(`${this.$apiList.category}/${data.id}`).then(res => {
+              this.getDataList()
+            })
+          })
+          .catch(() => {
+            this.$message("已取消删除");
+          });
       },
     }
   }

@@ -1,15 +1,15 @@
 <template>
   <div class="dept">
     <!-- 添加子部门输入部门名称弹窗 -->
-    <el-dialog :title="`您将在《${parentDeptName}》下添加子部门`" :visible.sync="showInputDeptName">
+    <el-dialog :title="`您将在《${parentDeptName}》下添加下级机构`" :visible.sync="showInputDeptName">
       <el-form :model="createInfo" size="mini" label-width="120px" inline :rules="DeptRules" ref="DeptRules">
-        <el-form-item label="部门名称" prop="name">
-          <el-input v-model="createInfo.name" clearable placeholder="请输入部门名称"></el-input>
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="createInfo.name" clearable placeholder="请输入名称"></el-input>
         </el-form-item>
-        <el-form-item label="部门编码" prop="code">
-          <el-input v-model="createInfo.code"  clearable placeholder="请输入部门编码"></el-input>
+        <el-form-item label="编码" prop="code">
+          <el-input v-model="createInfo.code"  clearable placeholder="请输入编码"></el-input>
         </el-form-item>
-        <el-form-item label="所在省" prop="provinceCode">
+        <el-form-item label="省" prop="provinceCode">
           <el-select v-model="createInfo.provinceCode" @change="getCityByProvice"  filterable placeholder="请选择">
             <el-option
               v-for="item in provinceOptions"
@@ -19,7 +19,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所在市" prop="cityCode">
+        <el-form-item label="市" prop="cityCode">
           <el-select v-model="createInfo.cityCode" @change="getDistrictByCity" filterable placeholder="请选择">
             <el-option
               v-for="item in cityOptions"
@@ -29,7 +29,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所在区/县" prop="districtCode">
+        <el-form-item label="区(县)" prop="districtCode">
           <el-select v-model="createInfo.districtCode" @change="getTownByDistrict" filterable placeholder="请选择">
             <el-option
               v-for="item in districtOptions"
@@ -39,7 +39,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所在乡/镇/街道" prop="townCode">
+        <el-form-item label="街道(乡镇)" prop="townCode">
           <el-select v-model="createInfo.townCode" @change="getVillageByTown" filterable placeholder="请选择">
             <el-option
               v-for="item in townOptions"
@@ -49,7 +49,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所在村/小区" prop="villageCode">
+        <el-form-item label="小区(村)" prop="villageCode">
           <el-select v-model="createInfo.villageCode" filterable placeholder="请选择">
             <el-option
               v-for="item in villageOptions"
@@ -78,7 +78,7 @@
       </el-form>
     </el-row>
     <el-row style="background:#fff;">
-      <el-col :span="15">
+      <el-col :span="14">
         <!-- 部门树结构 -->
         <el-tree :data="deptTree"
                  class="filter-tree"
@@ -112,7 +112,8 @@
                 icon="el-icon-plus"
                 v-if="buttonControl[_config.buttonCode.B_CREATE]"
                 @click.stop="handleCreate(data)"
-              >添加子部门</el-button>
+              >添加子机构</el-button>
+              <!--暂时不启用-->
               <el-dropdown @command="e=>handleCheckButton(e, data)"
                            v-if="buttonControl[_config.buttonCode.B_DEPT_ROLE_LIST]||buttonControl[_config.buttonCode.B_DEPT_USER_LIST]">
                 <el-button
@@ -123,9 +124,9 @@
                   <i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item :command="1" v-if="buttonControl[_config.buttonCode.B_DEPT_ROLE_LIST]">
-                    查询角色
-                  </el-dropdown-item>
+                  <!--<el-dropdown-item :command="1" v-if="buttonControl[_config.buttonCode.B_DEPT_ROLE_LIST]">-->
+                    <!--查询角色-->
+                  <!--</el-dropdown-item>-->
                   <el-dropdown-item :command="2" v-if="buttonControl[_config.buttonCode.B_DEPT_USER_LIST]">
                     查询用户
                   </el-dropdown-item>
@@ -142,7 +143,7 @@
           </span>
         </el-tree>
       </el-col>
-      <el-col :span="9" v-show="detailInfo.id" style="padding-left: 15px;">
+      <el-col :span="10" v-show="detailInfo.id" style="padding-left: 15px;">
         <!-- 部门详情 -->
         <el-form
           :model="detailInfo"
@@ -151,7 +152,7 @@
           label-width="90px"
           style="width:400px;"
         >
-          <el-form-item label="部门名称">
+          <el-form-item label="名称">
             <el-input v-model="detailInfo.name"></el-input>
           </el-form-item>
           <!--<el-form-item label="部门类型">-->
@@ -164,10 +165,10 @@
               <!--&gt;</el-option>-->
             <!--</el-select>-->
           <!--</el-form-item>-->
-          <el-form-item label="部门编码">
+          <el-form-item label="编码">
             <el-input v-model="detailInfo.code"></el-input>
           </el-form-item>
-          <el-form-item label="所在部门">
+          <el-form-item label="所属机构">
             <el-cascader
               v-model="detailInfo.pid"
               :props="prop"
@@ -175,7 +176,7 @@
               :options="deptTree"
             ></el-cascader>
           </el-form-item>
-          <el-form-item label="所在省" prop="provinceCode">
+          <el-form-item label="省" prop="provinceCode">
             <el-select v-model="detailInfo.provinceCode" @change="getCityByProvice"  filterable placeholder="请选择">
               <el-option
                 v-for="item in provinceOptions"
@@ -185,7 +186,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="所在市" prop="cityCode">
+          <el-form-item label="市" prop="cityCode">
             <el-select v-model="detailInfo.cityCode" @change="getDistrictByCity" filterable placeholder="请选择">
               <el-option
                 v-for="item in cityOptions"
@@ -195,7 +196,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="所在区/县" prop="districtCode">
+          <el-form-item label="区(县)" prop="districtCode">
             <el-select v-model="detailInfo.districtCode" @change="getTownByDistrict" filterable placeholder="请选择">
               <el-option
                 v-for="item in districtOptions"
@@ -205,7 +206,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="所在乡/镇/街道" prop="townCode">
+          <el-form-item label="街道(乡镇)" prop="townCode">
             <el-select v-model="detailInfo.townCode" @change="getVillageByTown" filterable placeholder="请选择">
               <el-option
                 v-for="item in townOptions"
@@ -215,7 +216,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="所在村/小区" prop="villageCode">
+          <el-form-item label="小区(村)" prop="villageCode">
             <el-select v-model="detailInfo.villageCode" filterable placeholder="请选择">
               <el-option
                 v-for="item in villageOptions"
@@ -227,7 +228,7 @@
           </el-form-item>
           <el-form-item label="是否启用">
             <el-switch v-model="detailInfo.enabled"></el-switch>
-            <p style="color:#E6A23C">“禁用”保存后此部门将消失</p>
+            <p style="color:#E6A23C">“禁用”后此机构将不可用</p>
           </el-form-item>
         </el-form>
         <el-form label-width="100px">
@@ -413,6 +414,7 @@
         createInfo: {
           description: "",
           name: "",
+          level:0,
           code:'',
           cityName: "",
           districtCode: "",
@@ -426,13 +428,13 @@
           villageName: '',
         }, //新增部门
         DeptRules: {
-          name: [{required: true, message: '请输入部门名', trigger: 'blur'}],
-          code: [{required: true, message: '请输入部门编码', trigger: 'blur'}],
-          districtCode: [{required: true, message: "请选择县/区", trigger: "change"}],
+          name: [{required: true, message: '请输入机构名', trigger: 'blur'}],
+          code: [{required: true, message: '请输入机构编码', trigger: 'blur'}],
+          districtCode: [{required: true, message: "请选择区(县)", trigger: "change"}],
           cityCode:[{required: true, message: "请选择城市", trigger: "change"}],
           provinceCode: [{required: true, message: "请选择省", trigger: "change"}],
-          townCode: [{required: true, message: "请选择乡/镇/街道", trigger: "change"}],
-          villageCode: [{required: true, message: "请选择村/小区", trigger: "change"}],
+          townCode: [{required: true, message: "请选择街道(乡镇)", trigger: "change"}],
+          villageCode: [{required: true, message: "请选择小区(村)", trigger: "change"}],
         },
         showInputDeptName: false, //添加子部门弹窗
         parentDeptName: "", //父部门名称
@@ -503,7 +505,7 @@
       },
       //启用禁用
       handleChangeStatus(data){
-        this.$confirm(`此操作将${data.enabled?'禁用':'启用'}该部门及其下属部门, 是否继续?`, "提示", {
+        this.$confirm(`此操作将${data.enabled?'禁用':'启用'}该机构及其下属机构, 是否继续?`, "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
@@ -834,6 +836,7 @@
         this.parentDeptName = data.name;
         this.showInputDeptName = true;
         this.createInfo.pid = data.id;
+        this.createInfo.level = data.level+1
         this.expandedKeys = [data.id]
       },
       // 创建部门
@@ -846,6 +849,7 @@
                 if (res.data.code == 200) {
                   this.$message.success(res.data.msg);
                 }
+                this.createInfo.level = 0
                 this.showInputDeptName = false;
                 this.createInfo = this._funs.emptyObj(this.createInfo);
                 this.getDeptTree();
@@ -872,7 +876,6 @@
       },
       // 查询部门详情
       getDeptById(id) {
-
         this.$request
           .get(this.$apiList.dept + "/" + id)
           .then(res => {

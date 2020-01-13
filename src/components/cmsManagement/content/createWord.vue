@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="itemId?'编辑文章':'创建文章'" fullscreen :visible.sync="$attrs.show" @close="close">
+  <el-dialog :title="itemId?'编辑文章':'发布文章'" fullscreen :visible.sync="$attrs.show" @close="close">
     <el-row class="content">
       <el-form label-width="115px"
                size="mini"
@@ -21,6 +21,7 @@
                 <el-select
                   v-model="columnData.siteId"
                   filterable
+                  :disabled="this.columnData.type == 1"
                   remote
                   clearable
                   reserve-keyword
@@ -37,13 +38,14 @@
               </el-form-item>
               <el-form-item label="所属栏目" :required="columnData.type!=1">
                 <el-cascader
+                  :disabled="this.columnData.type == 1"
                   v-model="columnData.categoryId"
                   :options="$attrs.columnOptions"
                   :props="{
-            value:'id',
-            label:'name',
-            emitPath: false,
-            checkStrictly: true}"
+                    value:'id',
+                    label:'name',
+                    emitPath: false,
+                    checkStrictly: true}"
                   clearable></el-cascader>
               </el-form-item>
               <el-form-item label="文章作者">
@@ -69,7 +71,7 @@
               </el-form-item>
               <el-row>
                 <el-form-item label="文章分类" prop="type">
-                  <el-radio-group v-model="columnData.type">
+                  <el-radio-group v-model="columnData.type" @change="changeArticalType">
                     <el-radio :label="item.key" v-for="item in _config.dict_wordType" :key="item.key">{{item.value}}
                     </el-radio>
                   </el-radio-group>
@@ -153,7 +155,7 @@
     <div slot="footer" style="text-align: center;">
       <el-button size="mini" @click="close">关闭</el-button>
       <el-button size="mini" @click="edit" type="primary" v-if="itemId&&$attrs.buttonControl[_config.buttonCode.B_UPDATE]">保存</el-button>
-      <el-button size="mini" @click="create" type="primary" v-if="!itemId&&$attrs.buttonControl[_config.buttonCode.B_CREATE]">创建</el-button>
+      <el-button size="mini" @click="create" type="primary" v-if="!itemId&&$attrs.buttonControl[_config.buttonCode.B_CREATE]">发布</el-button>
     </div>
   </el-dialog>
 </template>
@@ -232,6 +234,10 @@
       },
     },
     methods: {
+      changeArticalType(val){
+        this.columnData.siteId = ''
+        this.columnData.categoryId = ''
+      },
       close(val) {
         this.$emit('close', val)
       },

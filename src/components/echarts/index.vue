@@ -38,9 +38,7 @@
       },
       options:{
         handler(newVal){
-          if (newVal){
-            this.setOption()
-          }
+          this.setOption()
         },
         deep:true,
         immediate:true,
@@ -58,9 +56,11 @@
       beginShowMap(name,json){
         $e.registerMap(name,json)
         this.setOption()
+        //不用上面的是为了初始化时解决地图位置不居中的问题
+        // this.init()
       },
       //注册点击事件 type:注册标识
-      registerOnEvent(type){
+      registerOnEvent(){
         if (!this.initOnNum){
           this.initOnNum = 1
           let that = this
@@ -80,10 +80,11 @@
       init() {
         this.echarEle = this.$refs.echartContent
         this.canvas = $e.init(this.$refs.canvas, 'chalk')
+        this.setOption()
       },
       //设置数据源
       setOption() {
-        if(this.options!==null){
+        if(this.options&&this.canvas){
           this.canvas.setOption(this.options)
           this.resize()
         }

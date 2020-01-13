@@ -59,7 +59,7 @@
     data() {
       return {
         searchData: {
-          pageSize: 30,
+          pageSize: this._config.sizeArr[0],
           pageNum: 1,
           name: '',//任务名称
         },

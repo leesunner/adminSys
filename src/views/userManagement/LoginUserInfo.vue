@@ -12,10 +12,10 @@
       <el-form-item label="原密码" prop="oldPassWord">
         <el-input type="password" v-model="userInfo.oldPassWord" clearable placeholder="输入原密码"></el-input>
       </el-form-item>
-      <el-form-item label="新密码" prop="newPassWord">
+      <el-form-item label="新密码" prop="newPassWord" required>
         <el-input type="password" v-model="userInfo.newPassWord" clearable placeholder="输入新密码"></el-input>
       </el-form-item>
-      <el-form-item label="确认密码" prop="confirmPassWord">
+      <el-form-item label="确认密码" prop="confirmPassWord" required>
         <el-input type="password" v-model="userInfo.confirmPassWord" clearable placeholder="再次输入新密码"></el-input>
       </el-form-item>
       <el-form-item label="上次登录">

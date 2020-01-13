@@ -1,8 +1,9 @@
 <template>
   <el-dialog :title="itemId?'编辑站点':'创建站点'" :visible.sync="$attrs.show" @close="close" width="717px">
-    <el-form label-width="120px"
+    <el-form label-width="100px"
              size="mini"
              inline
+             class="website"
              :rules="rules"
              ref="formRules"
              :model="createInfo">
@@ -34,7 +35,7 @@
           v-model="createInfo.copyright">
         </el-input>
       </el-form-item>
-      <el-form-item label="所在省" prop="provinceCode">
+      <el-form-item label="省" prop="provinceCode">
         <el-select v-model="createInfo.provinceCode" @change="getCityByProvice"  filterable placeholder="请选择">
           <el-option
             v-for="item in provinceOptions"
@@ -44,7 +45,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="所在市" prop="cityCode">
+      <el-form-item label="市" prop="cityCode">
         <el-select v-model="createInfo.cityCode" @change="getDistrictByCity" filterable placeholder="请选择">
           <el-option
             v-for="item in cityOptions"
@@ -54,7 +55,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="所在区/县" prop="districtCode">
+      <el-form-item label="区(县)" prop="districtCode">
         <el-select v-model="createInfo.districtCode" @change="getTownByDistrict" filterable placeholder="请选择">
           <el-option
             v-for="item in districtOptions"
@@ -64,7 +65,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="所在乡/镇/街道" prop="townCode">
+      <el-form-item label="街道(乡镇)" prop="townCode">
         <el-select v-model="createInfo.townCode" @change="getVillageByTown" filterable placeholder="请选择">
           <el-option
             v-for="item in townOptions"
@@ -74,7 +75,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="所在村/小区" prop="villageCode">
+      <el-form-item label="小区(村)" prop="villageCode">
         <el-select v-model="createInfo.villageCode" filterable placeholder="请选择">
           <el-option
             v-for="item in villageOptions"
@@ -303,8 +304,10 @@
   display: block;
   margin-top: 20px;
 }
-  /deep/ .el-form-item__content{
-    width: 193px;
+  .website{
+    & /deep/ .el-textarea__inner{
+      width: 500px;
+    }
   }
   .rowCon{
     & /deep/ .el-form-item__content{

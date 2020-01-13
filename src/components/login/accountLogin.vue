@@ -15,10 +15,10 @@
     <el-form-item>
       <slider :control="control" @change="val => control=val"></slider>
     </el-form-item>
-    <el-form-item>
-      <el-checkbox v-model="checked">记住密码</el-checkbox>
-      <el-link class="passBack">忘记密码？</el-link>
-    </el-form-item>
+    <!--<el-form-item>-->
+      <!--<el-checkbox v-model="checked">记住密码</el-checkbox>-->
+      <!--<el-link class="passBack">忘记密码？</el-link>-->
+    <!--</el-form-item>-->
     <el-form-item>
       <el-button type="primary" class="login" @click="login" @keyup.enter.native="login">登 录</el-button>
     </el-form-item>

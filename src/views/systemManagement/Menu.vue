@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row style="margin-top: 20px">
+    <el-row>
       <el-radio-group v-model="checkBoxType" size="small" @change="getMenuTree">
         <el-radio-button :label="1">管理端</el-radio-button>
         <el-radio-button :label="2">展示端</el-radio-button>

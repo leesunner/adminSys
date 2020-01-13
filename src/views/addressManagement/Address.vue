@@ -164,15 +164,15 @@
             break;
           //通过市查县/区
           case 'city':
-            return '区/县'
+            return '区(县)'
             break;
           //通过县/区查乡镇
           case 'district':
-            return '乡/镇/街道'
+            return '街道(乡镇)'
             break;
           //通过乡镇查村
           case 'town':
-            return '村/社区'
+            return '社区(村)'
             break;
           case 'village':
             return '户'

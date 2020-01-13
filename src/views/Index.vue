@@ -36,9 +36,10 @@
           </echarts-box>
         </div>
         <div class="left-center">
-          <p class="title">事件提交时间分布</p>
+          <p class="title">事件时间分布</p>
           <echarts-box class="canvas-item">
-            <lee-echarts :options="num_barOption" ref="num_barOption"></lee-echarts>
+            <lee-echarts :options="num_barOption" ref="num_barOption" v-if="businessNodeNumList.length>0"></lee-echarts>
+            <div class="noInfo" v-else>暂无数据</div>
           </echarts-box>
         </div>
         <div class="left-bottom">
@@ -46,11 +47,13 @@
           <echarts-box class="canvas-item">
             <div class="item">
               <!--用户年龄段的统计-->
-              <lee-echarts :options="age_pieOption" ref="age_pieOption"></lee-echarts>
+              <lee-echarts :options="age_pieOption" ref="age_pieOption" v-if="userAges.length>0"></lee-echarts>
+              <div class="noInfo" v-else>暂无数据</div>
             </div>
             <div class="item">
               <!--用户性别的统计-->
-              <lee-echarts :options="sex_pieOption" ref="sex_pieOption"></lee-echarts>
+              <lee-echarts :options="sex_pieOption" ref="sex_pieOption" v-if="userSexs.length>0"></lee-echarts>
+              <div class="noInfo" v-else>暂无数据</div>
             </div>
           </echarts-box>
         </div>
@@ -71,7 +74,8 @@
         </div>
         <div class="center-bottom">
           <echarts-box>
-            <lee-echarts :options="num_lineOption" ref="num_lineOption"></lee-echarts>
+            <lee-echarts :options="num_lineOption" ref="num_lineOption" v-if="businessNumByTimeList.length>0"></lee-echarts>
+            <div class="noInfo" v-else>暂无数据</div>
           </echarts-box>
         </div>
       </el-col>
@@ -91,6 +95,11 @@
                   <!--<span class="numCount-text">件</span>-->
                 </li>
                 <li>
+                  <span class="numCount-text">已完成：</span>
+                  <span class="numCount-num">{{animatedAllFinisedCount}}</span>
+                  <!--<span class="numCount-text">件</span>-->
+                </li>
+                <li>
                   <span class="numCount-text">处理中：</span>
                   <span class="numCount-num">{{animatedWorkingCount}}</span>
                   <!--<span class="numCount-text">件</span>-->
@@ -101,31 +110,34 @@
         </div>
         <div class="right-bottom">
           <div class="title">
-            <img src="../assets/img/dicync.gif"/>
+            <!--<img src="../assets/img/dicync.gif"/>-->
             实时事件播报
           </div>
           <echarts-box class="canvas-item-right">
-            <ul class="newList">
-              <li v-for="(item,index) in newsList" :key="item.id+10">
-                <div class="newList-index">
-                  <p>事件</p>
-                  <p>{{index<10?'0'+(index+1):index}}</p>
-                </div>
-                <div class="newList-content">
-                  <div class="newList-content-title">{{item.title}}</div>
-                  <div class="newList-content-bottom">
-                    <div>
-                      <span>处理状态：</span>
-                      <span class="status">{{item.status|formatStatus}}</span>
-                    </div>
-                    <div>
-                      <span>处理时间：</span>
-                      <span>{{item.time|formatTime}}</span>
+            <el-scrollbar style="height: 100%;">
+              <ul class="newList" v-if="newsList.length>0">
+                <li v-for="(item,index) in newsList" :key="index+10">
+                  <div class="newList-index">
+                    <p>事件</p>
+                    <p>{{index<10?'0'+(index+1):index}}</p>
+                  </div>
+                  <div class="newList-content">
+                    <div class="newList-content-title">{{item.businessName+'--'+item.businessTaskName}}</div>
+                    <div class="newList-content-bottom">
+                      <div>
+                        <span>处理状态：</span>
+                        <span class="status">{{item.stateCn}}</span>
+                      </div>
+                      <div>
+                        <span>处理时间：</span>
+                        <span>{{item.startTime}}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </li>
-            </ul>
+                </li>
+              </ul>
+              <div class="noInfo" v-else>暂无数据</div>
+            </el-scrollbar>
           </echarts-box>
         </div>
       </el-col>
@@ -187,35 +199,21 @@
         workingNumber: 0,//处理中事件总数
         nowOnlineUsers: 0,//在线人数
         nowOnlineUser: 0,//在线人数结果
-        newsList:[
-          {
-            title:'处理中事件总数处理中事件总数处理中事件总数处理中事件总数处理中事件总数',
-            time:456489545,
-            status:1,
-          }
-        ]
+        finisedNumber:0,//已完成事件总数
+        finisedCount:0,//已完成事件总数结果
+        newsList: [],
+        businessNumByTimeList:[],
+        businessNodeNumList:[],
+        userSexs:[],
+        userAges:[],
       }
     },
     beforeDestroy() {
       window.onresize = null
     },
-    filters:{
-      formatStatus(val){
-        switch (val){
-          case 1:
-            return '待处理'
-          break;
-          case 2:
-            return '已处理'
-            break;
-          case 3:
-            return '处理中'
-            break;
-        }
-      }
-    },
     //字体动画效果 ----------开始
     computed: {
+      //事件总数结果
       animatedAllCount: function () {
         if (this.tweenedAllCount > 1000) {
           let num = this.tweenedAllCount.toFixed(0).toString().split('')
@@ -224,6 +222,7 @@
           return this.tweenedAllCount.toFixed(0)
         }
       },
+      //处理中事件总数结果
       animatedWorkingCount: function () {
         if (this.workingCount > 1000) {
           let num = this.workingCount.toFixed(0).toString().split('')
@@ -232,6 +231,7 @@
           return this.workingCount.toFixed(0)
         }
       },
+      //在线人数结果
       animatedOnlineUsersCount: function () {
         if (this.nowOnlineUser > 1000) {
           let num = this.nowOnlineUser.toFixed(0).toString().split('')
@@ -239,7 +239,15 @@
         } else {
           return this.nowOnlineUser.toFixed(0)
         }
-      }
+      },
+      animatedAllFinisedCount: function () {
+        if (this.finisedCount > 1000) {
+          let num = this.finisedCount.toFixed(0).toString().split('')
+          return toParNum(num);
+        } else {
+          return this.finisedCount.toFixed(0)
+        }
+      },
     },
     watch: {
       tweenedAllNumber: function (newValue) {
@@ -250,6 +258,9 @@
       },
       workingNumber: function (newValue) {
         TweenAminate.TweenLite.to(this.$data, 0.5, {workingCount: newValue});
+      },
+      finisedNumber:function (newValue) {
+        TweenAminate.TweenLite.to(this.$data, 0.5, {finisedCount: newValue});
       },
     },
     // ----------结束
@@ -280,11 +291,6 @@
     },
     methods: {
       getAllRequest() {
-        this.getBusinessNumByTime()
-        this.getAllUserNum()
-        this.getAllUserSex()
-        this.getBusinessNodeNumByTime()
-        this.getUserOnline()
         this.getMapAndData()
       },
       //复制对象属性值
@@ -299,10 +305,12 @@
       getBusinessNumByTime() {
         this.$request.get(`${this.$apiList.summary}/business/time`, {
           params: {
-            timePattern: 'yyyy-MM-dd'
+            timePattern: 'yyyy-MM-dd',
+            locationCode:this.locationData.locationCode
           }
         }).then(res => {
           const data = res.data.data
+          this.businessNumByTimeList = data
           this.num_lineOption = {
             title: {
               text: '业务数量趋势',
@@ -422,8 +430,13 @@
       },
       //获取用户性别统计
       getAllUserSex() {
-        this.$request.get(`${this.$apiList.summary}/users/sex`).then(res => {
+        this.$request.get(`${this.$apiList.summary}/users/sex`,{
+          params:{
+            locationCode:this.locationData.locationCode
+          }
+        }).then(res => {
           const data = res.data.data
+          this.userSexs = data
           this.sex_pieOption = {
             title: {
               left: 20,
@@ -450,7 +463,6 @@
               {
                 name: '',
                 type: 'pie',
-                avoidLabelOverlap: false,
                 label: {
                   normal: {
                     show: false,
@@ -465,7 +477,6 @@
                 },
                 labelLine: {
                   normal: {
-                    show: true,
                     length2: 5,
                   }
                 },
@@ -477,8 +488,13 @@
       },
       //用户年龄统计
       getAllUserNum() {
-        this.$request.get(`${this.$apiList.summary}/users/age`).then(res => {
+        this.$request.get(`${this.$apiList.summary}/users/age`,{
+          params:{
+            locationCode:this.locationData.locationCode
+          }
+        }).then(res => {
           const data = res.data.data
+          this.userAges = data
           this.age_pieOption = {
             title: {
               text: '用户年龄分布',
@@ -539,14 +555,16 @@
           this.event_pieOption.title.textStyle.fontSize = 12
         })
       },
-      //统计任务节点数量
+      //统计任务小时节点数量
       getBusinessNodeNumByTime() {
         this.$request.get(`${this.$apiList.summary}/business/task/time`, {
           params: {
-            timePattern: 'HH'
+            timePattern: 'HH',
+            locationCode:this.locationData.locationCode
           }
         }).then(res => {
           const data = res.data.data
+          this.businessNodeNumList = data
           this.num_barOption = {
             tooltip: {
               trigger: 'axis',//随鼠标提示
@@ -566,10 +584,10 @@
               }),
               axisLabel: {
                 rotate: -15,
+                interval:0,
               },
               axisTick: {
                 show: true,
-                inside: true,
                 length: 4,
                 alignWithLabel: true,
               },
@@ -581,7 +599,7 @@
             },
             series: [
               {
-                name: '节点数量',
+                name: '事件数量',
                 type: 'bar',
                 data: data.map(function (item) {
                   return item.value;
@@ -659,7 +677,7 @@
               series: [{
                 name: mapRes.data.data.locationName,
                 type: 'map',
-                map:mapRes.data.data.locationName,
+                map: mapRes.data.data.locationName,
                 emphasis: {
                   label: {
                     show: true,
@@ -684,7 +702,7 @@
                   color: '#fff'
                 },
                 itemStyle: {
-                  areaColor: '#5873ff',
+                  areaColor: '#cdcdcd',
                   borderColor: '#5873ff',
                 },
                 data: valRes.data.data,
@@ -693,6 +711,13 @@
             this.$refs['city_mapOption'].beginShowMap(mapRes.data.data.locationName, mapRes.data.data.mapJson || {})
           })
         )
+        this.getEventsNumbers()
+        this.getEventLists()
+        this.getAllUserNum()
+        this.getAllUserSex()
+        this.getBusinessNumByTime()
+        this.getBusinessNodeNumByTime()
+        this.getUserOnline()
       },
       //获取地图数据
       getMapJson() {
@@ -705,11 +730,34 @@
           this.nowOnlineUsers = data.onLine
         })
       },
+      //获取任务实时列表
+      getEventLists() {
+        this.$request.get(`${this.$apiList.summary}/business/task/details`, {
+          params: {
+            pageSize: 10,
+            pageNum: 1,
+            locationCode:this.locationData.locationCode
+          },
+        }).then(res => {
+          let data = res.data.data
+          this.newsList = data
+        })
+      },
+      //获取任务事件数字统计
+      getEventsNumbers() {
+        this.$request.get(`${this.$apiList.summary}/business/count`, {
+          params: {
+            locationCode: this.locationData.locationCode
+          }
+        }).then(res => {
+          let data = res.data.data
+          this.tweenedAllNumber = data.bussinessCount
+          this.workingNumber = data.businessProcessingCount
+          this.finisedNumber = data.businessEndCount
+        })
+      },
       //点击地图回调
       clickEvent(val) {
-        //模拟数字
-        this.tweenedAllNumber = parseInt(Math.random() * 20000)
-        this.workingNumber = parseInt(Math.random() * 20000)
         if (val.data) {
           this.locationData = this.copyClickMapData(val.data)
           const arr = this.tabTitleArr
@@ -778,6 +826,7 @@
 </script>
 
 <style lang="scss" scoped>
+  $fontColor:#0EE5F8;
   .index {
     position: relative;
     background-image: url("../assets/img/indebackgimg.png");
@@ -814,7 +863,7 @@
       background-position: bottom;
       .title {
         margin-top: 10px;
-        color: #0EE5F8;
+        color: $fontColor;
         font-size: 33px;
         letter-spacing: 5px;
         font-weight: 500;
@@ -824,7 +873,7 @@
       height: 100%;
       width: 100%;
       .title {
-        color: #0EE5F8;
+        color: $fontColor;
         line-height: 30px;
         text-align: center;
         margin: 5px auto;
@@ -843,8 +892,11 @@
         background-image: url("../assets/img/lefttop.png");
         background-repeat: no-repeat;
       }
-      &-right{
+      &-right {
         height: 100%;
+        & /deep/.el-scrollbar__wrap{
+          overflow-x: hidden;
+        }
       }
     }
 
@@ -893,7 +945,7 @@
           z-index: 10;
           li {
             height: 24px;
-            color: #0EE8F9;
+            color: $fontColor;
             font-size: 18px;
             font-weight: bold;
             font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -943,7 +995,7 @@
             text-align: center;
           }
           &-text {
-            color: #0EE8F9;
+            color: $fontColor;
             font-size: 20px;
             text-align: right;
             margin-top: 6px;
@@ -959,75 +1011,82 @@
         height: 40.5%;
         margin-top: 14px;
         .title {
-          color: #0EE5F8;
+          color: $fontColor;
           line-height: 30px;
           text-align: center;
           margin: 5px auto;
           width: 100%;
           position: relative;
-          img{
+          img {
             position: absolute;
             width: 33px;
             height: 33px;
           }
-          img:nth-child(1){
+          img:nth-child(1) {
             top: -3px;
             left: 70px;
           }
         }
-        .newList{
+        .newList {
           background-color: rgba(6, 41, 100, 0.85);
-          li{
+          li {
             padding: 12px 8px;
             border-bottom: solid 1px #0D327A;
           }
-          &-index{
+          &-index {
             display: inline-block;
             vertical-align: middle;
             padding: 8px 10px;
             text-align: center;
             background-color: #0D327A;
-            p{
-              color: #0EE5F8;
+            p {
+              color: $fontColor;
               font-size: 14px;
               font-weight: bold;
             }
           }
-          &-content{
+          &-content {
             display: inline-block;
             vertical-align: middle;
             margin-left: 1%;
             width: 79%;
-            p,span{
-              color: #0EE5F8;
+            p, span {
+              color: $fontColor;
               font-size: 12px;
             }
-            &-title{
-              color: #0EE5F8;
+            &-title {
+              color: $fontColor;
               font-size: 12px;
               @include text-over(1)
             }
-            &-bottom{
+            &-bottom {
               overflow: hidden;
-              div{
+              div {
                 float: left;
                 @include text-over(1);
+                color: $fontColor;
               }
-              div:nth-child(1){
+              div:nth-child(1) {
                 width: 42%;
               }
-              div:nth-child(2){
+              div:nth-child(2) {
                 width: 79%;
               }
             }
-            .status{
+            .status {
               color: #fffb55;
             }
           }
         }
       }
     }
-
+    .noInfo{
+      height: 100%;
+      width: 100%;
+      color: $fontColor;
+      text-align: center;
+      padding-top: 35px;
+    }
     :-webkit-full-screen {
     }
 

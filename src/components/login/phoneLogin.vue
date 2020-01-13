@@ -3,7 +3,7 @@
       <el-form-item>
         <div class="inputContent">
           <lee-icon icon="iconshouji"></lee-icon>
-          <el-input v-model="data.phoneNumber" placeholder="请输入手机号" class="trans" clearable></el-input>
+          <el-input v-model="data.telephone" placeholder="请输入手机号" class="trans" clearable></el-input>
         </div>
       </el-form-item>
       <!--<div class="code">-->
@@ -17,7 +17,7 @@
       <div class="code">
         <div class="code-input">
           <el-form-item>
-            <el-input type="password" v-model="data.code" placeholder="请输入验证码" clearable></el-input>
+            <el-input type="password" v-model="data.verificationCode" placeholder="请输入验证码" clearable></el-input>
           </el-form-item>
         </div>
         <el-button :type="buttonType" size="small" class="code-send" @click="sendCode">{{codeText>0?`${codeText}
@@ -46,8 +46,8 @@
       return {
         checked: '',
         data: {
-          phoneNumber: '',
-          code: ''
+          telephone: '',
+          verificationCode: ''
         },
         codeText: '发送验证码',
         time: null,
@@ -62,10 +62,10 @@
     methods: {
       //发送验证码
       sendCode() {
-        if (this._funs.checkPhone(this.data.phoneNumber)){
+        if (this._funs.checkPhone(this.data.telephone)){
           if (this.codeText === '发送验证码') {
             //发送验证码的接口
-            this.$request.get(`${this.$apiList.sendCode}/${this.data.phoneNumber}`).then(res=>{
+            this.$request.get(`${this.$apiList.sendCode}/${this.data.telephone}`).then(res=>{
               this.buttonType = 'info'
               this.codeText = 59
               this.countDown()
@@ -94,11 +94,11 @@
       },
       //验证表单信息
       checkInfo() {
-        if (!this._funs.checkPhone(this.data.phoneNumber)){
+        if (!this._funs.checkPhone(this.data.telephone)){
           this.$message.error('请输入正确的手机号码')
           return false
         }
-        if(!this.data.code){
+        if(!this.data.verificationCode){
           this.$message.error('请输入验证码')
           return false
         }

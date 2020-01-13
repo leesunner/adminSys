@@ -220,7 +220,7 @@
       }
     },
     created(){
-      this.getListByPage()
+      // this.getListByPage()
       this.getColumnTree()
       this.getSites()
     },
@@ -229,9 +229,9 @@
       close(val){
         this.showCreate = false
         this.wordId = ''
-        if (val !=undefined){
-          this.getListByPage()
-        }
+        // if (val !=undefined){
+        //   this.getListByPage()
+        // }
       },
       //过滤信息
       formatTpye(val){
@@ -270,8 +270,8 @@
       },
       //获取文章列表
       getListByPage(){
-        if (!this.categoryId&&this.siteId){
-          this.$message.warning('请先选择站点')
+        if (!this.searchData.siteId){
+          this.$message.warning('请先选中一个站点')
           return
         }
         this.$request.get(`${this.$apiList.article}/page`,{

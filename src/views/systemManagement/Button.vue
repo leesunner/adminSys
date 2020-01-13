@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row style="margin-top: 20px">
+    <el-row>
       <el-radio-group v-model="checkBoxType" size="small" @change="getMenuTree">
         <el-radio-button :label="1">管理端</el-radio-button>
         <el-radio-button :label="2">展示端</el-radio-button>
@@ -56,8 +56,8 @@
       </el-col>
       <el-col :span="17" style="padding-top:5px;margin-bottom: 30px;min-width: 630px;">
         <!-- 按钮列表表格 -->
-        <el-table :data="menuButtonDetail" size="mini" border>
-          <el-table-column type="index" label="序号" width="50"></el-table-column>
+        <el-table :data="menuButtonDetail.list" size="mini" border>
+          <el-table-column prop="id" label="ID" width="50"></el-table-column>
           <el-table-column prop="buttonName" label="名称"></el-table-column>
           <el-table-column prop="buttonCode" label="按钮代码"></el-table-column>
           <el-table-column prop="url" label="请求地址"></el-table-column>
@@ -81,6 +81,17 @@
             </template>
           </el-table-column>
         </el-table>
+        <!-- 分页 -->
+        <el-pagination
+          background
+          class="pagination"
+          layout="total, sizes, prev, pager, next"
+          :total="menuButtonDetail.total"
+          :page-size="10"
+          :page-sizes="[10]"
+          :current-page="buttonsPageNum"
+          @current-change="handleCurrentChange"
+        ></el-pagination>
       </el-col>
     </el-row>
     <!-- 创建按钮弹窗 -->
@@ -215,6 +226,7 @@
     mixins: [mixin, treeMixin],
     data() {
       return {
+        buttonsPageNum:1,
         currentName: '',//当前选取的菜单名
         checkBoxType: 1,
         checkType: true, //区分查看还是编辑
@@ -285,13 +297,24 @@
       // 查询菜单按钮列表
       getMenuButtonById(id) {
         this.$request
-          .get(this.$apiList.menu + "/" + id + "/buttons")
+          .get(this.$apiList.menu + "/buttons",{
+            params:{
+              pageNum:this.buttonsPageNum,
+              menuId:id
+            }
+          })
           .then(res => {
             var data = res.data;
             if (data.code == 200) {
               this.menuButtonDetail = data.data || [];
             }
           })
+      },
+      //翻页
+      // 翻页
+      handleCurrentChange(val) {
+        this.buttonsPageNum = val;
+        this.getMenuButtonById(this.nodeId);
       },
       // 查看按钮详情按钮
       handleCheck(index, row) {

@@ -51,8 +51,8 @@
       return {
         tableData: [],
         pageData: {
-          sizeArr: [10, 15, 20],
-          pageSize: 15,
+          sizeArr: this._config.sizeArr,
+          pageSize: this._config.sizeArr[0],
           pageNum: 1,
         },
         multipleSelection: [],
