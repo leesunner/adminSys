@@ -72,9 +72,18 @@
       //注册鼠标移入事件
       mouseOverEvent(){
         let that = this
+        let index = 0
         this.canvas.on('mouseover', function (e) {
-
+          index = e.dataIndex
+          that.chooseVuale('highlight',0,index)
         });
+        this.canvas.on('mouseout', function (e) {
+            that.chooseVuale('downplay',0,index)
+        });
+      },
+      //默认选择部分
+      chooseVuale(type,seriesIndex,dataIndex){
+        this.canvas.dispatchAction({type: type,seriesIndex: seriesIndex,dataIndex: dataIndex})
       },
       //初始化echarts
       init() {

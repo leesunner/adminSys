@@ -555,7 +555,10 @@
       color: #338ace;
     }
   }
-
+  .select-tree{
+    display: inline-block;
+    width: 100%;
+  }
   /deep/ .el-checkbox__input.is-disabled.is-checked
   .el-checkbox__inner {
     background: #409eff !important;

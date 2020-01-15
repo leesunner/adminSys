@@ -7,37 +7,36 @@
     <div class="content">
       <el-col class="left" :span="6">
         <div class="left-top">
-          <p class="title">事件进度</p>
+          <p class="title">各部门今日事件完成率</p>
           <echarts-box class="canvas-item">
             <div class="item">
-              <!--事件完成率统计-->
-              <lee-echarts :options="event_pieOption" ref="event_pieOption1"></lee-echarts>
+              <lee-echarts :options="event_pieOption1" ref="event_pieOption1" v-show="rateList.length>0"></lee-echarts>
+              <div class="noInfo" v-if="rateList.length==0">暂无数据</div>
             </div>
             <div class="item">
-              <!--事件处理中占比统计-->
-              <lee-echarts :options="event_pieOption" ref="event_pieOption2"></lee-echarts>
+              <lee-echarts :options="event_pieOption2" ref="event_pieOption2" v-show="rateList.length>0"></lee-echarts>
+              <div class="noInfo" v-if="rateList.length==0">暂无数据</div>
             </div>
             <div class="item">
-              <!--事件驳回占比统计-->
-              <lee-echarts :options="event_pieOption" ref="event_pieOption3"></lee-echarts>
+              <lee-echarts :options="event_pieOption3" ref="event_pieOption3" v-show="rateList.length>0"></lee-echarts>
+              <div class="noInfo" v-if="rateList.length==0">暂无数据</div>
             </div>
             <div class="item">
-              <!--事件完成率统计-->
-              <lee-echarts :options="event_pieOption" ref="event_pieOption4"></lee-echarts>
+              <lee-echarts :options="event_pieOption4" ref="event_pieOption4" v-show="rateList.length>0"></lee-echarts>
+              <div class="noInfo" v-if="rateList.length==0">暂无数据</div>
             </div>
             <div class="item">
-              <!--事件处理中占比统计-->
-              <lee-echarts :options="event_pieOption" ref="event_pieOption5"></lee-echarts>
+              <lee-echarts :options="event_pieOption5" ref="event_pieOption5" v-show="rateList.length>0"></lee-echarts>
+              <div class="noInfo" v-if="rateList.length==0">暂无数据</div>
             </div>
             <div class="item">
-              <!--事件驳回占比统计-->
-              <lee-echarts :options="event_pieOption" ref="event_pieOption6"></lee-echarts>
+              <lee-echarts :options="event_pieOption6" ref="event_pieOption6" v-show="rateList.length>0"></lee-echarts>
+              <div class="noInfo" v-if="rateList.length==0">暂无数据</div>
             </div>
           </echarts-box>
         </div>
         <div class="left-center">
-          <p class="title">事件时间分布</p>
-          <echarts-box class="canvas-item">
+          <echarts-box>
             <lee-echarts :options="num_barOption" ref="num_barOption" v-if="businessNodeNumList.length>0"></lee-echarts>
             <div class="noInfo" v-else>暂无数据</div>
           </echarts-box>
@@ -74,7 +73,8 @@
         </div>
         <div class="center-bottom">
           <echarts-box>
-            <lee-echarts :options="num_lineOption" ref="num_lineOption" v-if="businessNumByTimeList.length>0"></lee-echarts>
+            <lee-echarts :options="num_lineOption" ref="num_lineOption"
+                         v-if="businessNumByTimeList.length>0"></lee-echarts>
             <div class="noInfo" v-else>暂无数据</div>
           </echarts-box>
         </div>
@@ -90,8 +90,18 @@
                   <!--<span class="numCount-text">人</span>-->
                 </li>
                 <li>
-                  <span class="numCount-text">事件总计：</span>
-                  <span class="numCount-num">{{animatedAllCount}}</span>
+                  <span class="numCount-text">总人数：</span>
+                  <span class="numCount-num">{{animatedAllPersonCount}}</span>
+                  <!--<span class="numCount-text">人</span>-->
+                </li>
+                <!--<li>-->
+                  <!--<span class="numCount-text">事件总数：</span>-->
+                  <!--<span class="numCount-num">{{animatedAllCount}}</span>-->
+                  <!--&lt;!&ndash;<span class="numCount-text">件</span>&ndash;&gt;-->
+                <!--</li>-->
+                <li>
+                  <span class="numCount-text">处理中：</span>
+                  <span class="numCount-num">{{animatedWorkingCount}}</span>
                   <!--<span class="numCount-text">件</span>-->
                 </li>
                 <li>
@@ -100,8 +110,8 @@
                   <!--<span class="numCount-text">件</span>-->
                 </li>
                 <li>
-                  <span class="numCount-text">处理中：</span>
-                  <span class="numCount-num">{{animatedWorkingCount}}</span>
+                  <span class="numCount-text">今日完成率：</span>
+                  <span class="numCount-num">{{animatedFinishedPrecent}}</span>
                   <!--<span class="numCount-text">件</span>-->
                 </li>
               </ul>
@@ -173,7 +183,12 @@
         //圆饼图（占比）
         age_pieOption: null,//年龄
         sex_pieOption: null,//性别
-        event_pieOption: null,
+        event_pieOption1: null,
+        event_pieOption2: null,
+        event_pieOption3: null,
+        event_pieOption4: null,
+        event_pieOption5: null,
+        event_pieOption6: null,
         //柱状图
         num_barOption: null,
         //地图
@@ -184,13 +199,13 @@
         locationData: {
           locationName: '湖北省',
           locationCode: 420000,
-          locationLevel: 2
+          locationLevel: 1
         },
         tabTitleArr: [//存title的数据源
           {
             locationName: '湖北省',
             locationCode: 420000,
-            locationLevel: 2
+            locationLevel: 1
           }
         ],
         tweenedAllCount: 0,//事件总数结果
@@ -199,13 +214,16 @@
         workingNumber: 0,//处理中事件总数
         nowOnlineUsers: 0,//在线人数
         nowOnlineUser: 0,//在线人数结果
-        finisedNumber:0,//已完成事件总数
-        finisedCount:0,//已完成事件总数结果
+        finisedNumber: 0,//已完成事件总数
+        finisedCount: 0,//已完成事件总数结果
+        allPersonNumber:0,//总人数
+        allPersonCount:0,//总人数结果
         newsList: [],
-        businessNumByTimeList:[],
-        businessNodeNumList:[],
-        userSexs:[],
-        userAges:[],
+        businessNumByTimeList: [],
+        businessNodeNumList: [],
+        userSexs: [],
+        userAges: [],
+        rateList:[],
       }
     },
     beforeDestroy() {
@@ -214,14 +232,14 @@
     //字体动画效果 ----------开始
     computed: {
       //事件总数结果
-      animatedAllCount: function () {
-        if (this.tweenedAllCount > 1000) {
-          let num = this.tweenedAllCount.toFixed(0).toString().split('')
-          return toParNum(num);
-        } else {
-          return this.tweenedAllCount.toFixed(0)
-        }
-      },
+      // animatedAllCount: function () {
+      //   if (this.tweenedAllCount > 1000) {
+      //     let num = this.tweenedAllCount.toFixed(0).toString().split('')
+      //     return toParNum(num);
+      //   } else {
+      //     return this.tweenedAllCount.toFixed(0)
+      //   }
+      // },
       //处理中事件总数结果
       animatedWorkingCount: function () {
         if (this.workingCount > 1000) {
@@ -240,6 +258,16 @@
           return this.nowOnlineUser.toFixed(0)
         }
       },
+      //在线总人数
+      animatedAllPersonCount: function () {
+        if (this.allPersonCount > 1000) {
+          let num = this.allPersonCount.toFixed(0).toString().split('')
+          return toParNum(num);
+        } else {
+          return this.allPersonCount.toFixed(0)
+        }
+      },
+      //已完成的
       animatedAllFinisedCount: function () {
         if (this.finisedCount > 1000) {
           let num = this.finisedCount.toFixed(0).toString().split('')
@@ -248,19 +276,28 @@
           return this.finisedCount.toFixed(0)
         }
       },
+      //已完成的比率
+      animatedFinishedPrecent(){
+        this.tweenedAllNumber = this.tweenedAllNumber||1
+        let num = (this.finisedCount/this.tweenedAllNumber)*100
+        return num.toFixed(2)+'%'
+      }
     },
     watch: {
-      tweenedAllNumber: function (newValue) {
-        TweenAminate.TweenLite.to(this.$data, 0.5, {tweenedAllCount: newValue});
-      },
+      // tweenedAllNumber: function (newValue) {
+      //   TweenAminate.TweenLite.to(this.$data, 0.5, {tweenedAllCount: newValue});
+      // },
       nowOnlineUsers: function (newValue) {
         TweenAminate.TweenLite.to(this.$data, 0.5, {nowOnlineUser: newValue});
       },
       workingNumber: function (newValue) {
         TweenAminate.TweenLite.to(this.$data, 0.5, {workingCount: newValue});
       },
-      finisedNumber:function (newValue) {
+      finisedNumber: function (newValue) {
         TweenAminate.TweenLite.to(this.$data, 0.5, {finisedCount: newValue});
+      },
+      allPersonNumber: function (newValue) {
+        TweenAminate.TweenLite.to(this.$data, 0.5, {allPersonCount: newValue});
       },
     },
     // ----------结束
@@ -301,12 +338,12 @@
         obj.locationLevel = parseInt(data.locationLevel) + 1
         return obj
       },
-      //获取业务统计数量趋势
+      //获取业务统计数量趋势(中下)
       getBusinessNumByTime() {
         this.$request.get(`${this.$apiList.summary}/business/time`, {
           params: {
             timePattern: 'yyyy-MM-dd',
-            locationCode:this.locationData.locationCode
+            locationCode: this.locationData.locationCode
           }
         }).then(res => {
           const data = res.data.data
@@ -348,7 +385,7 @@
               // },
               axisLabel: {//设置坐标轴的标签
                 interval: 0,
-                // rotate:-5,
+                rotate:-18,
               },
               axisTick: {//刻度线
                 show: true,
@@ -430,10 +467,8 @@
       },
       //获取用户性别统计
       getAllUserSex() {
-        this.$request.get(`${this.$apiList.summary}/users/sex`,{
-          params:{
-            locationCode:this.locationData.locationCode
-          }
+        this.$request.get(`${this.$apiList.summary}/users/sex`, {
+          params: this.locationData
         }).then(res => {
           const data = res.data.data
           this.userSexs = data
@@ -488,10 +523,8 @@
       },
       //用户年龄统计
       getAllUserNum() {
-        this.$request.get(`${this.$apiList.summary}/users/age`,{
-          params:{
-            locationCode:this.locationData.locationCode
-          }
+        this.$request.get(`${this.$apiList.summary}/users/age`, {
+          params: this.locationData
         }).then(res => {
           const data = res.data.data
           this.userAges = data
@@ -514,7 +547,7 @@
               }),
               itemWidth: 16.5,
               itemHeight: 10,
-              bottom: 6
+              bottom: 10
             },
             series: [
               {
@@ -546,45 +579,69 @@
               }
             ]
           }
-          //测试数据
-          this.event_pieOption = this._funs.copyObject(this.age_pieOption)
-          this.event_pieOption.legend.show = false
-          this.event_pieOption.title.text = '事件完成度'
-          this.event_pieOption.title.top = 5
-          this.event_pieOption.title.left = 5
-          this.event_pieOption.title.textStyle.fontSize = 12
         })
       },
-      //统计任务小时节点数量
+      //统计柱状图（左二）今日数据
       getBusinessNodeNumByTime() {
-        this.$request.get(`${this.$apiList.summary}/business/task/time`, {
-          params: {
-            timePattern: 'HH',
-            locationCode:this.locationData.locationCode
-          }
+        let data = this._funs.copyObject(this.locationData)
+        let time = new Date()
+        data.month = time.getMonth()+1
+        data.year = time.getFullYear()
+        data.day = time.getDate()
+        this.$request.get(`${this.$apiList.summary}/business/count/top`, {
+          params: data
         }).then(res => {
           const data = res.data.data
           this.businessNodeNumList = data
           this.num_barOption = {
+            title: {
+              text: '今日业务数据',
+              x: 'center',
+              textStyle: {
+                fontSize: '16',
+              },
+              left: 10,
+              top: 10,
+            },
             tooltip: {
               trigger: 'axis',//随鼠标提示
               axisPointer: {
-                type: 'none',
+                type: 'shadow'
               }
             },
+            legend: {
+              data: ['处理中', '已完成'],
+              itemHeight: 12,
+              itemWidth:19,
+              textStyle: {
+                color: ["#fcae61", "#5873ff"]
+              },
+              top: 6,
+              right:6,
+              itemGap: 5,
+              selectedMode: true,//图例选择模式
+            },
+            dataZoom: [{
+              startValue: data.length>0?data[0].businessName:''
+            }, {
+              type: 'inside'
+            }],
             grid: {//调整图形大小
               x: 35,
-              y: 25,
+              y: 40,
               x2: 10,
-              y2: 25
+              y2: 65
             },
             xAxis: {
+              type: 'category',
               data: data.map(function (item) {
-                return item.name;
+                return item.businessName;
               }),
               axisLabel: {
-                rotate: -15,
-                interval:0,
+                rotate: -10,
+                show:true,
+                interval: 0,
+                position: 'center',
               },
               axisTick: {
                 show: true,
@@ -599,20 +656,54 @@
             },
             series: [
               {
-                name: '事件数量',
+                name: '处理中',
                 type: 'bar',
                 data: data.map(function (item) {
-                  return item.value;
+                  return item.processing;
                 }),
                 itemStyle: {
                   normal: {
                     //以及在折线图每个日期点顶端显示数字
                     label: {
-                      show: true,
+                      show: false,
+                      position: 'top',
+                      textStyle: {
+                        color: '#fcae61'
+                      },
+                      formatter:'{c}'
+                    },
+                    color: {
+                      type: 'linear',
+                      x: 0,
+                      y: 1,
+                      x2: 0,
+                      y2: 0,
+                      colorStops: [{
+                        offset: 0, color: '#fffb55' // 0% 处的颜色
+                      }, {
+                        offset: 1, color: '#fcae61' // 100% 处的颜色
+                      }],
+                      global: false // 缺省为 false
+                    }
+                  }
+                }
+              },
+              {
+                name: '已完成',
+                type: 'bar',
+                data: data.map(function (item) {
+                  return item.completion;
+                }),
+                itemStyle: {
+                  normal: {
+                    //以及在折线图每个日期点顶端显示数字
+                    label: {
+                      show: false,
                       position: 'top',
                       textStyle: {
                         color: '#76f2f2'
                       },
+                      formatter:'{c}'
                     },
                     color: {
                       type: 'linear',
@@ -657,7 +748,7 @@
                 max: 4000,//取其区间值就代表色系inRange中的一种颜色
                 left: 'left',
                 top: 'bottom',
-                text: ['高', '低'], // 文本，默认为数值文本
+                text: ['多', '少'], // 文本，默认为数值文本
                 calculable: false,
                 textStyle: {
                   color: '#fff'
@@ -712,6 +803,7 @@
           })
         )
         this.getEventsNumbers()
+        this.getDeptRate()
         this.getEventLists()
         this.getAllUserNum()
         this.getAllUserSex()
@@ -725,9 +817,12 @@
       },
       //获取在线人数统计
       getUserOnline() {
-        this.$request.get(`${this.$apiList.summary}/users/online`).then(res => {
+        this.$request.get(`${this.$apiList.summary}/users/online`, {
+          params: this.locationData
+        }).then(res => {
           let data = res.data.data
           this.nowOnlineUsers = data.onLine
+          this.allPersonNumber = data.total
         })
       },
       //获取任务实时列表
@@ -736,24 +831,154 @@
           params: {
             pageSize: 10,
             pageNum: 1,
-            locationCode:this.locationData.locationCode
+            locationCode: this.locationData.locationCode
           },
         }).then(res => {
           let data = res.data.data
-          this.newsList = data
+          this.newsList = data||[]
         })
       },
       //获取任务事件数字统计
       getEventsNumbers() {
+        let data = this._funs.copyObject(this.locationData)
+        let time = new Date()
+        data.month = time.getMonth()+1
+        data.year = time.getFullYear()
+        data.day = time.getDate()
         this.$request.get(`${this.$apiList.summary}/business/count`, {
-          params: {
-            locationCode: this.locationData.locationCode
-          }
+          params: data
         }).then(res => {
           let data = res.data.data
           this.tweenedAllNumber = data.bussinessCount
           this.workingNumber = data.businessProcessingCount
           this.finisedNumber = data.businessEndCount
+        })
+      },
+      //获取左一相关数据
+      getDeptRate() {
+        this.$request.get(`${this.$apiList.summary}/business/task/dept/rate`, {
+          params: this.locationData
+        }).then(res => {
+          const data = res.data.data
+          this.rateList = data||[]
+          let options = {
+            title: {
+              left: 3,
+              text: '',
+              textStyle: {
+                fontSize: '14',
+              },
+            },
+            tooltip: {
+              trigger: 'item',
+              formatter: '{a} <br/>{b}: {c} ({d}%)'
+            },
+            // legend: {
+            //   data: ['处理中', '完成率'],
+            //   itemHeight: 6.5,
+            //   itemWidth:11,
+            //   textStyle: {
+            //     color: ["#fffb55", "#5873ff"]
+            //   },
+            //   top: 6,
+            //   left:'50%',
+            //   itemGap: 5,
+            //   selectedMode: true,//图例选择模式
+            // },
+            series: [
+                {
+                name: '正在处理中',
+                type: 'pie',
+                clockWise: false,
+                selectedOffset: 1,
+                radius: ['60%', '70%'],
+                avoidLabelOverlap: false,
+                hoverAnimation: false,
+                label: {
+                  normal: {
+                    show: false,
+                    position: 'center',
+                    labelLine: {show: false},
+                    formatter: '{b}\n{d}%'
+                  },
+                },
+                emphasis: {
+                  show: true,
+                  textStyle: {
+                    fontSize: '12',
+                  },
+                  formatter: '{b}:{d}%'
+                },
+                bottom: 15,
+                data: []
+              },
+              {
+                name: '完成率',
+                type: 'pie',
+                clockWise: false,
+                selectedOffset: 1,
+                radius: ['49%', '59%'],
+                avoidLabelOverlap: false,
+                hoverAnimation: false,
+                label: {
+                  normal: {
+                    show: true,
+                    position: 'center',
+                    labelLine: {show: false},
+                    formatter: '{b}\n{d}%'
+                  },
+                },
+                emphasis: {
+                  show: true,
+                  textStyle: {
+                    fontSize: '12',
+                  },
+                  formatter: '{b}:{d}%'
+                },
+                bottom: 15,
+                data: []
+              }
+            ]
+          }
+          data.forEach((item, index) => {
+            this[`event_pieOption${index + 1}`] = this._funs.copyObject(options)
+            this[`event_pieOption${index + 1}`].title.text = item.deptName
+            this[`event_pieOption${index + 1}`].radius = [200 - index * 20, 220 - index * 20],
+              this[`event_pieOption${index + 1}`].series[0].data = [
+                {
+                  name: '处理中',
+                  value: item.processing,
+                  itemStyle: {
+                    color: "#5873ff"
+                  },
+                },
+                {
+                  name: '完成率',
+                  value: item.completion,
+                  itemStyle: {
+                    color: "transparent"
+                  },
+                }
+              ]
+              this[`event_pieOption${index + 1}`].series[1].data = [
+              {
+                name: '完成率',
+                value: item.completion,
+                itemStyle: {
+                  color: "#fffb55"
+                },
+              },
+              {
+                name: '处理中',
+                value: item.processing,
+                itemStyle: {
+                  color: "transparent"
+                },
+              },
+            ]
+              this.$refs[`event_pieOption${index + 1}`].mouseOverEvent()
+              this.$refs[`event_pieOption${index + 1}`].chooseVuale('highlight',1,0)
+          })
         })
       },
       //点击地图回调
@@ -826,7 +1051,7 @@
 </script>
 
 <style lang="scss" scoped>
-  $fontColor:#0EE5F8;
+  $fontColor: #0EE5F8;
   .index {
     position: relative;
     background-image: url("../assets/img/indebackgimg.png");
@@ -894,7 +1119,7 @@
       }
       &-right {
         height: 100%;
-        & /deep/.el-scrollbar__wrap{
+        & /deep/ .el-scrollbar__wrap {
           overflow-x: hidden;
         }
       }
@@ -905,7 +1130,7 @@
       margin-left: 1%;
       border-radius: 8px;
       &-top {
-        height: 34%;
+        height: 34.5%;
         margin-top: 14px;
         .item {
           width: 33.333333333333%;
@@ -986,13 +1211,22 @@
           background-repeat: no-repeat;
           background-position: 50% 100%;
           background-size: 90%;
+          position: relative;
         }
         .numCount {
           position: absolute;
           top: 9%;
           width: 100%;
           li {
+            display: inline-block;
+            vertical-align: middle;
+            width: 48%;
             text-align: center;
+          }
+          li:nth-last-child(1) {
+            display: block;
+            width: 100%;
+            margin-top: 15px;
           }
           &-text {
             color: $fontColor;
@@ -1003,7 +1237,7 @@
           &-num {
             color: #FFD500;
             font-weight: bold;
-            font-size: 34px;
+            font-size: 30px;
           }
         }
       }
@@ -1080,7 +1314,7 @@
         }
       }
     }
-    .noInfo{
+    .noInfo {
       height: 100%;
       width: 100%;
       color: $fontColor;

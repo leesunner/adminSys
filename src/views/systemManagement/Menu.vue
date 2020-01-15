@@ -151,26 +151,27 @@
             <el-switch v-model="menuDetail.enabled"></el-switch>
           </el-form-item>
         </el-form>
-        <el-form label-width="100px">
-          <el-form-item size="mini">
-            <el-button
-              @click="checkType = false"
-              v-if="buttonControl[_config.buttonCode.B_UPDATE]&&checkType"
-            >启用编辑
-            </el-button>
-            <el-button v-else @click="checkType = true">关闭编辑</el-button>
-            <el-button type="primary"
-                       @click="confirmChange"
-                       v-if="!checkType&&buttonControl[_config.buttonCode.B_UPDATE]">保存
-            </el-button>
-            <el-button
-              v-if="showMenuButton&&buttonControl[_config.buttonCode.B_LIST]"
-              type="primary"
-              @click="handleCheckButton"
-            >查看菜单按钮
-            </el-button>
-          </el-form-item>
-        </el-form>
+        <el-row style="text-align: right;width: 400px;">
+          <el-button
+            size="mini"
+            @click="checkType = false"
+            v-if="buttonControl[_config.buttonCode.B_UPDATE]&&checkType"
+          >启用编辑
+          </el-button>
+          <el-button v-else @click="checkType = true" size="mini">关闭编辑</el-button>
+          <el-button type="primary"
+                     @click="confirmChange"
+                     size="mini"
+                     v-if="!checkType&&buttonControl[_config.buttonCode.B_UPDATE]">保存
+          </el-button>
+          <el-button
+            size="mini"
+            v-if="showMenuButton&&buttonControl[_config.buttonCode.B_LIST]"
+            type="primary"
+            @click="handleCheckButton"
+          >查看菜单按钮
+          </el-button>
+        </el-row>
       </el-col>
     </el-row>
     <!-- 查看菜单绑定的按钮详情弹窗 -->

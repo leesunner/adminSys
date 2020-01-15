@@ -33,7 +33,6 @@ export default {
         realName: "",
         status: ""
       },
-      imgUrl: ""
     };
   },
   watch: {
@@ -53,15 +52,9 @@ export default {
         .get(`${this.$apiList.applyProc}/${this.taskId}`)
         .then(res => {
           this.formData = res.data.data[0];
-          console.log(this.formData);
           this.formData.createTime = formatTime(this.formData.createTime);
         });
     },
-    //浏览大图
-    handlePictureCardPreview(file) {
-      this.imgUrl = file.url;
-      this.dialogVisible = true;
-    }
   }
 };
 </script>
