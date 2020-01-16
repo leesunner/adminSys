@@ -1,8 +1,7 @@
 <template>
   <div class="slider" ref="slider" @mousemove.stop="mouseMove">
-    <p class="slider-text">拖动滑块>></p>
+    <p class="slider-text">{{lock?'已完成验证':'请按住滑块，拖到最右边>>'}}</p>
     <div :class="['slider-color',down?'':'slider-animtc']" :style="`width:${lock?xCache+45:xCache}px`">
-      {{lock?'拖动已完成>>':''}}
     </div>
     <div :class="['slider-item',down?'':'slider-animt']" v-show="!lock" ref="block" @mousedown.stop="mouseDown"
          @mouseup.stop="mouseUp" :style="`transform: translateX(${xCache}px)`">{{text}}
@@ -95,7 +94,23 @@
     font-size: 14px;
     &-text {
       line-height: $w;
-      animation: sca 1s linear -10s infinite;
+      //animation: sca 1s linear -10s infinite;
+      background: -webkit-gradient(linear,left top,right top,color-stop(0,#4d4d4d),color-stop(.4,#4d4d4d),color-stop(.5,#fff),color-stop(.6,#4d4d4d),color-stop(1,#4d4d4d));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: slidetounlock 2s infinite;
+      -webkit-text-size-adjust: none;
+      position: relative;
+      width: 100%;
+      z-index: 1;
+    }
+    @keyframes  slidetounlock{
+      from{
+        background-position: -200px 0;
+      }
+      to{
+        background-position: 200px 0;
+      }
     }
     @keyframes sca {
       0% {
@@ -130,6 +145,7 @@
       height: $w;
       width: $w;
       line-height: $w;
+      z-index: 10;
       cursor: move;
       background-color: $primary;
       color: $white;

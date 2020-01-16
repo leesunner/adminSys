@@ -780,6 +780,7 @@
                     areaColor: 'rgba(6,41,100,.85)',
                   }
                 },
+                // center:['50%','50%'],
                 zoom: 1.15,
                 roam: true,
                 scaleLimit: {

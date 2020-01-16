@@ -46,7 +46,7 @@
           :autosize="{ minRows: 3, maxRows: 6}"
           placeholder="输入banner内容"
           clearable
-          v-model="columnData.bannerContent">
+          v-model="columnData.content">
         </el-input>
       </el-form-item>
       <el-form-item label="banner展示端" required>
@@ -147,7 +147,7 @@
       return {
         checkType: true,
         columnData: {
-          bannerContent: "",
+          content: "",
           contentUrl: "",
           endTime: "",
           startTime: "",
@@ -178,7 +178,7 @@
           }
         } else {
           this.columnData = {
-            bannerContent: "",
+            content: "",
             contentUrl: "",
             endTime: "",
             startTime: "",

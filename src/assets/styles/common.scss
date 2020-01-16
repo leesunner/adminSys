@@ -41,6 +41,9 @@ $borderBackColor: rgba(6,41,100,.85);
 .el-tree-node__content{
   height: auto!important;
 }
+.el-image-viewer__close{
+  color: $white;
+}
 //form-item 文本居左
 //.el-form-item__label{
 //  text-align: left!important;

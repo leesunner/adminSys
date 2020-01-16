@@ -37,6 +37,7 @@
           <span v-else>暂无图片</span>
         </template>
       </el-table-column>
+      <el-table-column label="展示端" prop="showType" width="70"></el-table-column>
       <el-table-column label="创建时间">
         <template v-slot="scope">
           <span>{{scope.row.createTime | formatTime}}</span>

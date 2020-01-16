@@ -50,14 +50,14 @@
       },
       timeString() {
         let t = new Date(), h = t.getHours(), m = t.getMinutes();
-        if (h<=12){
-          if (m<1){
+        if (h<12){
+          return '上午好！'
+        }else{
+          if (h==12&&m<1){
             return '上午好！'
           }else{
             return '下午好！'
           }
-        }else{
-          return '下午好！'
         }
       },
     }
