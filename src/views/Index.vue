@@ -86,13 +86,13 @@
             <div class="box-con">
               <ul class="numCount">
                 <li>
-                  <span class="numCount-text">在线人数：</span>
-                  <span class="numCount-num">{{animatedOnlineUsersCount}}</span>
+                  <span class="numCount-text">在线用户数：</span>
+                  <span class="numCount-num">{{animatedOnlineUsersCount}} 人</span>
                   <!--<span class="numCount-text">人</span>-->
                 </li>
                 <li>
-                  <span class="numCount-text">总人数：</span>
-                  <span class="numCount-num">{{animatedAllPersonCount}}</span>
+                  <span class="numCount-text">总用户数：</span>
+                  <span class="numCount-num">{{animatedAllPersonCount}} 人</span>
                   <!--<span class="numCount-text">人</span>-->
                 </li>
                 <!--<li>-->
@@ -102,12 +102,12 @@
                 <!--</li>-->
                 <li>
                   <span class="numCount-text">处理中：</span>
-                  <span class="numCount-num">{{animatedWorkingCount}}</span>
+                  <span class="numCount-num">{{animatedWorkingCount}} 件</span>
                   <!--<span class="numCount-text">件</span>-->
                 </li>
                 <li>
                   <span class="numCount-text">已完成：</span>
-                  <span class="numCount-num">{{animatedAllFinisedCount}}</span>
+                  <span class="numCount-num">{{animatedAllFinisedCount}} 件</span>
                   <!--<span class="numCount-text">件</span>-->
                 </li>
                 <li>
@@ -890,7 +890,7 @@
               top:5,
               text: '',
               textStyle: {
-                fontSize: '14',
+                fontSize: '12',
               },
             },
             tooltip: {
@@ -923,7 +923,19 @@
                     show: false,
                     position: 'center',
                     labelLine: {show: false},
-                    formatter: '{b}\n{d}%'
+                    formatter: function(val){
+                      return `{b|处理中}\n{d|${val.value}%}`
+                    },
+                    rich:{
+                      b:{
+                        fontSize:12,
+                        color:'#0EE5F8'
+                      },
+                      d:{
+                        fontSize:18,
+                        fontWeight:600
+                      }
+                    }
                   },
                 },
                 emphasis: {
@@ -949,7 +961,19 @@
                     show: true,
                     position: 'center',
                     labelLine: {show: false},
-                    formatter: '{b}\n{d}%'
+                    formatter: function(val){
+                      return `{b|完成率}\n{d|${val.value}%}`
+                    },
+                    rich:{
+                      b:{
+                        fontSize:12,
+                        color:'#0EE5F8'
+                      },
+                      d:{
+                        fontSize:18,
+                        fontWeight:600
+                      }
+                    }
                   },
                 },
                 emphasis: {
@@ -1257,7 +1281,7 @@
           }
           &-text {
             color: $fontColor;
-            font-size: 20px;
+            font-size: 16px;
             text-align: right;
             margin-top: 6px;
           }
