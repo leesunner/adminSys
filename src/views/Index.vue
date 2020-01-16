@@ -338,7 +338,7 @@
         let obj = {}
         obj.locationName = data.name || data.locationName
         obj.locationCode = data.locationCode
-        obj.locationLevel = parseInt(data.locationLevel) + 1
+        obj.locationLevel = data.locationLevel
         return obj
       },
       //获取业务统计数量趋势(中下)
@@ -1000,6 +1000,7 @@
               break;
             }
           }
+          //把标题相关加进去
           isInside ? arr.push(this.locationData) : ''
           this.getMapAndData()
         }

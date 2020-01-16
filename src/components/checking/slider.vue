@@ -137,6 +137,9 @@
     }
     &-animtc {
       transition: all 0.22s ease-in-out;
+      background-image: url("../../assets/img/c8fa73f7.png");
+      background-repeat: no-repeat;
+      background-size: contain;
     }
     &-item {
       position: absolute;
