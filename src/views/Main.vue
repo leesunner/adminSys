@@ -3,7 +3,7 @@
     <div class="index">
       <el-container style="height: 100%;">
         <el-header>
-          <lee-header></lee-header>
+          <lee-header v-if="$route.path!='/index'"></lee-header>
         </el-header>
         <el-container style="height: 100%;">
           <el-aside width="auto">
