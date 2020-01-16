@@ -36,7 +36,8 @@
           </echarts-box>
         </div>
         <div class="left-center">
-          <echarts-box>
+          <p class="title">今日业务数据</p>
+          <echarts-box class="canvas-item">
             <lee-echarts :options="num_barOption" ref="num_barOption" v-if="businessNodeNumList.length>0"></lee-echarts>
             <div class="noInfo" v-else>暂无数据</div>
           </echarts-box>
@@ -314,13 +315,15 @@
         });
         //窗口变动监听
         window.onresize = (e) => {
-          this.$refs['age_pieOption'].resize()
-          this.$refs['sex_pieOption'].resize()
-          this.$refs['num_lineOption'].resize()
-          this.$refs['num_barOption'].resize()
-          this.$refs['city_mapOption'].resize()
+          this.$refs['age_pieOption']?this.$refs['age_pieOption'].resize():''
+          this.$refs['age_pieOption']?this.$refs['sex_pieOption'].resize():''
+          this.$refs['num_lineOption']?this.$refs['num_lineOption'].resize():''
+          this.$refs['num_barOption']?this.$refs['num_barOption'].resize():''
+          this.$refs['city_mapOption']?this.$refs['city_mapOption'].resize():''
           for (let i = 0; i < 6; i++) {
-            this.$refs[`event_pieOption${i + 1}`].resize()
+            if (this.$refs[`event_pieOption${i + 1}`]){
+              this.$refs[`event_pieOption${i + 1}`].resize()
+            }
           }
         }
         this.getAllRequest()
@@ -595,7 +598,7 @@
           this.businessNodeNumList = data
           this.num_barOption = {
             title: {
-              text: '今日业务数据',
+              text: '',
               x: 'center',
               textStyle: {
                 fontSize: '16',
@@ -663,7 +666,6 @@
                 }),
                 itemStyle: {
                   normal: {
-                    //以及在折线图每个日期点顶端显示数字
                     label: {
                       show: false,
                       position: 'top',
@@ -909,7 +911,6 @@
                   },
                   formatter: '{b}:{d}%'
                 },
-                bottom: 15,
                 data: []
               },
               {
@@ -935,7 +936,6 @@
                   },
                   formatter: '{b}:{d}%'
                 },
-                bottom: 15,
                 data: []
               }
             ]
