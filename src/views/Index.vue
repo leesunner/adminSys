@@ -87,13 +87,14 @@
               <ul class="numCount">
                 <li>
                   <span class="numCount-text">在线用户数：</span>
-                  <span class="numCount-num">{{animatedOnlineUsersCount}} 人</span>
+                  <span class="numCount-num">{{animatedOnlineUsersCount}}</span>
+                  <span class="numCount-text">人</span>
                   <!--<span class="numCount-text">人</span>-->
                 </li>
                 <li>
                   <span class="numCount-text">总用户数：</span>
-                  <span class="numCount-num">{{animatedAllPersonCount}} 人</span>
-                  <!--<span class="numCount-text">人</span>-->
+                  <span class="numCount-num">{{animatedAllPersonCount}}</span>
+                  <span class="numCount-text">人</span>
                 </li>
                 <!--<li>-->
                   <!--<span class="numCount-text">事件总数：</span>-->
@@ -102,18 +103,17 @@
                 <!--</li>-->
                 <li>
                   <span class="numCount-text">处理中：</span>
-                  <span class="numCount-num">{{animatedWorkingCount}} 件</span>
-                  <!--<span class="numCount-text">件</span>-->
+                  <span class="numCount-num">{{animatedWorkingCount}}</span>
+                  <span class="numCount-text">件</span>
                 </li>
                 <li>
                   <span class="numCount-text">已完成：</span>
-                  <span class="numCount-num">{{animatedAllFinisedCount}} 件</span>
-                  <!--<span class="numCount-text">件</span>-->
+                  <span class="numCount-num">{{animatedAllFinisedCount}}</span>
+                  <span class="numCount-text">件</span>
                 </li>
                 <li>
                   <span class="numCount-text">今日完成率：</span>
                   <span class="numCount-num">{{animatedFinishedPrecent}}</span>
-                  <!--<span class="numCount-text">件</span>-->
                 </li>
               </ul>
             </div>
