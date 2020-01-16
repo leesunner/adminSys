@@ -1,46 +1,23 @@
 import axios from 'axios'
-import _session from '../tools/sessionTool'
+import _session from '../../tools/sessionTool'
 import {Loading, Message} from 'element-ui';
-import router from '../router';
-import url from './api/realmnUrl'
+import router from '../../router';
+import url from './realmnUrl'
 
-axios.defaults.timeout = 20000
-axios.defaults.baseURL = url
-
-let loadingInstance = null
-let count = 0
-
-function close() {
-  count--
-  if (count === 0) {
-    loadingInstance.close()
-  }
-}
-
-function open() {
-  count++
-  loadingInstance = Loading.service({
-    text: '加载中...',
-    spinner: '',
-    background: 'rgba(0, 0, 0, 0.62)',
-  });
-}
+let _axios = axios.create({
+  timeout:20000,
+  baseURL:url,
+})
 
 //请求拦截器
-axios.interceptors.request.use(config => {
-  open()
+_axios.interceptors.request.use(config => {
   config.headers['requestOrigin'] = 1//识别登录方式（pc）
   const TOKEN = _session.getSessoin('AUTH_TOKEN')
   if (!(TOKEN == 'undefined' || !TOKEN)) {
     config.headers['Authorization'] = `Bearer ${TOKEN}`
   }
-  // const USER_INFO = _session.getSessoin('USER_INFO')
-  // if (USER_INFO){
-  //   config.headers['userId'] = USER_INFO.id
-  // }
   return config
 }, error => {
-  close()
   Message({
     showClose: true,
     message: '接口请求有误',
@@ -50,13 +27,8 @@ axios.interceptors.request.use(config => {
 })
 
 //响应拦截器
-axios.interceptors.response.use(res => {
-  close()
-  if (res.headers['content-type'] !== undefined && res.headers['content-type'].indexOf('image') > -1) {
-    //获取系统中图片时，文件流传递过来做的拦截
-    return res
-  }
-  if (res.data.code === 200||res.data.type=='FeatureCollection') {
+_axios.interceptors.response.use(res => {
+  if (res.data.code === 200) {
     return res
   } else {
     //有需要可以根据code的值给出对应的提示
@@ -89,4 +61,4 @@ axios.interceptors.response.use(res => {
   });
   return Promise.reject(error)
 })
-export default axios
+export default _axios

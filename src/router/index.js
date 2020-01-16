@@ -22,6 +22,7 @@ router.beforeEach((to, from, next) => {
     }else{
       _session.clearSession()
       _session.clearLocalStorage()
+      store.commit('setRouterTree',[])
       //login和首次进来的直接过
       if (to.path==='/login'||to.path==='/'){
         next()

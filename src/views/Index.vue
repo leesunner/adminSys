@@ -158,9 +158,9 @@
 <script>
   import echartsBox from '../components/echarts/frameBox';
   import leeEcharts from '../components/echarts/index.vue';
+  import axios from '@/request/api/echartsReuqest';
   // import 'echarts/map/js/province/hubei.js'// 引入中国地图数据
   import TweenAminate from '../tools/TweenLite.js'
-
   //数字和单位分隔符
   function toParNum(num) {
     for (let i in num) {
@@ -225,10 +225,12 @@
         userSexs: [],
         userAges: [],
         rateList:[],
+        interVal:null,//定时器
       }
     },
     beforeDestroy() {
       window.onresize = null
+      this.clearInterVal()
     },
     //字体动画效果 ----------开始
     computed: {
@@ -330,6 +332,18 @@
       })
     },
     methods: {
+      //清楚定时器
+      clearInterVal(){
+        clearInterval(this.interVal)
+        this.interVal = null
+      },
+      //定时器
+      getInterval(){
+        this.interVal = setInterval(()=>{
+          this.getAllRequest()
+        },5000)
+      },
+      //请求地图数据
       getAllRequest() {
         this.getMapAndData()
       },
@@ -343,7 +357,7 @@
       },
       //获取业务统计数量趋势(中下)
       getBusinessNumByTime() {
-        this.$request.get(`${this.$apiList.summary}/business/time`, {
+        axios.get(`${this.$apiList.summary}/business/time`, {
           params: {
             timePattern: 'yyyy-MM-dd',
             locationCode: this.locationData.locationCode
@@ -470,7 +484,7 @@
       },
       //获取用户性别统计
       getAllUserSex() {
-        this.$request.get(`${this.$apiList.summary}/users/sex`, {
+        axios.get(`${this.$apiList.summary}/users/sex`, {
           params: this.locationData
         }).then(res => {
           const data = res.data.data
@@ -526,7 +540,7 @@
       },
       //用户年龄统计
       getAllUserNum() {
-        this.$request.get(`${this.$apiList.summary}/users/age`, {
+        axios.get(`${this.$apiList.summary}/users/age`, {
           params: this.locationData
         }).then(res => {
           const data = res.data.data
@@ -591,7 +605,7 @@
         data.month = time.getMonth()+1
         data.year = time.getFullYear()
         data.day = time.getDate()
-        this.$request.get(`${this.$apiList.summary}/business/count/top`, {
+        axios.get(`${this.$apiList.summary}/business/count/top`, {
           params: data
         }).then(res => {
           const data = res.data.data
@@ -729,14 +743,14 @@
       },
       //点击地图查询业务数量
       getNumByArea() {
-        return this.$request.get(`${this.$apiList.summary}/business/location`, {
+        return axios.get(`${this.$apiList.summary}/business/location`, {
           params: this.locationData
         })
       },
       //获取地图和对应数据
       getMapAndData() {
-        this.$request.all([this.getMapJson(), this.getNumByArea()]).then(
-          this.$request.spread((mapRes, valRes) => {
+        this.getMapJson().then(mapRes=>{
+          this.getNumByArea().then(valRes=>{
             //事件只注册一次
             if (this.city_mapOption === null) {
               this.$refs['city_mapOption'].registerOnEvent()
@@ -804,7 +818,12 @@
             }
             this.$refs['city_mapOption'].beginShowMap(mapRes.data.data.locationName, mapRes.data.data.mapJson || {})
           })
-        )
+        } )
+        // axios.all([this.getMapJson(), this.getNumByArea()]).then(
+        //   axios.spread((mapRes, valRes) => {
+        //
+        //   })
+        // )
         this.getEventsNumbers()
         this.getDeptRate()
         this.getEventLists()
@@ -813,14 +832,15 @@
         this.getBusinessNumByTime()
         this.getBusinessNodeNumByTime()
         this.getUserOnline()
+        this.interVal==null?this.getInterval():''
       },
       //获取地图数据
       getMapJson() {
-        return this.$request.get(`${this.$apiList.location}/map/${this.locationData.locationCode}`)
+        return axios.get(`${this.$apiList.location}/map/${this.locationData.locationCode}`)
       },
       //获取在线人数统计
       getUserOnline() {
-        this.$request.get(`${this.$apiList.summary}/users/online`, {
+        axios.get(`${this.$apiList.summary}/users/online`, {
           params: this.locationData
         }).then(res => {
           let data = res.data.data
@@ -830,7 +850,7 @@
       },
       //获取任务实时列表
       getEventLists() {
-        this.$request.get(`${this.$apiList.summary}/business/task/details`, {
+        axios.get(`${this.$apiList.summary}/business/task/details`, {
           params: {
             pageSize: 10,
             pageNum: 1,
@@ -848,7 +868,7 @@
         data.month = time.getMonth()+1
         data.year = time.getFullYear()
         data.day = time.getDate()
-        this.$request.get(`${this.$apiList.summary}/business/count`, {
+        axios.get(`${this.$apiList.summary}/business/count`, {
           params: data
         }).then(res => {
           let data = res.data.data
@@ -859,7 +879,7 @@
       },
       //获取左一相关数据
       getDeptRate() {
-        this.$request.get(`${this.$apiList.summary}/business/task/dept/rate`, {
+        axios.get(`${this.$apiList.summary}/business/task/dept/rate`, {
           params: this.locationData
         }).then(res => {
           const data = res.data.data
@@ -987,6 +1007,7 @@
       },
       //点击地图回调
       clickEvent(val) {
+        this.clearInterVal()
         if (val.data) {
           this.locationData = this.copyClickMapData(val.data)
           const arr = this.tabTitleArr
@@ -1007,6 +1028,7 @@
       },
       //点击title切换数据
       changeTabTitle(val) {
+        this.clearInterVal()
         if (this.locationData.locationLevel != val.locationLevel) {
           this.locationData = val
           const arr = this.tabTitleArr
