@@ -641,7 +641,7 @@
                 return item.businessName;
               }),
               axisLabel: {
-                rotate: -10,
+                rotate: -15,
                 show:true,
                 interval: 0,
                 position: 'center',
@@ -866,6 +866,7 @@
           let options = {
             title: {
               left: 3,
+              top:5,
               text: '',
               textStyle: {
                 fontSize: '14',
@@ -911,14 +912,15 @@
                   },
                   formatter: '{b}:{d}%'
                 },
-                data: []
-              },
+                data: [],
+                center:['50%','60%']
+                },
               {
                 name: '完成率',
                 type: 'pie',
                 clockWise: false,
                 selectedOffset: 1,
-                radius: ['49%', '59%'],
+                radius: ['45.5%', '58.5%'],
                 avoidLabelOverlap: false,
                 hoverAnimation: false,
                 label: {
@@ -936,7 +938,8 @@
                   },
                   formatter: '{b}:{d}%'
                 },
-                data: []
+                data: [],
+                center:['50%','60%']
               }
             ]
           }
