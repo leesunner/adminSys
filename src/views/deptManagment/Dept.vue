@@ -309,9 +309,9 @@
     <!-- 查看用户组成员列表弹窗 -->
     <el-dialog :title="`成员列表：${rowData.name}`" :visible.sync="showUserGroupMemberDetail">
       <el-form inline size="mini" :model="userSearchData">
-        <span>
+        <span class="searchInfo">
           <el-form-item>
-            <el-input v-model="userSearchData.realName" clearable placeholder="真实姓名"></el-input>
+            <el-input v-model="userSearchData.keyword" clearable placeholder="可输入账号、手机号、真实姓名查询"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="getUserGroupMemberById" v-if="buttonControl[_config.buttonCode.B_UNOWN_USER_LIST]">查询</el-button>
@@ -322,6 +322,7 @@
         <el-table-column type="index" label="序号" width="50"></el-table-column>
         <el-table-column prop="username" label="账号名"></el-table-column>
         <el-table-column prop="realName" label="真实名"></el-table-column>
+        <el-table-column prop="telephone" label="手机号"></el-table-column>
         <el-table-column label="操作" width="90">
           <template v-slot="scope">
             <el-button type="danger"
@@ -336,6 +337,16 @@
         append-to-body
         :visible.sync="showEditorUserGroupMemberDetail"
       >
+        <el-form inline size="mini" :model="userSearchData">
+        <span class="searchInfo">
+          <el-form-item>
+            <el-input v-model="searchUserNoMember.keyword" clearable placeholder="可输入账号、手机号、真实姓名查询"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="getUserGroupNoMemberById" v-if="buttonControl[_config.buttonCode.B_INTO_DEPT_USERS]">查询</el-button>
+          </el-form-item>
+        </span>
+        </el-form>
         <el-table
           ref="noMemberTable"
           row-key="userId"
@@ -348,6 +359,7 @@
           <el-table-column type="selection" reserve-selection width="55"></el-table-column>
           <el-table-column prop="username" label="账号名"></el-table-column>
           <el-table-column prop="realName" label="真实名"></el-table-column>
+          <el-table-column prop="telephone" label="手机号"></el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -468,7 +480,7 @@
           //用户组查询条件
           pageNum: 1,
           pageSize: this._config.sizeArr[0],
-          realName: "",
+          keyword: "",
           deptId: '',
         },
         showUserGroupMemberDetail: false, //查看用户组成员列表弹窗
@@ -480,6 +492,7 @@
           //用户组未拥有成员查询
           deptId: "",
           pageNum: 1,
+          keyword:'',
           pageSize: this._config.sizeArr[0]
         },
         selectMemberArr: [], //选中的成员
@@ -910,5 +923,10 @@
     width: 193px;
   }
 }
+  .searchInfo{
+    & /deep/ .el-form-item__content{
+      width: 250px;
+    }
+  }
 </style>
 
