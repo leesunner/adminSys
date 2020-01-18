@@ -7,10 +7,21 @@
           <el-input v-model="createInfo.name" clearable placeholder="请输入名称"></el-input>
         </el-form-item>
         <el-form-item label="编码" prop="code">
-          <el-input v-model="createInfo.code"  clearable placeholder="请输入编码"></el-input>
+          <el-input v-model="createInfo.code" clearable placeholder="请输入编码"></el-input>
         </el-form-item>
-        <el-form-item label="省" prop="provinceCode">
-          <el-select v-model="createInfo.provinceCode" @change="getCityByProvice"  filterable placeholder="请选择">
+        <el-form-item label="级别" prop="level">
+          <el-select v-model="createInfo.level" @change="changeLevel" filterable placeholder="请选择">
+            <el-option
+              v-for="item in levelOptions"
+              :key="item.code"
+              :label="item.name"
+              :value="item.code">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="省">
+          <el-select v-model="createInfo.provinceCode" :disabled="createInfo.level<2" @change="getCityByProvice"
+                     filterable placeholder="请选择">
             <el-option
               v-for="item in provinceOptions"
               :key="item.locationCode"
@@ -19,8 +30,9 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="市" prop="cityCode">
-          <el-select v-model="createInfo.cityCode" @change="getDistrictByCity" filterable placeholder="请选择">
+        <el-form-item label="市">
+          <el-select v-model="createInfo.cityCode" :disabled="createInfo.level<3" @change="getDistrictByCity"
+                     filterable placeholder="请选择">
             <el-option
               v-for="item in cityOptions"
               :key="item.locationCode"
@@ -29,8 +41,9 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="区(县)" prop="districtCode">
-          <el-select v-model="createInfo.districtCode" @change="getTownByDistrict" filterable placeholder="请选择">
+        <el-form-item label="区(县)">
+          <el-select v-model="createInfo.districtCode" :disabled="createInfo.level<4" @change="getTownByDistrict"
+                     filterable placeholder="请选择">
             <el-option
               v-for="item in districtOptions"
               :key="item.locationCode"
@@ -39,8 +52,9 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="街道(乡镇)" prop="townCode">
-          <el-select v-model="createInfo.townCode" @change="getVillageByTown" filterable placeholder="请选择">
+        <el-form-item label="街道(乡镇)">
+          <el-select v-model="createInfo.townCode" :disabled="createInfo.level<5" @change="getVillageByTown" filterable
+                     placeholder="请选择">
             <el-option
               v-for="item in townOptions"
               :key="item.locationCode"
@@ -49,8 +63,8 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="小区(村)" prop="villageCode">
-          <el-select v-model="createInfo.villageCode" filterable placeholder="请选择">
+        <el-form-item label="小区(村)">
+          <el-select v-model="createInfo.villageCode" :disabled="createInfo.level<6" filterable placeholder="请选择">
             <el-option
               v-for="item in villageOptions"
               :key="item.locationCode"
@@ -125,7 +139,7 @@
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
                   <!--<el-dropdown-item :command="1" v-if="buttonControl[_config.buttonCode.B_DEPT_ROLE_LIST]">-->
-                    <!--查询角色-->
+                  <!--查询角色-->
                   <!--</el-dropdown-item>-->
                   <el-dropdown-item :command="2" v-if="buttonControl[_config.buttonCode.B_DEPT_USER_LIST]">
                     查询用户
@@ -148,25 +162,37 @@
         <el-form
           :model="detailInfo"
           size="mini"
+          inline
+          ref="DeptDetailRules"
+          :rules="DeptRules"
           :disabled="checkType"
           label-width="90px"
-          style="width:400px;"
         >
-          <el-form-item label="名称">
+          <el-form-item label="名称" prop="name">
             <el-input v-model="detailInfo.name"></el-input>
           </el-form-item>
           <!--<el-form-item label="部门类型">-->
-            <!--<el-select style="width:100%;" v-model="detailInfo.type" clearable placeholder="部门类型">-->
-              <!--<el-option-->
-                <!--v-for="(item,index) of _config.dict_dept_type"-->
-                <!--:key="index"-->
-                <!--:label="item.value"-->
-                <!--:value="item.key"-->
-              <!--&gt;</el-option>-->
-            <!--</el-select>-->
+          <!--<el-select style="width:100%;" v-model="detailInfo.type" clearable placeholder="部门类型">-->
+          <!--<el-option-->
+          <!--v-for="(item,index) of _config.dict_dept_type"-->
+          <!--:key="index"-->
+          <!--:label="item.value"-->
+          <!--:value="item.key"-->
+          <!--&gt;</el-option>-->
+          <!--</el-select>-->
           <!--</el-form-item>-->
-          <el-form-item label="编码">
+          <el-form-item label="编码" prop="code">
             <el-input v-model="detailInfo.code"></el-input>
+          </el-form-item>
+          <el-form-item label="级别" prop="level">
+            <el-select v-model="detailInfo.level" @change="changeLevel" filterable placeholder="请选择">
+              <el-option
+                v-for="item in levelOptions"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code">
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="所属机构">
             <el-cascader
@@ -177,7 +203,10 @@
             ></el-cascader>
           </el-form-item>
           <el-form-item label="省" prop="provinceCode">
-            <el-select v-model="detailInfo.provinceCode" @change="getCityByProvice"  filterable placeholder="请选择">
+            <el-select v-model="detailInfo.provinceCode"
+                       @change="getCityByProvice"
+                       :disabled="detailInfo.level<2"
+                       filterable placeholder="请选择">
               <el-option
                 v-for="item in provinceOptions"
                 :key="item.locationCode"
@@ -187,7 +216,8 @@
             </el-select>
           </el-form-item>
           <el-form-item label="市" prop="cityCode">
-            <el-select v-model="detailInfo.cityCode" @change="getDistrictByCity" filterable placeholder="请选择">
+            <el-select v-model="detailInfo.cityCode" :disabled="detailInfo.level<3" @change="getDistrictByCity"
+                       filterable placeholder="请选择">
               <el-option
                 v-for="item in cityOptions"
                 :key="item.locationCode"
@@ -197,7 +227,8 @@
             </el-select>
           </el-form-item>
           <el-form-item label="区(县)" prop="districtCode">
-            <el-select v-model="detailInfo.districtCode" @change="getTownByDistrict" filterable placeholder="请选择">
+            <el-select v-model="detailInfo.districtCode" :disabled="detailInfo.level<4" @change="getTownByDistrict"
+                       filterable placeholder="请选择">
               <el-option
                 v-for="item in districtOptions"
                 :key="item.locationCode"
@@ -207,7 +238,8 @@
             </el-select>
           </el-form-item>
           <el-form-item label="街道(乡镇)" prop="townCode">
-            <el-select v-model="detailInfo.townCode" @change="getVillageByTown" filterable placeholder="请选择">
+            <el-select v-model="detailInfo.townCode" @change="getVillageByTown" :disabled="detailInfo.level<5"
+                       filterable placeholder="请选择">
               <el-option
                 v-for="item in townOptions"
                 :key="item.locationCode"
@@ -217,7 +249,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="小区(村)" prop="villageCode">
-            <el-select v-model="detailInfo.villageCode" filterable placeholder="请选择">
+            <el-select v-model="detailInfo.villageCode" :disabled="detailInfo.level<6" filterable placeholder="请选择">
               <el-option
                 v-for="item in villageOptions"
                 :key="item.locationCode"
@@ -257,7 +289,8 @@
             <el-button type="danger"
                        size="mini"
                        v-if="checkType&&buttonControl[_config.buttonCode.B_DELETE_ROLE]"
-                       @click="handleDelRole(scope.$index, scope.row)">移除</el-button>
+                       @click="handleDelRole(scope.$index, scope.row)">移除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -314,7 +347,8 @@
             <el-input v-model="userSearchData.keyword" clearable placeholder="可输入账号、手机号、真实姓名查询"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="getUserGroupMemberById" v-if="buttonControl[_config.buttonCode.B_UNOWN_USER_LIST]">查询</el-button>
+            <el-button type="primary" @click="getUserGroupMemberById"
+                       v-if="buttonControl[_config.buttonCode.B_UNOWN_USER_LIST]">查询</el-button>
           </el-form-item>
         </span>
       </el-form>
@@ -328,7 +362,8 @@
             <el-button type="danger"
                        size="mini"
                        v-if="buttonControl[_config.buttonCode.B_DELETE_USERS]"
-                       @click="handleDelMember(scope.$index, scope.row)">移除</el-button>
+                       @click="handleDelMember(scope.$index, scope.row)">移除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -343,7 +378,8 @@
             <el-input v-model="searchUserNoMember.keyword" clearable placeholder="可输入账号、手机号、真实姓名查询"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="getUserGroupNoMemberById" v-if="buttonControl[_config.buttonCode.B_INTO_DEPT_USERS]">查询</el-button>
+            <el-button type="primary" @click="getUserGroupNoMemberById"
+                       v-if="buttonControl[_config.buttonCode.B_INTO_DEPT_USERS]">查询</el-button>
           </el-form-item>
         </span>
         </el-form>
@@ -408,12 +444,13 @@
   import mixin from '@/mixin/buttonPermission'
   import treeMixin from '@/mixin/treeSearchMixin'
   import addressMixin from '@/mixin/addressMixin'
+
   export default {
-    mixins: [mixin, treeMixin,addressMixin],
+    mixins: [mixin, treeMixin, addressMixin],
     name: "dept",
     data() {
       return {
-        expandedKeys:[1],
+        expandedKeys: [],
         checkType: true, //区分查看还是编辑
         detailInfo: {}, //部门详情
         deptTree: [], //部门树结构
@@ -423,11 +460,12 @@
           emitPath: false,
           checkStrictly: true
         },
+        levelOptions: [],
         createInfo: {
           description: "",
           name: "",
-          level:0,
-          code:'',
+          level: '',
+          code: '',
           cityName: "",
           districtCode: "",
           cityCode: "",
@@ -442,11 +480,7 @@
         DeptRules: {
           name: [{required: true, message: '请输入机构名', trigger: 'blur'}],
           code: [{required: true, message: '请输入机构编码', trigger: 'blur'}],
-          districtCode: [{required: true, message: "请选择区(县)", trigger: "change"}],
-          cityCode:[{required: true, message: "请选择城市", trigger: "change"}],
-          provinceCode: [{required: true, message: "请选择省", trigger: "change"}],
-          townCode: [{required: true, message: "请选择街道(乡镇)", trigger: "change"}],
-          villageCode: [{required: true, message: "请选择小区(村)", trigger: "change"}],
+          level: [{required: true, message: '请选择级别', trigger: 'blur'}],
         },
         showInputDeptName: false, //添加子部门弹窗
         parentDeptName: "", //父部门名称
@@ -492,7 +526,7 @@
           //用户组未拥有成员查询
           deptId: "",
           pageNum: 1,
-          keyword:'',
+          keyword: '',
           pageSize: this._config.sizeArr[0]
         },
         selectMemberArr: [], //选中的成员
@@ -500,35 +534,50 @@
     },
     mounted() {
       this.getDeptTree();
+      this.getLevelOptions();
       this.getAllRequest()
     },
     methods: {
-      getAllRequest(){
+      //清空地址
+      changeLevel(){
+        this.createInfo.provinceCode = ''
+        this.createInfo.cityCode = ''
+        this.createInfo.districtCode = ''
+        this.createInfo.townCode = ''
+        this.createInfo.villageCode = ''
+      },
+      //获取部门级别
+      getLevelOptions() {
+        this.$request.get(`${this.$apiList.dept}/level`).then(res => {
+          this.levelOptions = res.data.data || []
+        })
+      },
+      getAllRequest() {
         this.$request.all([this.getAlreadyProvice()]).then(this.$request.spread((res1) => {
-          this.provinceOptions = res1.data.data ||[]
+          this.provinceOptions = res1.data.data || []
         }))
       },
       // 查看权限拥有的按钮
       handleCheckButton(type, data) {
-        if (type ==1){
+        if (type == 1) {
           this.handleCreateRole(data)
-        }else{
+        } else {
           this.handleCheckMember(data)
         }
       },
       //启用禁用
-      handleChangeStatus(data){
-        this.$confirm(`此操作将${data.enabled?'禁用':'启用'}该机构及其下属机构, 是否继续?`, "提示", {
+      handleChangeStatus(data) {
+        this.$confirm(`此操作将${data.enabled ? '禁用' : '启用'}该机构及其下属机构, 是否继续?`, "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         })
           .then(() => {
             let obj = {
-              id:data.id,
-              enable:!data.enabled
+              id: data.id,
+              enable: !data.enabled
             }
-            this.$request.put(`${this.$apiList.dept}/enable`,obj).then(res=>{
+            this.$request.put(`${this.$apiList.dept}/enable`, obj).then(res => {
               this.$message.success(res.data.msg);
               this.getDeptTree();
             })
@@ -841,6 +890,7 @@
       },
       // 查看部门详情
       handleNodeClick(data) {
+        this.rowData = data
         this.expandedKeys = [data.id]
         this.getDeptById(data.id);
       },
@@ -849,22 +899,43 @@
         this.parentDeptName = data.name;
         this.showInputDeptName = true;
         this.createInfo.pid = data.id;
-        this.createInfo.level = data.level+1
         this.expandedKeys = [data.id]
       },
       // 创建部门
       confirmCreate() {
         this.$refs['DeptRules'].validate(valid => {
           if (valid) {
+            debugger
+            let level = this.createInfo.level
+            if (level == 2 && this.createInfo.provinceCode == '') {
+              this.$message.error('请选择可用的地址')
+              return
+            }
+            if (level == 3 && (this.createInfo.provinceCode == '' || this.createInfo.cityCode == '')) {
+              this.$message.error('请选择可用的地址')
+              return
+            }
+            if (level == 4 && (this.createInfo.provinceCode == '' || this.createInfo.cityCode == ''|| this.createInfo.districtCode == '')) {
+              this.$message.error('请选择可用的地址')
+              return
+            }
+            if (level == 5 && (this.createInfo.provinceCode == '' || this.createInfo.cityCode == '' || this.createInfo.districtCode == '' || this.createInfo.townCode == '')) {
+              this.$message.error('请选择可用的地址')
+              return
+            }
+            if (level == 6 && (this.createInfo.provinceCode == '' || this.createInfo.cityCode == '' || this.createInfo.districtCode == '' || this.createInfo.townCode == '' ||this.createInfo.villageCode == '')) {
+              this.$message.error('请选择可用的地址')
+              return
+            }
             let data = this.formatFormDatas(this.createInfo)
             this.$request.post(this.$apiList.dept, data)
               .then(res => {
                 if (res.data.code == 200) {
                   this.$message.success(res.data.msg);
                 }
-                this.createInfo.level = 0
                 this.showInputDeptName = false;
                 this.createInfo = this._funs.emptyObj(this.createInfo);
+                this.createInfo.level = ''
                 this.getDeptTree();
               })
           }
@@ -872,20 +943,45 @@
       },
       // 确认修改部门信息
       confirmChange() {
-        let data = this.formatFormDatas(this.detailInfo)
-        this.$request
-          .put(this.$apiList.dept, data)
-          .then(res => {
-            if (res.data.code == 200) {
-              this.$message.success(res.data.msg);
+        this.$refs['DeptDetailRules'].validate(valid => {
+          if (valid) {
+            let level = this.detailInfo.level
+            if (level == 2 && this.detailInfo.provinceCode == '') {
+              this.$message.error('请选择可用的地址')
+              return
             }
-            this.detailInfo = this._funs.emptyObj(this.detailInfo);
-            this.checkType = true;
-            this.getDeptTree();
-          })
-          .catch(err => {
-            this.$message.error(err);
-          });
+            if (level == 3 && (this.detailInfo.provinceCode == '' || this.detailInfo.cityCode == '')) {
+              this.$message.error('请选择可用的地址')
+              return
+            }
+            if (level == 4 && (this.detailInfo.provinceCode == '' || this.detailInfo.cityCode == ''|| this.detailInfo.districtCode == '')) {
+              this.$message.error('请选择可用的地址')
+              return
+            }
+            if (level == 5 && (this.detailInfo.provinceCode == '' || this.detailInfo.cityCode == '' || this.detailInfo.districtCode == '' || this.detailInfo.townCode == '')) {
+              this.$message.error('请选择可用的地址')
+              return
+            }
+            if (level == 6 && (this.detailInfo.provinceCode == '' || this.detailInfo.cityCode == '' || this.detailInfo.districtCode == '' || this.detailInfo.townCode == '' ||this.detailInfo.villageCode == '')) {
+              this.$message.error('请选择可用的地址')
+              return
+            }
+            let data = this.formatFormDatas(this.detailInfo)
+            this.$request
+              .put(this.$apiList.dept, data)
+              .then(res => {
+                if (res.data.code == 200) {
+                  this.$message.success(res.data.msg);
+                }
+                this.detailInfo = this._funs.emptyObj(this.detailInfo);
+                this.checkType = true;
+                this.getDeptTree();
+              })
+              .catch(err => {
+                this.$message.error(err);
+              });
+          }
+        })
       },
       // 查询部门详情
       getDeptById(id) {
@@ -910,7 +1006,7 @@
             var data = res.data;
             if (data.code == 200) {
               this.deptTree = data.data || [];
-              this.handleNodeClick(data.data[0])
+              this.handleNodeClick(this.expandedKeys.length <= 0 ? data.data[0] : this.rowData)
             }
           })
       }
@@ -918,13 +1014,14 @@
   };
 </script>
 <style lang="scss" scoped>
-.dept{
-  & /deep/ .el-form-item__content{
-    width: 193px;
+  .dept {
+    & /deep/ .el-form-item__content {
+      width: 193px;
+    }
   }
-}
-  .searchInfo{
-    & /deep/ .el-form-item__content{
+
+  .searchInfo {
+    & /deep/ .el-form-item__content {
       width: 250px;
     }
   }
