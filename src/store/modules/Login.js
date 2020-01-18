@@ -105,7 +105,6 @@ export default {
             Array.prototype.push.apply(arr[0].children, res.data.data[0].children)
           }
           commit('setRouterTree', arr)
-          debugger
           permissionRouters(arr)
           setCacheInfo('ROUTERS_LIST', arr)
         })
