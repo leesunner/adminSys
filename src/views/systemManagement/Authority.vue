@@ -108,6 +108,7 @@
                <span class="custom-tree-node-title" :class="currentMenuId==data.id?'color':''">{{ node.label }}</span>
             </span>
           </el-tree>
+          <div style="rgb(96, 98, 102)" v-if="permissionMenuTreeButton<=0">请先获取菜单权限，再添加对应按钮权限</div>
         </el-col>
         <el-col :span="15">
           <el-row style="text-align:right;margin-top: 25px;">
@@ -425,7 +426,7 @@
             type: type
           }
         }).then(res => {
-          this.permissionMenuTreeButton = res.data.data;
+          this.permissionMenuTreeButton = res.data.data||[];
         })
       },
 

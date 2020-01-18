@@ -11,7 +11,7 @@
     components: {VueUeditorWrap},
     data() {
       return {
-        msg:"您可以点击富文本工具栏右上角的屏幕小标全屏编辑内容哦！",
+        msg:"",
         myConfig: {
           //外部的div不转P
           allowDivTransToP: false,

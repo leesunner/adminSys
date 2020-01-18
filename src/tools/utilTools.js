@@ -6,7 +6,7 @@ import CryptoJS from 'crypto-js'
 const key = '201991022019ndit';
 //加密偏移值
 const piv = 1234567876543210;
-
+import _session from '../tools/sessionTool'
 /**
  * 文件类型
  * @param 默认识别txt/word/xsml
@@ -33,16 +33,16 @@ export const checkEmail = (value) => {
  * 信息空校验
  * @param (_this:vue对象，data:数据校验对象)
  * */
-export const checkInfoEmpty = (_this,data = {}) => {
+export const checkInfoEmpty = (_this, data = {}) => {
   let control = false
   for (let item in data) {
-      if (!data[item]){
-        _this.$message.error(`${item}不能为空`)
-        control = false
-        break
-      }else{
-        control = true
-      }
+    if (!data[item]) {
+      _this.$message.error(`${item}不能为空`)
+      control = false
+      break
+    } else {
+      control = true
+    }
   }
   return control
 }
@@ -50,19 +50,63 @@ export const checkInfoEmpty = (_this,data = {}) => {
 /**
  * 加密
  */
-export const Encrypt = (val) => {
-  const message = CryptoJS.enc.Utf8.parse(val);
-  const secret_key = CryptoJS.enc.Utf8.parse(key);//key
-  const iv = CryptoJS.enc.Utf8.parse(piv);//偏移
-  // Encrypt
-  const ciphertext = CryptoJS.AES.encrypt(message, secret_key, {
-    iv: iv,
-    mode: CryptoJS.mode.CBC,
-    padding: CryptoJS.pad.Pkcs7
+export const Encrypt = (val) => {
+  if(typeof val =='object'){
+    val = JSON.stringify(val)
+  }
+  const message = CryptoJS.enc.Utf8.parse(val);
+  const secret_key = CryptoJS.enc.Utf8.parse(key);//key
+  const iv = CryptoJS.enc.Utf8.parse(piv);//偏移
+  // Encrypt
+  const ciphertext = CryptoJS.AES.encrypt(message, secret_key, {
+    iv: iv,
+    mode: CryptoJS.mode.CBC,
+    padding: CryptoJS.pad.Pkcs7
   });
-  return CryptoJS.enc.Base64.stringify(ciphertext.ciphertext)
+  return CryptoJS.enc.Base64.stringify(ciphertext.ciphertext)
+}
+/**
+ * 解密
+ * */
+export const Decrypt = (val) => {
+  const secret_key = CryptoJS.enc.Utf8.parse(key);
+  const iv = CryptoJS.enc.Utf8.parse(piv);
+  const ciphertext = CryptoJS.AES.decrypt(val, secret_key, {
+    iv: iv,
+    mode: CryptoJS.mode.CBC,
+    padding: CryptoJS.pad.Pkcs7
+  });
+  return ciphertext.toString(CryptoJS.enc.Utf8)
+}
+/**
+ * 获取本地缓存加密信息
+ * 
+*/
+export const getCacheInfo = (str) => {
+  let info = _session.getLocalStorage(Encrypt(str)), resultInfo;
+  if (info) {
+    resultInfo = Decrypt(info)
+  }
+  let test = /[\[\]{}]/g
+  if(test.test(resultInfo)){
+    return JSON.parse(resultInfo)
+  }else{
+    return resultInfo
+  }
 }
 
+/**
+ * 存放本地缓存加密信息
+ * @param name:要存放进缓存的key；data：数据对象；type：local/session
+ * 
+*/
+export const setCacheInfo = (name, data, type = 'local') => {
+  if (type === 'local') {
+    _session.setLocalStorage(Encrypt(name), Encrypt(data));//加密
+  } else {
+    _session.setSession(Encrypt(name), Encrypt(data));//加密
+  }
+}
 /**
  * 清空对象的所有属性的值
  */

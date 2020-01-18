@@ -189,7 +189,7 @@
           hideStatus: false, //隐藏
         },
         headers: {
-          'Authorization': `Bearer ${this._session.getSessoin('AUTH_TOKEN')}`
+          'Authorization': `Bearer ${this._funs.getCacheInfo('AUTH_TOKEN')}`
         },
         detailInfo:{},
         dialogVisible: false,

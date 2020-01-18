@@ -30,6 +30,11 @@
           <span>{{scope.row.createTime | formatTime}}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="createTime" label="是否已读">
+        <template v-slot="scope">
+          <el-link :underline="false" :type="scope.row.readStatus?'danger':'success'">{{scope.row.readStatus?'未读':'已读'}}</el-link>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="100">
         <template v-slot="scope">
           <el-button

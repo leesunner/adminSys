@@ -6,10 +6,11 @@
           <el-form-item>
             <el-input v-model="searchData.title" clearable placeholder="输入标题名"></el-input>
           </el-form-item>
-          <el-form-item label="所属站点" prop="siteId">
+          <el-form-item>
           <el-select
             v-model="searchData.siteId"
             filterable
+            clearable
             remote
             reserve-keyword
             placeholder="请输入所属站点关键字"
@@ -23,9 +24,10 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所属栏目" prop="categoryId">
+        <el-form-item>
           <el-cascader
             v-model="searchData.categoryId"
+            @change="changeVal"
             :options="columnOptions"
             :props="{
             value:'id',
@@ -33,6 +35,38 @@
             emitPath: false,
             checkStrictly: true}"
             clearable></el-cascader>
+        </el-form-item>
+          <el-form-item>
+          <el-select
+            v-model="searchData.type"
+            filterable
+            clearable
+            remote
+            reserve-keyword
+            placeholder="请选择专题分类">
+            <el-option
+              v-for="item in _config.dict_wordType"
+              :key="item.key"
+              :label="item.value"
+              :value="item.key">
+            </el-option>
+          </el-select>
+        </el-form-item>
+          <el-form-item>
+          <el-select
+            v-model="searchData.auditStatus"
+            filterable
+            clearable
+            remote
+            reserve-keyword
+            placeholder="请选择审核状态">
+            <el-option
+              v-for="item in _config.dict_auditStatus"
+              :key="item.key"
+              :label="item.value"
+              :value="item.key">
+            </el-option>
+          </el-select>
         </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="getListByPage" v-if="buttonControl[_config.buttonCode.B_LIST]" icon="el-icon-search">查询</el-button>
@@ -185,6 +219,8 @@
           pageNum: 1,
           siteId:'',
           categoryId:'',
+          auditStatus:'',
+          type:'',
         },
 
         //站点查询
@@ -220,11 +256,18 @@
       }
     },
     created(){
-      // this.getListByPage()
+      this.getListByPage()
       this.getColumnTree()
       this.getSites()
     },
     methods:{
+      changeVal(val){
+        if (val!=null){
+          this.searchData.categoryId = val
+        }else{
+          this.searchData.categoryId = ''
+        }
+      },
       //关闭
       close(val){
         this.showCreate = false
@@ -270,10 +313,9 @@
       },
       //获取文章列表
       getListByPage(){
-        if (!this.searchData.siteId){
-          this.$message.warning('请先选中一个站点')
-          return
-        }
+        this.getList()
+      },
+      getList(){
         this.$request.get(`${this.$apiList.article}/page`,{
           params:this.searchData
         }).then(res=>{

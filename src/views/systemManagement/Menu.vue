@@ -284,7 +284,7 @@
       //刷新导航树
       refreshTree() {
         //修改后同步
-        this._session.setSession('ROUTERS_LIST', [])
+        this._funs.setCacheInfo('ROUTERS_LIST', [])
         this.$store.login.state.ROUTERS_LIST = []
         this.$store.dispatch('routerTree')
       },

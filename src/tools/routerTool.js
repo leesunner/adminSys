@@ -6,7 +6,9 @@ const arr = []
 export const permissionRouters = function(datas){
   let arr = dataRecursion(datas)
   //合并分离后的路由信息
-  Array.prototype.push.apply( arr[0].children, arr.splice(1,arr.length));
+  if (arr[0].children){
+    Array.prototype.push.apply( arr[0].children, arr.splice(1,arr.length));
+  }
   router.addRoutes(arr)
 }
 //将所有路由信息父子分离，并存放在数组中

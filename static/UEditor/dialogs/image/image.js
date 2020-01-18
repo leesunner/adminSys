@@ -704,7 +704,7 @@
             uploader.on('uploadBeforeSend', function (file, data, header) {
                 //这里可以通过data对象添加POST参数
                 header['X_Requested_With'] = 'XMLHttpRequest';
-                header['Authorization']= "Bearer "+ window.sessionStorage.getItem('AUTH_TOKEN');
+                header['Authorization']= "Bearer "+ window.sessionStorage.getItem('8XFv4Xiokm/dG5ptFEGvTA==');
                 // HaoChuan9421
                 if(editor.options.headers && Object.prototype.toString.apply(editor.options.headers) === "[object Object]"){
                     for(var key in editor.options.headers){

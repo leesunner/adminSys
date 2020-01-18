@@ -1,6 +1,7 @@
 import request from '@/request';
 //引入接口列表
 import {apiList} from "@/request/api/apiList";
+import {setCacheInfo,getCacheInfo} from '../../tools/utilTools';
 import _session from '../../tools/sessionTool';
 import router from '../../router';
 import {Notification} from 'element-ui';
@@ -39,9 +40,9 @@ export default {
             offset:35,
           })
           //设置登录时间（用来限制菜单树刷新页面接口的频繁请求）
-          _session.setLocalStorage('LOGIN_TIME', new Date().getTime())
-          _session.setLocalStorage('USER_INFO', res.data.data)
-          _session.setLocalStorage('AUTH_TOKEN', res.data.data.accessToken)
+          setCacheInfo('LOGIN_TIME', new Date().getTime())
+          setCacheInfo('USER_INFO', res.data.data)
+          setCacheInfo('AUTH_TOKEN', res.data.data.accessToken)
           commit('setUserInfo', res.data.data)
           return dispatch('routerTree')
         }
@@ -57,9 +58,9 @@ export default {
             offset:35,
           })
           //设置登录时间
-          _session.setLocalStorage('LOGIN_TIME', new Date().getTime())
-          _session.setLocalStorage('AUTH_TOKEN', res.data.data.accessToken)
-          _session.setLocalStorage('USER_INFO', res.data.data)
+          setCacheInfo('LOGIN_TIME', new Date().getTime())
+          setCacheInfo('AUTH_TOKEN', res.data.data.accessToken)
+          setCacheInfo('USER_INFO', res.data.data)
           commit('setUserInfo', res.data.data)
           return dispatch('routerTree')
         }
@@ -77,25 +78,25 @@ export default {
     //获取路由树
     routerTree({dispatch, commit, state}) {
       //为了刷新时正确使用数据
-      let userInfo = _session.getLocalStorage('USER_INFO')
-      let tree = _session.getLocalStorage('ROUTERS_LIST')
+      let userInfo = getCacheInfo('USER_INFO')
+      let tree = getCacheInfo('ROUTERS_LIST')
       if (userInfo){
         //新开页面保持登录信息
-        let token = _session.getLocalStorage('AUTH_TOKEN')
-        _session.setSession('AUTH_TOKEN',token)
+        let token = getCacheInfo('AUTH_TOKEN')
+        setCacheInfo('AUTH_TOKEN',token)
         commit('setUserInfo', userInfo)
       }
       //获取之前登录的时间
-      let time = _session.getLocalStorage('LOGIN_TIME'),nowTime = new Date().getTime();
+      let time = getCacheInfo('LOGIN_TIME'),nowTime = new Date().getTime();
       //1800000ms=30分钟
       if (nowTime-time>1800000){
-        _session.setLocalStorage('ROUTERS_LIST',null)
-        tree = _session.getLocalStorage('ROUTERS_LIST')
+        setCacheInfo('ROUTERS_LIST',null)
+        tree = getCacheInfo('ROUTERS_LIST')
       }
       //超过半小时的 刷新重新请求接口
-      if (!tree){
+      if (!tree||tree == 'null'){
         //需要重新获取数据后，重置时间
-        _session.setLocalStorage('LOGIN_TIME', new Date().getTime())
+        setCacheInfo('LOGIN_TIME', new Date().getTime())
         return request.get(`${apiList.menu}/user`).then(res => {
           //导入菜单公共页面路由
           const arr = menuRouter
@@ -104,8 +105,9 @@ export default {
             Array.prototype.push.apply(arr[0].children, res.data.data[0].children)
           }
           commit('setRouterTree', arr)
+          debugger
           permissionRouters(arr)
-          _session.setLocalStorage('ROUTERS_LIST', arr)
+          setCacheInfo('ROUTERS_LIST', arr)
         })
       }else{
         commit('setRouterTree', tree)

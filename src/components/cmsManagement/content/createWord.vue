@@ -174,7 +174,7 @@
       return {
         dialogVisible:false,
         headers: {
-          'Authorization': `Bearer ${this._session.getSessoin('AUTH_TOKEN')}`
+          'Authorization': `Bearer ${this._funs.getCacheInfo('AUTH_TOKEN')}`
         },
         tabActiveName: 'first',
         //站点查询

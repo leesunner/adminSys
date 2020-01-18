@@ -9,9 +9,22 @@
       <div class="header-right">
         <span class="el-dropdown-link">
           <!-- 通知中心 -->
-          <el-badge :value="1" :max="99" class="item">
-            <i class="aloneIcon el-icon-bell"></i>
-          </el-badge>
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              <el-badge :value="noticeNum" :max="99" class="item" :hidden="noticeNum<=0">
+                <i class="aloneIcon el-icon-bell"></i>
+              </el-badge>
+            </span>
+          <el-dropdown-menu slot="dropdown">
+           <el-dropdown-item v-for="item in  noticeList" :key="item.name" @click.native="goPage(item.type)" v-if="noticeList.length>0">
+              <span>{{item.name}}:</span>
+              <span>{{item.count}}条未处理</span>
+           </el-dropdown-item>
+            <el-dropdown-item v-else>
+              <span>您暂无任何消息！</span>
+           </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
         </span>
         <el-dropdown>
             <span class="el-dropdown-link">
@@ -37,13 +50,32 @@
     data() {
       return {
         userInfo: {},
-        time: this.timeString()
+        time: this.timeString(),
+        noticeList:[],
+        noticeNum:0,
       }
     },
     created() {
       this.userInfo = this.$store.state.login.USER_INFO
+      this.getNoticeInfo()
     },
     methods: {
+      goPage(type){
+        if (type == 1){
+          this.$router.push('/feedBack')
+        }else{
+          this.$router.push('/myWaitForMatters')
+        }
+      },
+      //获取消息信息
+      getNoticeInfo(){
+        this.$request.get(`${this.$apiList.user}/message`).then(res =>{
+            this.noticeList = res.data.data||[]
+            this.noticeList.forEach(item=>{
+              this.noticeNum+=item.count
+            })
+        })
+      },
       // 修改密码
       goUserInfo() {
         this.$router.push('currentUserInfo');

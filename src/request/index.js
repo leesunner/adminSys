@@ -1,5 +1,6 @@
 import axios from 'axios'
 import _session from '../tools/sessionTool'
+import {setCacheInfo,getCacheInfo} from '../tools/utilTools';
 import {Loading, Message} from 'element-ui';
 import router from '../router';
 import url from './api/realmnUrl'
@@ -30,7 +31,7 @@ function open() {
 axios.interceptors.request.use(config => {
   open()
   config.headers['requestOrigin'] = 1//识别登录方式（pc）
-  const TOKEN = _session.getSessoin('AUTH_TOKEN')
+  const TOKEN = getCacheInfo('AUTH_TOKEN')
   if (!(TOKEN == 'undefined' || !TOKEN)) {
     config.headers['Authorization'] = `Bearer ${TOKEN}`
   }
