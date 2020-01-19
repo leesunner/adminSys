@@ -42,8 +42,8 @@
       :preview-src-list="srcList">
     </el-image>
     <el-dialog title="部署工作流" :visible.sync="showCreateFlow" width="685px">
-      <el-form inline :model="formData" size="mini">
-        <el-form-item label="选择菜单" label-width="96px">
+      <el-form :model="formData" size="mini">
+        <el-form-item label="选择菜单" required label-width="96px">
           <el-select v-model="formData.menuCode" placeholder="请选择菜单">
             <el-option
               v-for="(item,index) of menuSelect"
@@ -53,7 +53,25 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="上传文件"  label-width="96px">
+        <el-form-item label="导航图标" required label-width="96px">
+          <el-upload
+            :action="$baseUrl+$apiList.fileUpload"
+            :data="{businessFileType:6}"
+            :on-success="handleAvatarSuccessIcon"
+            :on-error="handleAvatarError"
+            :before-upload="beforeAvatarUploadIcon"
+            :on-remove="handleRemoveIcon"
+            list-type="picture-card"
+            :limit="1"
+            :headers="headers"
+            :auto-upload="true">
+            <i class="el-icon-plus"></i>
+          </el-upload>
+          <el-row style="padding-left: 12px;font-size: 12px;color: #f56c6c;">
+            * 上传菜单图标限制一张
+          </el-row>
+        </el-form-item>
+        <el-form-item label="上传文件" required label-width="96px">
           <el-upload
             :action="`${$baseUrl+$apiList.workFlow}/deploymentZip`"
             :data="formData"
@@ -120,6 +138,7 @@
         },
         formData:{
           menuCode:'',
+          icon:'',
         },
         fileList:[],
       }
@@ -159,6 +178,10 @@
           this.$message.error('请先选择要部署的事务项')
           return
         }
+        if (this.icon==''){
+          this.$message.error('请先上传导航图标')
+          return
+        }
         if (this.fileList.length<=0){
           this.$message.error('请先选择要部署的文件')
           return
@@ -188,6 +211,30 @@
       handleAvatarError(err) {
         this.$message.error('上传发生错误')
       },
+      //上传成功回调
+      handleAvatarSuccessIcon(res, file) {
+        if (res.code == 200) {
+          this.formData.icon = res.data
+        } else {
+          this.$message.error(res.msg)
+        }
+      },
+      //上传拦截
+      beforeAvatarUploadIcon(file) {
+        if (!(file.type=='image/png'||file.type=='image/jpeg')){
+          this.$message.error('上传文件类型错误');
+          return false
+        }
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) {
+          this.$message.error('上传图片大小不能超过 2MB!');
+        }
+        return isLt2M;
+      },
+      //删除图片
+      handleRemoveIcon(file) {
+        this.formData.icon = ''
+      },
     }
   }
 </script>
@@ -205,6 +252,11 @@
       font-size: 12px;
       color: #f56c6c;
       margin-top: 18px;
+    }
+    & /deep/ .el-upload--picture-card, /deep/ .is-success{
+      width: 90px;
+      height: 90px;
+      line-height: 90px;
     }
   }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="dept">
     <!-- 添加子部门输入部门名称弹窗 -->
-    <el-dialog :title="`您将在《${parentDeptName}》下添加下级机构`" :visible.sync="showInputDeptName">
+    <el-dialog :title="`您将在《${parentDeptName}》下添加下级机构`" :visible.sync="showInputDeptName" width="715px">
       <el-form :model="createInfo" size="mini" label-width="120px" inline :rules="DeptRules" ref="DeptRules">
         <el-form-item label="名称" prop="name">
           <el-input v-model="createInfo.name" clearable placeholder="请输入名称"></el-input>
@@ -102,7 +102,7 @@
                  node-key="id"
                  accordion
                  :props="defaultProps">
-          <span class="custom-tree-node" slot-scope="{ node, data }">
+          <span class="custom-tree-node" slot-scope="{ node, data }" @click.stop.prevent="handleNodeClick(data)">
             <el-tooltip class="item" effect="dark" :content="node.label" placement="right">
               <span class="custom-tree-node-title">{{ node.label }}</span>
             </el-tooltip>
@@ -277,7 +277,7 @@
       </el-col>
     </el-row>
     <!-- 查看角色列表弹窗 -->
-    <el-dialog :title="`角色列表：${rowData.name}`" :visible.sync="dialogTableRoleVisible">
+    <el-dialog :title="`角色列表：${rowData.name}`" :visible.sync="dialogTableRoleVisible" width="715px">
       <el-table :data="userGroupRoleDetail.list"
                 size="mini"
                 ref="multipleTable"
@@ -297,6 +297,7 @@
       <el-dialog
         :title="`添加角色：${rowData.name}`"
         append-to-body
+        width="715px"
         :visible.sync="showEditorUserGroupRoleDetail"
       >
         <el-table
@@ -340,7 +341,7 @@
       </div>
     </el-dialog>
     <!-- 查看用户组成员列表弹窗 -->
-    <el-dialog :title="`成员列表：${rowData.name}`" :visible.sync="showUserGroupMemberDetail">
+    <el-dialog :title="`成员列表：${rowData.name}`" :visible.sync="showUserGroupMemberDetail" width="815px">
       <el-form inline size="mini" :model="userSearchData">
         <span class="searchInfo">
           <el-form-item>
@@ -354,9 +355,14 @@
       </el-form>
       <el-table :data="userGroupMemberDetail.list || []" size="mini" border style="width: 100%">
         <el-table-column type="index" label="序号" width="50"></el-table-column>
-        <el-table-column prop="username" label="账号名"></el-table-column>
-        <el-table-column prop="realName" label="真实名"></el-table-column>
-        <el-table-column prop="telephone" label="手机号"></el-table-column>
+        <el-table-column prop="username" label="账号名" width="105px"></el-table-column>
+        <el-table-column prop="realName" label="真实名" width="105px"></el-table-column>
+        <el-table-column prop="telephone" label="手机号" width="105px"></el-table-column>
+        <el-table-column prop="telephone" label="角色信息">
+          <template v-slot="scope">
+            <p v-for="item in scope.row.roleList" v-if="scope.row.roleList">{{`${item.roleName}：${item.roleCode}`}}</p>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="90">
           <template v-slot="scope">
             <el-button type="danger"
@@ -368,6 +374,7 @@
         </el-table-column>
       </el-table>
       <el-dialog
+        width="715px"
         :title="`添加成员：${rowData.name}`"
         append-to-body
         :visible.sync="showEditorUserGroupMemberDetail"
@@ -385,7 +392,7 @@
         </el-form>
         <el-table
           ref="noMemberTable"
-          row-key="userId"
+          row-key="id"
           :data="userGroupNoMemberDetail.list || []"
           style="width: 100%"
           border
@@ -771,6 +778,7 @@
       },
       // 可添加成员勾选结果
       handleSelectionMemberChange(val) {
+        console.log(val)
         this.selectMemberArr = val;
       },
       // 移除人员
@@ -896,6 +904,7 @@
       },
       // 点击添加子部门
       handleCreate(data) {
+        this.rowData = data
         this.parentDeptName = data.name;
         this.showInputDeptName = true;
         this.createInfo.pid = data.id;
