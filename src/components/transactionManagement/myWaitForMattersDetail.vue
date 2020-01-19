@@ -220,7 +220,7 @@
         const obj = this.formData;
         let arr ;
         for (let i in obj){
-          if (obj[i].formType==type){
+          if (obj[i].formType==type&&obj[i].value<=0){
             arr = obj[i].value
             break;
           }
