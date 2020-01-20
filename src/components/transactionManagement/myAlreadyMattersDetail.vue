@@ -8,15 +8,21 @@
       <el-form-item :label="val.formTitle" v-for="(val,item,index) in formData"
                     :key="val.formId">
         <el-input
-          v-if="val.formType ==='label'"
+          v-if="val.formType ==='lLabel'"
           disabled
           :autosize="{ minRows: 2, maxRows: 4}"
           :placeholder="`输入${val.formTitle}`"
           type="textarea"
           v-model="formData[item].value">
         </el-input>
+        <el-input
+          v-if="val.formType ==='label'"
+          disabled
+          :placeholder="`输入${val.formTitle}`"
+          v-model="formData[item].value">
+        </el-input>
         <el-upload
-          v-if="val.formType ==='file'"
+          v-if="val.formType ==='fileDownload'"
           action=""
           disabled
           :on-preview="handleDownLoad"
@@ -24,7 +30,7 @@
           点击对应文件下载
         </el-upload>
         <el-upload
-          v-if="val.formType ==='image'"
+          v-if="val.formType ==='imageShow'"
           action=""
           :on-preview="handlePictureCardPreview"
           list-type="picture-card"
@@ -87,7 +93,7 @@
       },
       //新建对象(obj:新数据对象，item:数据复制对象，)
       newObject(obj, item) {
-        const type = item.formType=='image'||item.formType=='file'
+        const type = item.formType=='imageShow'||item.formType=='fileDownload'
         obj[item.formId] = {
           value: type?this.getJsonArr(item.formDefaultValue):item.formDefaultValue,
           formType: item.formType,

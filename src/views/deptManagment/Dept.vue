@@ -97,7 +97,7 @@
         <el-tree :data="deptTree"
                  class="filter-tree"
                  :filter-node-method="filterNode"
-                 ref="tree"
+                 ref="tree" :accordion="true"
                  :default-expanded-keys="expandedKeys"
                  node-key="id"
                  accordion

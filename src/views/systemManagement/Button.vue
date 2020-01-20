@@ -30,7 +30,7 @@
         <el-tree
           :default-expanded-keys="[1,2]"
           node-key="id"
-          class="filter-tree"
+          class="filter-tree" :accordion="true"
           :filter-node-method="filterNode"
           ref="tree"
           :data="menuTreeData"

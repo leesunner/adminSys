@@ -55,7 +55,7 @@
           <el-tree :data="deptTree"
                    class="filter-tree"
                    :filter-node-method="filterNode"
-                   ref="tree"
+                   ref="tree" :accordion="true"
                    default-expand-all
                    :props="defaultProps">
           <span class="custom-tree-node" slot-scope="{ node, data }"

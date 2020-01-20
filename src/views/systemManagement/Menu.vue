@@ -80,7 +80,7 @@
           node-key="id"
           class="filter-tree"
           :filter-node-method="filterNode"
-          ref="tree"
+          ref="tree" :accordion="true"
           :data="menuTreeData"
           :props="defaultProps"
           highlight-current

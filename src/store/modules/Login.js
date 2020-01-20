@@ -107,6 +107,7 @@ export default {
           commit('setRouterTree', arr)
           permissionRouters(arr)
           setCacheInfo('ROUTERS_LIST', arr)
+          return Promise.resolve(res)
         })
       }else{
         commit('setRouterTree', tree)

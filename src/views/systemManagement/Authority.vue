@@ -101,6 +101,7 @@
             :data="permissionMenuTreeButton"
             :default-expanded-keys="[1]"
             ref="tree"
+            :accordion="true"
             node-key="id"
             :props="menuDefaultProps"
           >
@@ -177,6 +178,7 @@
         show-checkbox
         :default-expanded-keys="[1]"
         ref="tree"
+        :accordion="true"
         node-key="id"
         :default-checked-keys="checkedNode"
         :props="menuDefaultProps"
