@@ -335,7 +335,8 @@
       confirmMenu(checked) {
         this.$request.put(this.$apiList.menu + "/all/tree/permission", {
           permissionId: this.rowData.id,
-          resourceIds: checked
+          resourceIds: checked,
+          type:this.platType,
         })
           .then(res => {
             if (res.data.code == 200) {
@@ -472,7 +473,8 @@
           .put(this.$apiList.button + "/permission", {
             permissionId: this.rowData.id,
             menuId: this.currentMenuId,
-            resourceIds: this.checkedButtonPermissions
+            resourceIds: this.checkedButtonPermissions,
+            type:this.platType,
           })
           .then(res => {
             if (res.data.code == 200) {

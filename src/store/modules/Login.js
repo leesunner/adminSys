@@ -94,7 +94,7 @@ export default {
         tree = null
       }
       //超过半小时的 刷新重新请求接口
-      if (!tree||tree.length<= 0){
+      if (!tree||tree=='null'||tree.length<= 0){
         //需要重新获取数据后，重置时间
         setCacheInfo('LOGIN_TIME', new Date().getTime())
         return request.get(`${apiList.menu}/user`).then(res => {

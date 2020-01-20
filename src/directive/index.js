@@ -7,7 +7,6 @@ Vue.directive('buttonP', {
     if (PERMISSION){
       if (PERMISSION.length>0){
         for (let i = 0; i < PERMISSION.length; i++) {
-          console.log('--------------')
           if (PERMISSION[i].buttonCode === binding.value) {
             //查到在按钮权限中，优化代码直接打断循环
             break
