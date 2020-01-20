@@ -85,7 +85,7 @@
           :props="defaultProps"
           highlight-current
         >
-          <span class="custom-tree-node" slot-scope="{ node, data }">
+          <span class="custom-tree-node" slot-scope="{ node, data }"  @click.stop.prevent="() => handleNodeClick(data)">
             <span class="custom-tree-node-title">{{ node.label }}</span>
             <span style="display: inline-block;width: 280px;text-align: left;">
               <el-button
@@ -236,7 +236,8 @@
         rules: {
           menuName: [{required: true, message: '请输入菜单名', trigger: 'blur'}],
           parentId: [{required: true, message: '请选择所属菜单', trigger: 'blur'}],
-        }
+        },
+        rowData:{},
       };
     },
     mounted() {
@@ -245,6 +246,7 @@
     methods: {
       // 点击查看按钮
       handleNodeClick(data) {
+        this.rowData = data
         this.getMenuById(data.id);
         this.showMenuButton = true;
       },
@@ -327,9 +329,10 @@
                   this.$message.success(res.data.msg);
                   this.showMenuButton = false;
                   this.checkType = true;
+                  this.expandedKeys = [this.menuDetail.id]
                   this.getMenuTree();
                   this.refreshTree()
-                  this.expandedKeys = [this.menuDetail.id]
+
                 })
             }else{
               this.$message.success('请先选择菜单');
@@ -369,7 +372,7 @@
             var data = res.data;
             if (data.code == 200) {
               this.menuTreeData = data.data || [];
-              this.handleNodeClick(data.data[0])
+              this.handleNodeClick(this.expandedKeys.length <= 0 ? data.data[0] : this.rowData)
             }
           })
       }
