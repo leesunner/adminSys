@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row>
-      <el-radio-group v-model="checkBoxType" size="small" @change="getMenuTree">
+      <el-radio-group v-model="checkBoxType" size="small" @change="getMenuTree('tab')">
         <el-radio-button :label="1">管理端</el-radio-button>
         <el-radio-button :label="2">展示端</el-radio-button>
       </el-radio-group>
@@ -197,7 +197,7 @@
     mixins: [mixin, treeMixin],
     data() {
       return {
-        expandedKeys:[1,2],
+        expandedKeys:[],
         dialogVisible: false,//创建弹框
         num: 0,
         checkBoxType: 1,
@@ -241,11 +241,12 @@
       };
     },
     mounted() {
-      this.getMenuTree();
+      this.getMenuTree('tab');
     },
     methods: {
       // 点击查看按钮
       handleNodeClick(data) {
+        this.expandedKeys = [data.id]
         this.rowData = data
         this.getMenuById(data.id);
         this.showMenuButton = true;
@@ -292,6 +293,7 @@
       },
       //添加创建弹框
       showDialogCreate(data) {
+        this.rowData = data
         this.createMenu.parentId = data.id
         this.createMenu.type = parseInt(this.checkBoxType)
         this.createMenu.level = data.level + 1
@@ -331,8 +333,7 @@
                   this.checkType = true;
                   this.expandedKeys = [this.menuDetail.id]
                   this.getMenuTree();
-                  this.refreshTree()
-
+                  // this.refreshTree()
                 })
             }else{
               this.$message.success('请先选择菜单');
@@ -365,14 +366,14 @@
           });
       },
       // 查询菜单树结构
-      getMenuTree() {
+      getMenuTree(val) {
         this.$request
           .get(this.$apiList.menu + "/all/tree/" + this.checkBoxType)
           .then(res => {
             var data = res.data;
             if (data.code == 200) {
               this.menuTreeData = data.data || [];
-              this.handleNodeClick(this.expandedKeys.length <= 0 ? data.data[0] : this.rowData)
+              this.handleNodeClick(val =='tab'? data.data[0] : this.rowData)
             }
           })
       }

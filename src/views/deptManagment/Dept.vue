@@ -778,7 +778,6 @@
       },
       // 可添加成员勾选结果
       handleSelectionMemberChange(val) {
-        console.log(val)
         this.selectMemberArr = val;
       },
       // 移除人员
