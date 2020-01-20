@@ -99,7 +99,7 @@
         <el-col :span="9">
           <el-tree
             :data="permissionMenuTreeButton"
-            :default-expanded-keys="[1]"
+            :default-expanded-keys="[1,2]"
             ref="tree"
             :accordion="true"
             node-key="id"
