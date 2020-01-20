@@ -176,7 +176,7 @@
       <el-tree
         :data="permissionMenuTreeData"
         show-checkbox
-        :default-expanded-keys="[1]"
+        :default-expanded-keys="[1,2]"
         ref="tree"
         :accordion="true"
         node-key="id"
@@ -294,6 +294,8 @@
       },
       // 查看权限拥有的按钮
       handleCheckButton(type, row) {
+        this.buttonPermissions = []
+        this.buttonPermissionsControl = false
         this.platType = type
         this.showPermissionButtonTree = true;
         this.checkType = true;
