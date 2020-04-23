@@ -29,6 +29,7 @@ router.beforeEach((to, from, next) => {
         //其它未登录的都跳登录
         next('/login')
       }
+      NProgress.done()
     }
   } else {
     //已登录（或已登录刷新）
@@ -51,6 +52,7 @@ router.beforeEach((to, from, next) => {
       if(to.path==='/login'||to.path==='/'){
         clearLocalData()
         location.reload()
+        NProgress.done()
       }else{
         //更新每次停留的路由信息
         let data = {url:to.path,menuName:to.name}

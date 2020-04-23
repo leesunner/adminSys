@@ -53,7 +53,8 @@ axios.interceptors.request.use(config => {
 //响应拦截器
 axios.interceptors.response.use(res => {
   close()
-  if (res.headers['content-type'] !== undefined && res.headers['content-type'].indexOf('image') > -1) {
+  console.log(res.headers['content-type'])
+  if (res.headers['content-type'] !== undefined && (res.headers['content-type'].indexOf('image') > -1||res.headers['content-type'].indexOf('xml')>-1)) {
     //获取系统中图片时，文件流传递过来做的拦截
     return res
   }

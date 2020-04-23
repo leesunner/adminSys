@@ -48,4 +48,6 @@ export default {
     B_DETAIL_COLUMN:'B_DETAIL_COLUMN',//站点已拥有的栏目
     B_ALL_COLUMN:'B_ALL_COLUMN',//站点所有的栏目
     B_SUBMIT_COLUMN:'B_SUBMIT_COLUMN',//给站点分配栏目
+    //工作流下载文件
+    B_DOWNLOAD:'B_DOWNLOAD'
 }

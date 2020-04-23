@@ -9,7 +9,7 @@
           <el-input v-model="searchData.defKey" clearable placeholder="工作流Key"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="getPageList" icon="el-icon-search" v-if="buttonControl[_config.buttonCode.B_LIST]">查询</el-button>
+          <el-button type="primary" @click="searchInfo" icon="el-icon-search" v-if="buttonControl[_config.buttonCode.B_LIST]">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="showCreateFlow = true" icon="el-icon-plus" v-if="buttonControl[_config.buttonCode.B_CREATE]">部署工作流</el-button>
@@ -19,10 +19,11 @@
     <!-- 列表表格 -->
     <el-table size="mini" :data="tableData.list" border style="width: 100%">
       <el-table-column prop="procDefId" label="流程定义ID"></el-table-column>
-      <el-table-column prop="name" label="流程名称"></el-table-column>
+      <el-table-column prop="simpleName" label="流程简称"></el-table-column>
+      <el-table-column prop="longName" label="流程全称"></el-table-column>
       <el-table-column prop="defKey" label="流程Key"></el-table-column>
       <el-table-column prop="deployTime" label="流程部署时间"></el-table-column>
-      <el-table-column label="操作" width="96px">
+      <el-table-column label="操作" width="240px">
         <template v-slot="scope">
           <el-button
             type="primary"
@@ -31,6 +32,14 @@
             v-if="buttonControl[_config.buttonCode.B_DETAIL]"
             @click="handleCheck(scope.row)"
           >查看
+          </el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-view"
+            v-if="buttonControl[_config.buttonCode.B_DOWNLOAD]"
+            @click="handleDownloadCheck(scope.row)"
+          >下载部署文件
           </el-button>
         </template>
       </el-table-column>
@@ -41,6 +50,19 @@
       lazy
       :preview-src-list="srcList">
     </el-image>
+    <!-- 分页 -->
+    <el-pagination
+      background
+      class="pagination"
+      layout="total, sizes, prev, pager, next"
+      :total="tableData.total"
+      :page-sizes="_config.sizeArr"
+      :page-size="searchData.pageSize"
+      :current-page="searchData.pageNum"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    ></el-pagination>
+    <!--工作流弹窗-->
     <el-dialog title="部署工作流" :visible.sync="showCreateFlow" width="685px">
       <el-form :model="formData" size="mini">
         <el-form-item label="选择菜单" required label-width="96px">
@@ -52,6 +74,12 @@
               :value="item.key"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="流程简称" required label-width="96px">
+          <el-input v-model="formData.simpleName" clearable placeholder="工作流简称"></el-input>
+        </el-form-item>
+        <el-form-item label="流程全称" required label-width="96px">
+          <el-input v-model="formData.longName" clearable placeholder="工作流全称"></el-input>
         </el-form-item>
         <el-form-item label="导航图标" required label-width="96px">
           <el-upload
@@ -126,7 +154,7 @@
           }
         ],
         searchData: {
-          //用户列表查询条件
+          //列表查询条件
           pageNum: 1,
           pageSize: this._config.sizeArr[0],
           name: "",
@@ -147,17 +175,49 @@
       this.getPageList()
     },
     methods: {
+      //条件查询
+      searchInfo(){
+        this.searchData.pageNum = 1
+        this.getPageList()
+      },
       //  获取已部署的工作流
       getPageList() {
-        this.$request.get(`${this.$apiList.workFlow}/deploy`).then(res => {
+        this.$request.get(`${this.$apiList.workFlow}/deploy`,{
+          params:this.searchData
+        }).then(res => {
           this.tableData = res.data.data
         })
+      },
+      // 翻页
+      handleCurrentChange(val) {
+        this.searchData.pageNum = val;
+        this.getPageList();
+      },
+      // 修改每页显示数量
+      handleSizeChange(val) {
+        this.searchData.pageSize = val;
+        this.getPageList();
       },
       //查看流程
       handleCheck(data) {
         this.srcList = []
         const url = this.$baseUrl + this.$gateway + data.procImgUrl
         this.checkImg(url)
+      },
+      //下载 Bpmn文件
+      handleDownloadCheck(data){
+        this.$request.get(this.$baseUrl+ this.$gateway+data.procBpmnUrl,{
+          responseType:'blob'
+        }).then(res=>{
+          const url = URL.createObjectURL(res.data);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = data.longName;
+          a.click();
+          setTimeout(()=>{
+            URL.revokeObjectURL(url);
+          },200)
+        })
       },
       //因为查看流程图要权限，所以做了图片流的请求
       checkImg(url) {
