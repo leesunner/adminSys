@@ -22,7 +22,11 @@
       <el-table-column prop="simpleName" label="流程简称"></el-table-column>
       <el-table-column prop="longName" label="流程全称"></el-table-column>
       <el-table-column prop="defKey" label="流程Key"></el-table-column>
-      <el-table-column prop="deployTime" label="流程部署时间"></el-table-column>
+      <el-table-column label="流程部署时间">
+        <template v-slot="scope">
+          <span>{{scope.row.deployTime | formatTime}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="240px">
         <template v-slot="scope">
           <el-button
