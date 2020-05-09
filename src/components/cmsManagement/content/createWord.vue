@@ -63,16 +63,16 @@
                 <el-input clearable placeholder="请输入关键字" v-model="columnData.keywords"></el-input>
               </el-form-item>
               <el-row>
-                <el-form-item label="文章分类" prop="type">
-                  <el-radio-group v-model="columnData.type" @change="changeArticalType">
-                    <el-radio
-                      :label="item.key"
-                      v-for="item in _config.dict_wordType"
-                      :key="item.key"
-                    >{{item.value}}</el-radio>
-                  </el-radio-group>
-                </el-form-item>
-                <el-form-item label="是否显示" style="margin-left: 50px;">
+                <!--<el-form-item label="文章分类" prop="type">-->
+                  <!--<el-radio-group v-model="columnData.type" @change="changeArticalType">-->
+                    <!--<el-radio-->
+                      <!--:label="item.key"-->
+                      <!--v-for="item in _config.dict_wordType"-->
+                      <!--:key="item.key"-->
+                    <!--&gt;{{item.value}}</el-radio>-->
+                  <!--</el-radio-group>-->
+                <!--</el-form-item>-->
+                <el-form-item label="是否显示">
                   <el-tooltip :content="columnData.hideStatus?'隐藏':'显示'" placement="right">
                     <el-switch
                       v-model="columnData.hideStatus"
@@ -201,7 +201,7 @@ import ElRow from "element-ui/packages/row/src/row";
         description: "",
         categoryId: "",
         author: "",
-        type: "", // 1、国内新闻 2、县级新闻 3、通知公告
+        // type: "", // 1、国内新闻 2、县级新闻 3、通知公告
         copyFrom: "",
         keywords: "",
         hideStatus: false, //默认显示发布
@@ -216,9 +216,9 @@ import ElRow from "element-ui/packages/row/src/row";
           { required: true, message: "请输入文章内容", trigger: "blur" }
         ],
         title: [{ required: true, message: "请输入文章标题", trigger: "blur" }],
-        type: [
-          { required: true, message: "请选择文章分类", trigger: "change" }
-        ],
+        // type: [
+        //   { required: true, message: "请选择文章分类", trigger: "change" }
+        // ],
         image: [
           { required: true, message: "文章封面图不能为空", trigger: "blur" }
         ]

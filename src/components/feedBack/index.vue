@@ -38,7 +38,7 @@
           :src="imgUrl"
           :preview-src-list="formData.images">
         </el-image>
-        <el-row style="padding-left: 12px;font-size: 12px;color: #E4E7ED;">
+        <el-row style="padding-left: 12px;font-size: 12px;color: #b6b9bf;">
           * 点击可查看大图
         </el-row>
       </el-form-item>
