@@ -1,5 +1,6 @@
 //配置接口信息列表/center-users
 const gateway = '/center-users'//网关
+// const gateway = '/center-users-sam'//网关
 const version = '/v1'//版本号
 function headString(url) {
   return gateway + version + url
@@ -29,6 +30,9 @@ const apiList = {
   feedBack: headString('/m/sys/feedback'),//系统反馈
   allChildren: headString(`/m/activiti/allChildren`),//所有业务
   applyProc: headString(`/m/activiti/applyProc`),//业务详情(我的申请任务历史流转)/{actProcInstId}
+
+  commentList: headString(`/m/activiti/task/comments`),//评论列表、评论详情/{id}--评论删除/{id}
+  commentGrades: headString(`/m/activiti/task/comment/grades`),//评价等级列表
 }
 
 export { apiList, gateway }
