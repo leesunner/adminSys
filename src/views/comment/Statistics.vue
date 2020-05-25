@@ -22,7 +22,7 @@
             <el-button
               type="primary"
               size="mini"
-              @click="jtCommentGrades()"
+              @click="getCommentList()"
               icon="el-icon-search"
               v-if="buttonControl[_config.buttonCode.B_LIST]"
             >查询</el-button>
@@ -31,7 +31,7 @@
       </el-form>
     </el-row>
     <!-- 评价列表 -->
-    <el-table size="mini" :data="CommentList" border style="width: 100%" header-align="center">
+    <el-table size="mini" :data="CommentList.list" border style="width: 100%" header-align="center">
       <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
       <el-table-column prop="organizationName" label="所属组织" align="center"></el-table-column>
       <el-table-column prop="businessInfoUserRealName" label="办事员真实名称" align="center"></el-table-column>
@@ -79,12 +79,6 @@ export default {
         pageNum: 1,
         pageSize: this._config.sizeArr[0]
       },
-      //分页查询
-      querySelect: {
-        pageNum: 1,
-        pageSize: this._config.sizeArr[0]
-      },
-
       formLabelWidth: "120px"
     };
   },
@@ -113,44 +107,26 @@ export default {
     getCommentList() {
       this.$request
         .get(this.$apiList.commentList, {
-          params: this.querySelect
-        })
-        .then(res => {
-          let data = res.data;
-          if (data.code == 200) {
-            this.CommentList = data.data.list;
-          }
-        })
-        .catch(err => {
-          this.$message.error(err);
-        });
-    },
-
-    // 条件查询
-    jtCommentGrades() {
-      this.$request
-        .get(this.$apiList.commentList, {
           params: this.searchData
         })
         .then(res => {
           let data = res.data;
           if (data.code == 200) {
-            this.CommentList = data.data.list;
+            this.CommentList = data.data;
           }
         })
         .catch(err => {
           this.$message.error(err);
         });
     },
-
     // 翻页
     handleCurrentChange(val) {
-      this.querySelect.pageNum = val;
+      this.searchData.pageNum = val;
       this.getCommentList();
     },
     // 修改每页显示数量
     handleSizeChange(val) {
-      this.querySelect.pageSize = val;
+      this.searchData.pageSize = val;
       this.getCommentList();
     }
   }

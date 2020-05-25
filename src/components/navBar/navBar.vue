@@ -60,6 +60,7 @@
   .left {
     background-color: #292F37;
     height: 100%;
+    padding-bottom: 10px;
     overflow: hidden;
     position: relative;
     &-control{
