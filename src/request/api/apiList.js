@@ -33,6 +33,7 @@ const apiList = {
 
   commentList: headString(`/m/activiti/task/comments`),//评论列表、评论详情/{id}--评论删除/{id}
   commentGrades: headString(`/m/activiti/task/comment/grades`),//评价等级列表
+  deptScoreList: headString(`/m/activiti/task/dept/comment/avgscore`),//部门评分列表
 }
 
 export { apiList, gateway }

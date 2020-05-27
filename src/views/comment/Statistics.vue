@@ -33,16 +33,9 @@
     <!-- 评价列表 -->
     <el-table size="mini" :data="CommentList.list" border style="width: 100%" header-align="center">
       <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
-      <el-table-column prop="organizationName" label="所属组织" align="center"></el-table-column>
-      <el-table-column prop="businessInfoUserRealName" label="办事员真实名称" align="center"></el-table-column>
+      <el-table-column prop="organizationName" label="部门/组织" align="center"></el-table-column>
+      <el-table-column prop="avgScore" label="平均得分" align="center"></el-table-column>
       <el-table-column prop="gradeLabel" label="评论等级" align="center"></el-table-column>
-      <el-table-column prop="realName" label="评论人真实名称" align="center"></el-table-column>
-      <el-table-column prop="telephone" label="评论人手机号" align="center"></el-table-column>
-      <el-table-column prop="createTime" label="创建时间" align="center">
-        <template v-slot="scope">
-          <span>{{scope.row.createTime | formatTime}}</span>
-        </template>
-      </el-table-column>
     </el-table>
 
     <!-- 分页 -->
@@ -71,11 +64,8 @@ export default {
       columnOptions: [],
       //评价查询条件
       searchData: {
-        businessInfoUserRealName: "",
         organizationCode: "",
         grade: "",
-        realName: "",
-        telephone: "",
         pageNum: 1,
         pageSize: this._config.sizeArr[0]
       },
@@ -106,7 +96,7 @@ export default {
     // 评价列表展示
     getCommentList() {
       this.$request
-        .get(this.$apiList.commentList, {
+        .get(this.$apiList.deptScoreList, {
           params: this.searchData
         })
         .then(res => {
