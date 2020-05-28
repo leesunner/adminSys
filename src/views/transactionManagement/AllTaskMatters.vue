@@ -25,18 +25,18 @@
           <span>{{scope.row.createTime | formatTime}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100">
-        <template v-slot="scope">
-          <el-button
-            type="primary"
-            size="mini"
-            icon="el-icon-view"
-            v-if="buttonControl[_config.buttonCode.B_DETAIL]"
-            @click="handleIntoFlow(scope.row)"
-          >进入
-          </el-button>
-        </template>
-      </el-table-column>
+      <!--<el-table-column label="操作" width="100">-->
+        <!--<template v-slot="scope">-->
+          <!--<el-button-->
+            <!--type="primary"-->
+            <!--size="mini"-->
+            <!--icon="el-icon-view"-->
+            <!--v-if="buttonControl[_config.buttonCode.B_DETAIL]"-->
+            <!--@click="handleIntoFlow(scope.row)"-->
+          <!--&gt;进入-->
+          <!--</el-button>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
     </el-table>
     <!-- 分页 -->
     <el-pagination
@@ -51,7 +51,7 @@
       @size-change="handleSizeChange"
     ></el-pagination>
     <!--待办组件-->
-    <my-wait-for-matters-detail :show="showDrag" :taskId="taskId" @close="val => showDrag = val" @reqList="getPageList"></my-wait-for-matters-detail>
+    <!--<my-wait-for-matters-detail :show="showDrag" :taskId="taskId" @close="val => showDrag = val" @reqList="getPageList"></my-wait-for-matters-detail>-->
   </div>
 </template>
 
