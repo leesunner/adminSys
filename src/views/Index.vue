@@ -317,11 +317,11 @@
         });
         //窗口变动监听
         window.onresize = (e) => {
-          this.$refs['age_pieOption']?this.$refs['age_pieOption'].resize():''
-          this.$refs['age_pieOption']?this.$refs['sex_pieOption'].resize():''
-          this.$refs['num_lineOption']?this.$refs['num_lineOption'].resize():''
-          this.$refs['num_barOption']?this.$refs['num_barOption'].resize():''
-          this.$refs['city_mapOption']?this.$refs['city_mapOption'].resize():''
+          this.$refs['age_pieOption']?this.$refs['age_pieOption'].resize():'';
+          this.$refs['age_pieOption']?this.$refs['sex_pieOption'].resize():'';
+          this.$refs['num_lineOption']?this.$refs['num_lineOption'].resize():'';
+          this.$refs['num_barOption']?this.$refs['num_barOption'].resize():'';
+          this.$refs['city_mapOption']?this.$refs['city_mapOption'].resize():'';
           for (let i = 0; i < 6; i++) {
             if (this.$refs[`event_pieOption${i + 1}`]){
               this.$refs[`event_pieOption${i + 1}`].resize()
@@ -500,10 +500,9 @@
             },
             tooltip: {
               trigger: 'item',
-              formatter: '{a} <br/>{b}: {c} ({d}%)'
+              formatter: '{b}: {c} ({d}%)'
             },
             legend: {
-              bottom: 10,
               data: data.map(function (item) {
                 return item.name
               }),

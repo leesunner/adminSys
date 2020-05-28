@@ -34,6 +34,9 @@ const apiList = {
   commentList: headString(`/m/activiti/task/comments`),//评论列表、评论详情/{id}--评论删除/{id}
   commentGrades: headString(`/m/activiti/task/comment/grades`),//评价等级列表
   deptScoreList: headString(`/m/activiti/task/dept/comment/avgscore`),//部门评分列表
+  userWorkFlowNum:headString('/api/summary/users/task/count/'),//根据时间查询用待办，已办，申请等事项完成情况统计(饼子图)
+  userHotTopFive:headString('/api/summary/users/task/top-five/'),//热门事件top5
+  allWorksNum:headString('/api/summary/users/task/business-type/'),//总事项项目
 }
 
 export { apiList, gateway }

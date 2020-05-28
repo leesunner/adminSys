@@ -31,11 +31,15 @@
       </el-form>
     </el-row>
     <!-- 评价列表 -->
-    <el-table size="mini" :data="CommentList.list" border style="width: 100%" header-align="center">
-      <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
-      <el-table-column prop="organizationName" label="部门/组织" align="center"></el-table-column>
-      <el-table-column prop="avgScore" label="平均得分" align="center"></el-table-column>
-      <el-table-column prop="gradeLabel" label="评论等级" align="center"></el-table-column>
+    <el-table size="mini" :data="CommentList.list" border style="width: 100%">
+      <el-table-column type="index" label="序号" width="50"></el-table-column>
+      <el-table-column prop="organizationName" label="部门/组织"></el-table-column>
+      <el-table-column prop="avgScore" label="平均得分"></el-table-column>
+      <el-table-column label="评论等级">
+        <template v-slot="scope">
+          <div :class="scope.row.gradeLabel=='差评'?'red':''">{{scope.row.gradeLabel}}</div>
+        </template>
+      </el-table-column>
     </el-table>
 
     <!-- 分页 -->
@@ -65,7 +69,7 @@ export default {
       //评价查询条件
       searchData: {
         organizationCode: "",
-        grade: "",
+        gradeLabel: "",
         pageNum: 1,
         pageSize: this._config.sizeArr[0]
       },
@@ -126,5 +130,8 @@ export default {
 .statistics /deep/ .el-checkbox:last-child {
   margin-right: 30px;
 }
+  .red{
+    color: #ff0400;
+  }
 </style>
 

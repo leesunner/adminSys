@@ -57,20 +57,24 @@
       </el-form>
     </el-row>
     <!-- 评价列表 -->
-    <el-table size="mini" :data="CommentList.list" border style="width: 100%" header-align="center">
-      <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
-      <el-table-column prop="organizationName" label="所属组织" align="center"></el-table-column>
-      <el-table-column prop="businessInfoUserRealName" label="办事员真实名称" align="center"></el-table-column>
-      <el-table-column prop="score" label="评分" align="center" width="65"></el-table-column>
-      <el-table-column prop="gradeLabel" label="评论等级" align="center"></el-table-column>
-      <el-table-column prop="realName" label="评论人真实名称" align="center"></el-table-column>
-      <el-table-column prop="telephone" label="评论人手机号" align="center"></el-table-column>
-      <el-table-column prop="createTime" label="创建时间" align="center">
+    <el-table size="mini" :data="CommentList.list" border style="width: 100%">
+      <el-table-column type="index" label="序号" width="50"</el-table-column>
+      <el-table-column prop="organizationName" label="所属组织"</el-table-column>
+      <el-table-column prop="businessInfoUserRealName" label="办事员真实名称"></el-table-column>
+      <el-table-column prop="score" label="评分" width="65"></el-table-column>
+      <el-table-column label="评论等级">
+        <template v-slot="scope">
+          <div :class="scope.row.gradeLabel=='差评'?'red':''">{{scope.row.gradeLabel}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="realName" label="评论人真实名称"></el-table-column>
+      <el-table-column prop="telephone" label="评论人手机号"></el-table-column>
+      <el-table-column prop="createTime" label="创建时间">
         <template v-slot="scope">
           <span>{{scope.row.createTime | formatTime}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="210" align="center">
+      <el-table-column label="操作" width="210">
         <template v-slot="scope">
           <el-button
             size="mini"
@@ -109,6 +113,9 @@
         </el-form-item>
         <el-form-item label="评论等级 :">
           <el-input v-model="userGroupDetail.gradeLabel"></el-input>
+        </el-form-item>
+        <el-form-item label="评论内容 :">
+          <el-input type="textarea" :min="3" :max="5" v-model="userGroupDetail.content"></el-input>
         </el-form-item>
         <el-form-item label="评论人真实名称 :">
           <el-input v-model="userGroupDetail.realName"></el-input>
@@ -311,6 +318,9 @@
 
   .agrades {
     margin-right: 10px;
+  }
+  .red{
+    color: #ff0400;
   }
 </style>
 

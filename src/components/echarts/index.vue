@@ -1,5 +1,5 @@
 <template>
-  <div class="echart" :class="!$attrs.showBackground?'showBackground':''" ref="echartContent" :style="`height: ${height};width: ${width};`">
+  <div class="echart"  ref="echartContent" :style="`height: ${height};width: ${width};background-color:${backGroundColor};`">
     <div ref="canvas" style="width:100%;height: 100%;"></div>
   </div>
 </template>
@@ -19,6 +19,10 @@
       width: {
         type: String,
         default: '100%'
+      },
+      backGroundColor:{
+        type: String,
+        default:'rgba(6,41,100,.85)'
       },
       options: {
         type: Object,
@@ -108,9 +112,5 @@
 <style lang="scss" scoped>
   .echart {
     position: relative;
-  }
-  .showBackground{
-    /*background-color: #062964;*/
-    background-color: $borderBackColor;
   }
 </style>
