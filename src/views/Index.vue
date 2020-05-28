@@ -68,7 +68,7 @@
           <!--地图-->
           <lee-echarts
             :options="city_mapOption"
-            :showBackground="true"
+            showBackground="transparent"
             ref="city_mapOption"
             @clickEvent="clickEvent"></lee-echarts>
         </div>
