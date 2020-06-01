@@ -2,7 +2,7 @@
   <el-dialog :title="itemId?'编辑文章':'发布文章'" fullscreen :visible.sync="$attrs.show" @close="close">
     <el-row class="content">
       <el-form
-        label-width="115px"
+        label-width="100px"
         size="mini"
         inline
         :rules="rules"
@@ -75,7 +75,7 @@
                 <el-form-item label="类型简称">
                   <el-input clearable placeholder="请输入文章类型简称" v-model="columnData.shortName"></el-input>
                 </el-form-item>
-                <el-form-item label="是否显示" style="margin-left: 50px;">
+                <el-form-item label="是否显示">
                   <el-tooltip :content="columnData.hideStatus?'隐藏':'显示'" placement="right">
                     <el-switch
                       v-model="columnData.hideStatus"

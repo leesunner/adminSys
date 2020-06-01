@@ -89,7 +89,8 @@
     }
     & .el-menu-vertical-demo:not(.el-menu--collapse) {
       width: 200px;
-      min-height: auto
+      min-height: auto;
+      padding-bottom:68px;
     }
     & /deep/ .el-scrollbar__wrap {
       overflow-x: hidden;

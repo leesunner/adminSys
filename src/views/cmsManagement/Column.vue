@@ -25,8 +25,8 @@
       :header-row-style="{'background-color': '#f7f7f7'}"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
       <el-table-column
-        prop="id"
-        label="ID"
+        prop="sort"
+        label="排序"
         width="180">
       </el-table-column>
       <el-table-column
