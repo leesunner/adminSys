@@ -20,27 +20,27 @@
                   maxlength="49"
                 ></el-input>
               </el-form-item>
-              <!--<el-form-item label="所属站点" :required="columnData.type!=1" v-if="!itemId">-->
-                <!--<el-select-->
-                  <!--v-model="columnData.siteId"-->
-                  <!--filterable-->
-                  <!--:disabled="this.columnData.type == 1"-->
-                  <!--remote-->
-                  <!--clearable-->
-                  <!--reserve-keyword-->
-                  <!--placeholder="请输入所属站点关键字"-->
-                  <!--:remote-method="remoteMethod"-->
-                  <!--:loading="loading"-->
-                <!--&gt;-->
-                  <!--<el-option-->
-                    <!--v-for="item in webOptions"-->
-                    <!--:key="item.id"-->
-                    <!--:label="item.name"-->
-                    <!--:value="item.id"-->
-                  <!--&gt;</el-option>-->
-                <!--</el-select>-->
-              <!--</el-form-item>-->
-              <el-form-item label="所属栏目" prop="categoryId">
+              <el-form-item label="所属站点" :required="columnData.type!=1" v-if="!itemId">
+                <el-select
+                  v-model="columnData.siteId"
+                  filterable
+                  :disabled="this.columnData.type == 1"
+                  remote
+                  clearable
+                  reserve-keyword
+                  placeholder="请输入所属站点关键字"
+                  :remote-method="remoteMethod"
+                  :loading="loading"
+                >
+                  <el-option
+                    v-for="item in webOptions"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="所属栏目" :required="columnData.type!=1" v-if="!itemId">
                 <el-cascader
                   :disabled="this.columnData.type == 1"
                   v-model="columnData.categoryId"
@@ -220,9 +220,9 @@ import ElRow from "element-ui/packages/row/src/row";
           { required: true, message: "请输入文章内容", trigger: "blur" }
         ],
         title: [{ required: true, message: "请输入文章标题", trigger: "blur" }],
-        categoryId: [
-          { required: true, message: "请选择文章所属栏目", trigger: "change" }
-        ],
+        // categoryId: [
+        //   { required: true, message: "请选择文章所属栏目", trigger: "change" }
+        // ],
         shortName: [{ required: true, message: "请输入类型简称", trigger: "blur" }],
         image: [
           { required: true, message: "请上传文章封面图", trigger: "blur" }
@@ -294,12 +294,23 @@ import ElRow from "element-ui/packages/row/src/row";
       this.$refs["formRules"].validate(valid => {
         if (valid && this.checkFormDataInfo(this.columnData)) {
           if (this.columnData.content.length > 200) {
-            this.$request
-              .post(this.$apiList.article, this.columnData)
-              .then(res => {
-                this.$message.success(res.data.msg);
-                this.close(1);
+            this.$confirm('确认发布文章?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.$request
+                .post(this.$apiList.article, this.columnData)
+                .then(res => {
+                  this.$message.success(res.data.msg);
+                  this.close(1);
+                });
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消删除'
               });
+            });
           } else {
             this.$message.error("文章内容不够100字");
           }
@@ -312,12 +323,23 @@ import ElRow from "element-ui/packages/row/src/row";
         if (valid && this.checkFormDataInfo(this.columnData)) {
           if (this.columnData.content.length > 200) {
             this.columnData.createTime = "";
-            this.$request
-              .put(this.$apiList.article, this.columnData)
-              .then(res => {
-                this.$message.success(res.data.msg);
-                this.close(1);
+            this.$confirm('确认更新文章?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.$request
+                .put(this.$apiList.article, this.columnData)
+                .then(res => {
+                  this.$message.success(res.data.msg);
+                  this.close(1);
+                });
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消删除'
               });
+            });
           } else {
             this.$message.error("文章内容不够100字");
           }
