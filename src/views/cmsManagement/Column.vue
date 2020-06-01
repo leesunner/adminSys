@@ -25,13 +25,17 @@
       :header-row-style="{'background-color': '#f7f7f7'}"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
       <el-table-column
-        prop="sort"
-        label="排序"
+        label="序号"
+        type="index"
         width="180">
       </el-table-column>
       <el-table-column
         prop="name"
         label="栏目名称">
+      </el-table-column>
+      <el-table-column
+        prop="sort"
+        label="排序">
       </el-table-column>
       <el-table-column
         width="310"

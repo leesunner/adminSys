@@ -72,9 +72,6 @@
                     <!--&gt;{{item.value}}</el-radio>-->
                   <!--</el-radio-group>-->
                 <!--</el-form-item>-->
-                <el-form-item label="类型简称" prop="shortName">
-                  <el-input clearable placeholder="请输入文章类型简称" v-model="columnData.shortName"></el-input>
-                </el-form-item>
                 <el-form-item label="是否显示">
                   <el-tooltip :content="columnData.hideStatus?'隐藏':'显示'" placement="right">
                     <el-switch
@@ -204,7 +201,6 @@ import ElRow from "element-ui/packages/row/src/row";
         description: "",
         categoryId: "",
         author: "",
-          shortName:"",
         // type: "", // 1、国内新闻 2、县级新闻 3、通知公告
         copyFrom: "",
         keywords: "",
@@ -223,7 +219,6 @@ import ElRow from "element-ui/packages/row/src/row";
         // categoryId: [
         //   { required: true, message: "请选择文章所属栏目", trigger: "change" }
         // ],
-        shortName: [{ required: true, message: "请输入类型简称", trigger: "blur" }],
         image: [
           { required: true, message: "请上传文章封面图", trigger: "blur" }
         ]
@@ -244,7 +239,6 @@ import ElRow from "element-ui/packages/row/src/row";
           categoryId: "",
           author: "",
           // type: "", // 1、国内新闻 2、县级新闻 3、通知公告
-          shortName:'',
           copyFrom: "",
           keywords: "",
           hideStatus: false //默认显示发布
