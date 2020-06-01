@@ -61,7 +61,11 @@
               password: this._funs.Encrypt(this.data.password)
             }
             this.$store.dispatch('Login', params).then(res => {
-              this.$router.push('/index')
+              if(this.$store.state.hasIndex){
+                this.$router.push('/index')
+              }else{
+                this.$router.push('/currentUserInfo')
+              }
             })
             //接口有反应后，初始化滑块状态
             this.control = false

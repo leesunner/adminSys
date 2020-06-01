@@ -30,11 +30,10 @@
   </el-form>
 </template>
 
-<script>
+  <script>
   // const Slider = () => import('../checking/slider')
   const jGraph = () => import('../checking/jGraphicCode')
   import {Encrypt} from '@/tools/utilTools'
-
   const leeIcon = () => import('@/components/icon/index')
   export default {
     name: "phone-login",
@@ -108,7 +107,11 @@
       login() {
         if (this.checkInfo()) {
           this.$store.dispatch('LoginByPhone', this.data).then(res => {
-            this.$router.push('/index')
+            if(this.$store.state.hasIndex){
+              this.$router.push('/index')
+            }else{
+              this.$router.push('/currentUserInfo')
+            }
           })
         }
       }

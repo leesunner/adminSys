@@ -31,4 +31,7 @@ export default {
   setLeftControl(state, data){
     state.leftControl = data
   },
+  setHasIndex(state, data){
+    state.hasIndex = data
+  }
 }
