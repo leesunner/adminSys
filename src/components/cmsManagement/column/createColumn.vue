@@ -13,6 +13,14 @@
           v-model="columnData['name']">
         </el-input>
       </el-form-item>
+      <el-form-item label="栏目简称" prop="shortName">
+        <el-input
+          placeholder="输入栏目简称"
+          clearable
+          :disabled="!$attrs.buttonControl[_config.buttonCode.B_UPDATE]"
+          v-model="columnData['shortName']">
+        </el-input>
+      </el-form-item>
       <el-form-item label="栏目状态">
         <el-tooltip :content="columnData.hideStatus?'隐藏后看不到栏目':'现在可以看到栏目了'" placement="right">
           <el-switch
@@ -42,11 +50,13 @@
       return {
         columnData: {
           name: '',
+          shortName:'',
           hideStatus: false,//显示
           parentId: 0,//顶级目录是0
         },
         rules: {
           name: [{required: true, message: '请输入栏目名', trigger: 'blur'}],
+          shortName:[{required: true, message: '请输入栏目简称', trigger: 'blur'}]
         }
       }
     },
@@ -62,6 +72,7 @@
         this.$emit('close', false)
         this.columnData = {
           name: '',
+          shortName:'',
           hideStatus: false,//显示
           parentId: 0,//顶级目录是0
         }
