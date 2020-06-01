@@ -20,27 +20,27 @@
                   maxlength="49"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="所属站点" :required="columnData.type!=1" v-if="!itemId">
-                <el-select
-                  v-model="columnData.siteId"
-                  filterable
-                  :disabled="this.columnData.type == 1"
-                  remote
-                  clearable
-                  reserve-keyword
-                  placeholder="请输入所属站点关键字"
-                  :remote-method="remoteMethod"
-                  :loading="loading"
-                >
-                  <el-option
-                    v-for="item in webOptions"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="所属栏目" :required="columnData.type!=1">
+              <!--<el-form-item label="所属站点" :required="columnData.type!=1" v-if="!itemId">-->
+                <!--<el-select-->
+                  <!--v-model="columnData.siteId"-->
+                  <!--filterable-->
+                  <!--:disabled="this.columnData.type == 1"-->
+                  <!--remote-->
+                  <!--clearable-->
+                  <!--reserve-keyword-->
+                  <!--placeholder="请输入所属站点关键字"-->
+                  <!--:remote-method="remoteMethod"-->
+                  <!--:loading="loading"-->
+                <!--&gt;-->
+                  <!--<el-option-->
+                    <!--v-for="item in webOptions"-->
+                    <!--:key="item.id"-->
+                    <!--:label="item.name"-->
+                    <!--:value="item.id"-->
+                  <!--&gt;</el-option>-->
+                <!--</el-select>-->
+              <!--</el-form-item>-->
+              <el-form-item label="所属栏目" prop="categoryId">
                 <el-cascader
                   :disabled="this.columnData.type == 1"
                   v-model="columnData.categoryId"
@@ -72,7 +72,7 @@
                     <!--&gt;{{item.value}}</el-radio>-->
                   <!--</el-radio-group>-->
                 <!--</el-form-item>-->
-                <el-form-item label="类型简称">
+                <el-form-item label="类型简称" prop="shortName">
                   <el-input clearable placeholder="请输入文章类型简称" v-model="columnData.shortName"></el-input>
                 </el-form-item>
                 <el-form-item label="是否显示">
@@ -220,12 +220,12 @@ import ElRow from "element-ui/packages/row/src/row";
           { required: true, message: "请输入文章内容", trigger: "blur" }
         ],
         title: [{ required: true, message: "请输入文章标题", trigger: "blur" }],
-        // type: [
-        //   { required: true, message: "请选择文章分类", trigger: "change" }
-        // ],
+        categoryId: [
+          { required: true, message: "请选择文章所属栏目", trigger: "change" }
+        ],
         shortName: [{ required: true, message: "请输入类型简称", trigger: "blur" }],
         image: [
-          { required: true, message: "文章封面图不能为空", trigger: "blur" }
+          { required: true, message: "请上传文章封面图", trigger: "blur" }
         ]
       }
     };
@@ -317,7 +317,6 @@ import ElRow from "element-ui/packages/row/src/row";
               .then(res => {
                 this.$message.success(res.data.msg);
                 this.close(1);
-                debugger;
               });
           } else {
             this.$message.error("文章内容不够100字");

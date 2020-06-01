@@ -913,7 +913,6 @@
       confirmCreate() {
         this.$refs['DeptRules'].validate(valid => {
           if (valid) {
-            debugger
             let level = this.createInfo.level
             if (level == 2 && this.createInfo.provinceCode == '') {
               this.$message.error('请选择可用的地址')
