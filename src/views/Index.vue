@@ -1351,7 +1351,7 @@
                 color: $fontColor;
               }
               div:nth-child(1) {
-                width: 42%;
+                width:70%;
               }
               div:nth-child(2) {
                 width: 79%;
