@@ -27,7 +27,7 @@
           // 上传文件接口
           serverUrl: this.$baseUrl+this.$apiList.ueditorFileUpload,
           // UEditor 资源文件的存放路径
-          // UEDITOR_HOME_URL: '../../../static/UEditor/'
+          UEDITOR_HOME_URL: '../../../admin/static/UEditor/'
         }
       }
     },
