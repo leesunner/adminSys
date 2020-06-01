@@ -153,13 +153,13 @@
     <div slot="footer" style="text-align: center;">
       <el-button size="mini" @click="close">关闭</el-button>
       <el-button
-        size="mini"
+        size="small"
         @click="edit"
         type="primary"
         v-if="itemId&&$attrs.buttonControl[_config.buttonCode.B_UPDATE]"
       >保存</el-button>
       <el-button
-        size="mini"
+        size="small"
         @click="create"
         type="primary"
         v-if="!itemId&&$attrs.buttonControl[_config.buttonCode.B_CREATE]"

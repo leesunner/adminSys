@@ -6,6 +6,14 @@
 
 <script>
   import VueUeditorWrap from 'vue-ueditor-wrap';
+  function urls() {
+    let host  = window.location.host;
+    let url = window.location.origin+ window.location.pathname
+    if(host.indexOf('localhost')>-1){
+      url = '../../../'
+    }
+    return url
+  }
   export default {
     name: "ueditor",
     components: {VueUeditorWrap},
@@ -27,7 +35,7 @@
           // 上传文件接口
           serverUrl: this.$baseUrl+this.$apiList.ueditorFileUpload,
           // UEditor 资源文件的存放路径
-          UEDITOR_HOME_URL: '../../../admin/static/UEditor/'
+          UEDITOR_HOME_URL: `${urls()}static/UEditor/`
         }
       }
     },

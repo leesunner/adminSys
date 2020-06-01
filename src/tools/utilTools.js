@@ -83,28 +83,30 @@ export const Decrypt = (val) => {
  * 
 */
 export const getCacheInfo = (str) => {
-  let info = _session.getLocalStorage(Encrypt(str)), resultInfo;
+  let info = _session.getLocalStorage(Encrypt(str));
   if (info) {
-    resultInfo = Decrypt(info)
-  }
-  let test = /[\[\]{}]/g
-  if(test.test(resultInfo)){
-    return JSON.parse(resultInfo)
+    info = str=='AUTH_TOKEN'?info:Decrypt(info)
+    let test = /[\[\]{}]/g
+    if(test.test(info)){
+      return JSON.parse(info)
+    }else{
+      return info
+    }
   }else{
-    return resultInfo
+    return null
   }
 }
 
 /**
  * 存放本地缓存加密信息
- * @param name:要存放进缓存的key；data：数据对象；type：local/session
+ * @param name:要存放进缓存的key；data：数据对象；dataEncrypt 是否加密数据 ;type：local/session
  * 
 */
-export const setCacheInfo = (name, data, type = 'local') => {
+export const setCacheInfo = (name, data,type = 'local') => {
   if (type === 'local') {
-    _session.setLocalStorage(Encrypt(name), Encrypt(data));//加密
+    _session.setLocalStorage(Encrypt(name), name=='AUTH_TOKEN'?data:Encrypt(data));//加密
   } else {
-    _session.setSession(Encrypt(name), Encrypt(data));//加密
+    _session.setSession(Encrypt(name), name=='AUTH_TOKEN'?data:Encrypt(data));//加密
   }
 }
 /**
