@@ -1,0 +1,81 @@
+//变量
+$black: #000000;
+$opcity: transparent;
+$white: #fff;
+$primary: #409EFF;
+$success: #67c23a;
+$gay:#909399;
+$borderBackColor: rgba(6,41,100,.85);
+//自定义控制字符行数隐藏
+@mixin text-over($val:1) {
+  @if ($val<=1) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  } @else {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: $val;
+  }
+}
+@mixin flew_item($val){
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  @if($val=='row'){
+    flex-flow: row nowrap;
+  }@else{
+    flex-flow: column nowrap;
+  }
+}
+.el-table th{
+  background-color: transparent!important;
+}
+.el-tree-node{
+  margin-top: 6px;
+}
+.el-tree-node__content{
+  height: auto!important;
+}
+.el-image-viewer__close{
+  color: $white;
+}
+//form-item 文本居左
+//.el-form-item__label{
+//  text-align: left!important;
+// }
+//修改必填项的样式
+//.is-required{
+//  & .el-form-item__label::after{
+//    content: '*';
+//    color: #F56C6C;
+//    margin-left: 4px;
+//  }
+//  & .el-form-item__label::before{
+//    content: ''!important;
+//    margin-right: 0px!important;
+//  }
+//}
+.custom-tree-node {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  padding-right: 8px;
+  &-title{
+    display: inline-block!important;
+    @include text-over(1)
+  }
+  span{
+    vertical-align: middle;
+  }
+}
+.pagination{
+  margin-top: 15px;
+}
+
